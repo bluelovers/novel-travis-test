@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "do-task": "node ./bin/_run-task.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run do-task"
   },
   "author": "",
   "license": "ISC",
