@@ -46,6 +46,15 @@ if (fs.pathExistsSync(DIST_NOVEL) && index_1.isGitRoot(DIST_NOVEL)) {
         cwd: DIST_NOVEL,
     });
     pullGit();
+    __1.crossSpawnSync('git', [
+        'checkout',
+        '-B',
+        'segment',
+        'master',
+    ], {
+        stdio: 'inherit',
+        cwd: DIST_NOVEL,
+    });
     console.timeEnd(label);
 }
 else {
@@ -62,6 +71,15 @@ else {
     ], {
         stdio: 'inherit',
         cwd: PROJECT_ROOT,
+    });
+    __1.crossSpawnSync('git', [
+        'checkout',
+        '-B',
+        'segment',
+        'master',
+    ], {
+        stdio: 'inherit',
+        cwd: DIST_NOVEL,
     });
     console.timeEnd(label);
 }
@@ -108,6 +126,7 @@ function pullGit() {
 function pushGit() {
     let cp = __1.crossSpawnSync('git', [
         'push',
+        '--force',
         `https://${GITEE_TOKEN ? GITEE_TOKEN : ''}gitee.com/demogitee/novel.git`,
     ], {
         cwd: DIST_NOVEL,
