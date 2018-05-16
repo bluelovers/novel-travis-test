@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "do-task": "node ./bin/_run-task.js",
-    "test": "npm run do-task"
+    "test": "node -v"
   },
   "author": "",
   "license": "ISC",

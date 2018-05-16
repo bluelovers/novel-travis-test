@@ -11,16 +11,18 @@ deploy:
   #local-dir: docs
 cache:
   directories:
-    - .cache
+  - ".cache"
 before_install:
-  - git config --global user.email "testbot@test.test"
-  - git config --global user.name "testbot"
-  - git clone --depth=50 https://gitee.com/bluelovers/novel.git dist_novel
-  - npm i -g yarn
+- git config --global user.email "testbot@test.test"
+- git config --global user.name "testbot"
+#- travis_wait git clone --depth=50 --progress https://gitee.com/bluelovers/novel.git dist_novel
+- npm i -g yarn
 install:
-  - yarn
+- yarn
 before_script:
 script:
+- node ./bin/_travis-encrypt.js
 env:
   global:
-    secure: vz13IjFLZaTGJFFxOkksSZu9bOKhuSZa4+sSSMUD4O495XZ62x+5FkG729zeTb+US9Q5ar3reqQuDR4b30hHVDkWOqspM9gdaX+5tT/xbr2dCkTFWi9cRLLrBq7bAArVioIFtvfXuTIDLeE6VPgHW/jWpea8RyIaFvzE33AEjgERyOQMQPckWqIHkPQmzIKoghYFPdjscZipT/X123KdB4wsGv8/voT/HQ0rvYczCk6nC+4nBepzi05mqTpLpP+sjPi55+MD/hmPLRlUdTe2hzHfba6H98pmWqgHdIrpe/7s6nVzdbZ2I+c6cc4WBKVlah/3BysdObadoNbPeBaINL8p5qp06/gwFn37uPs+E0hujBK7eqhtOt1iH15Htfq64QmGKVJ/vPE1j+UZ6jODavzXP+ATP/nGZHFxB+z4BiVSFvtrC/uUX9okCwNvjCGZmM2wp3CHGkTMQf2dz5fO+jQ+t4EL4gWiaAPpbbyH88MWPV0Byb5SfqwJQzGnSJrcf9FLMTM/zPxpNoWJuOFp6LaqmqwRNJYciqqkImMVmVl6O3/bdCJqRq/Wj6bHk8CWZg3Pk0DHLWOsa/t44JNH/HoUmfs0jGBhSbwzuJgppI/SK376SM5zGu/hOZZJGh4X4Y9fH1NijLCifD+Q0iFzMoXoQh4dueSxlnpjZg1DgbM=
+  - secure: vz13IjFLZaTGJFFxOkksSZu9bOKhuSZa4+sSSMUD4O495XZ62x+5FkG729zeTb+US9Q5ar3reqQuDR4b30hHVDkWOqspM9gdaX+5tT/xbr2dCkTFWi9cRLLrBq7bAArVioIFtvfXuTIDLeE6VPgHW/jWpea8RyIaFvzE33AEjgERyOQMQPckWqIHkPQmzIKoghYFPdjscZipT/X123KdB4wsGv8/voT/HQ0rvYczCk6nC+4nBepzi05mqTpLpP+sjPi55+MD/hmPLRlUdTe2hzHfba6H98pmWqgHdIrpe/7s6nVzdbZ2I+c6cc4WBKVlah/3BysdObadoNbPeBaINL8p5qp06/gwFn37uPs+E0hujBK7eqhtOt1iH15Htfq64QmGKVJ/vPE1j+UZ6jODavzXP+ATP/nGZHFxB+z4BiVSFvtrC/uUX9okCwNvjCGZmM2wp3CHGkTMQf2dz5fO+jQ+t4EL4gWiaAPpbbyH88MWPV0Byb5SfqwJQzGnSJrcf9FLMTM/zPxpNoWJuOFp6LaqmqwRNJYciqqkImMVmVl6O3/bdCJqRq/Wj6bHk8CWZg3Pk0DHLWOsa/t44JNH/HoUmfs0jGBhSbwzuJgppI/SK376SM5zGu/hOZZJGh4X4Y9fH1NijLCifD+Q0iFzMoXoQh4dueSxlnpjZg1DgbM=
+  - secure: UAenmkUSzNUy8hDsWxoPxUJNT2Aj8dsb91APmf8v0he/3nOfG58nyS3KFmDSJA1JR1AxV/isIx6dyT1ypFY0cbUFK2yXB7mZTpCTsWEKkpfbEQL+6GsYJILIe6ZwFIu4p3P9Dub9K04AiRplXAKf5yMXeg6JaLpT4mqTUNsFsjBbYbzRcvaPCnNC/zGCfH2umVymXxPrKv1xa3A/NlP9sldXkVeYfiJVm5lGMu1dUXQMfvzI7+skrC1Y0DMeU7evAC7AYMs8BdrVYcfkoIO8rjY7syZWLSk3gEP0zMU0oVkktZfMgULnM0s72XJivp+dqr9uxqF/P1qA4hvEDFVt+76fUqRPsOIyRjfmRz62K7+oLXUrUold7K9EiXqrsm/jQuQPjbe2WY6DA7q+cLjWdPEtAmIvL1NRAjT4A+6k026TD3sUEsCTw6TAe1r/V4b8b0lMGSpIGVmX2of4a7UEy358WHWyyPRvhZ+rErnlGlcJfJFNQwpVhRvKDtEA1ztVi5IlB0VCUU2HvpfcdE78AJ484Lrsk70m/z8bHUo+ueWg9jWyWCo7EwWwZb6cN1/x5GpK++N0vP3xTePT9E/435RBanHc8B8Q0qJbLI+t3P1iVVoWb4G51yOIsjbOP2pAisR23+FECSP73Gk7p4JS1rETL7IkHEZm4Fv5mvjIzt8=

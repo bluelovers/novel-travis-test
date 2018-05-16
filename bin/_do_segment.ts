@@ -1,6 +1,4 @@
-/**
- * Created by user on 2018/5/16/016.
- */
+#!/usr/bin/env node
 
 import * as yargs from 'yargs';
 import { doSegmentGlob } from '../script/segment';
