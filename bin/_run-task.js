@@ -13,7 +13,7 @@ const DEBUG = false;
 let label;
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 let GITEE_TOKEN = process.env.GITEE_TOKEN || '';
-const DIST_NOVEL = path.resolve(PROJECT_ROOT, 'DIST_NOVEL');
+const DIST_NOVEL = path.resolve(PROJECT_ROOT, 'dist_novel');
 if (!GITEE_TOKEN) {
     let env = dotenv_1.config({ path: path.join(PROJECT_ROOT, '.env') });
     if (env.parsed && env.parsed.GITEE_TOKEN) {
@@ -28,6 +28,13 @@ if (fs.pathExistsSync(DIST_NOVEL) && index_1.isGitRoot(DIST_NOVEL)) {
     label = `--- PULL ---`;
     console.log(label);
     console.time(label);
+    //	crossSpawnSync('git', [
+    //		'fetch',
+    //		'--all',
+    //	], {
+    //		stdio: 'inherit',
+    //		cwd: DIST_NOVEL,
+    //	});
     pullGit();
     console.timeEnd(label);
 }
@@ -38,8 +45,9 @@ else {
     //fs.emptyDirSync(DIST_NOVEL);
     __1.crossSpawnSync('git', [
         'clone',
+        '--depth=50',
         'https://gitee.com/bluelovers/novel.git',
-        'DIST_NOVEL',
+        'dist_novel',
     ], {
         stdio: 'inherit',
         cwd: PROJECT_ROOT,
