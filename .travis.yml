@@ -15,6 +15,7 @@ cache:
 before_install:
   - git config --global user.email "testbot@test.test"
   - git config --global user.name "testbot"
+  - git clone https://gitee.com/bluelovers/novel.git
   - npm i -g yarn
 install:
   - yarn
