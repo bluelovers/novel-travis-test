@@ -18,10 +18,11 @@ function doSegmentGlob(options) {
     options.pathMain_out = options.pathMain_out || options.pathMain;
     let CWD_IN = _path(options.pathMain, options.novelID, novel_root);
     let CWD_OUT = _path(options.pathMain_out, options.novelID, novel_root);
-    return Promise
-        .resolve(FastGlob([
+    let globPattern = options.globPattern || [
         '**/*.txt',
-    ], {
+    ];
+    return Promise
+        .resolve(FastGlob(globPattern, {
         cwd: CWD_IN,
     }))
         .tap(function (ls) {
@@ -42,7 +43,7 @@ function doSegmentGlob(options) {
             let text = await fs.readFile(path.join(CWD_IN, file));
             text = crlf_normalize_1.crlf(text.toString());
             if (!text.replace(/\s+/g, '')) {
-                console.warn('[skin]', label);
+                console.warn('[skip]', label);
                 return {
                     file,
                     changed: false,
@@ -64,11 +65,12 @@ function doSegmentGlob(options) {
             else {
                 console.log('[done]', label);
             }
+            ks = null;
             return {
                 file,
                 changed,
             };
-        }, { concurrency: 3 });
+        }, { concurrency: 2 });
         console.timeEnd(label);
         console.log(`file changed: ${count_changed}`);
         return {

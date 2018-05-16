@@ -12,6 +12,7 @@ export declare function doSegmentGlob(options: {
     novelID: string;
     segment?: Segment;
     novel_root?: string;
+    globPattern?: string[];
 }): Promise<{
     ls: string[];
     count: {

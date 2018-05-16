@@ -88,7 +88,7 @@ label = `--- PUSH ---`;
 console.log(label);
 console.time(label);
 
-pushGit();
+//pushGit();
 
 console.timeEnd(label);
 

@@ -3,8 +3,10 @@
  */
 
 import { IListFileRow, IListMainRow, IListNovelRow } from '@node-novel/task';
+import { crossSpawnAsync, crossSpawnOutput } from './index';
 import { doSegmentGlob } from './script/segment';
 import path = require('upath2');
+import ProjectConfig from './project.config';
 
 let DIST_NOVEL = path.join(__dirname, 'dist_novel');
 
@@ -23,7 +25,12 @@ export default {
 		{
 			console.log('NOVEL', data.pathMain, data.novelID, data.length);
 
-			if (0 || 0 && data.pathMain == 'cm' && data.novelID == '姫騎士がクラスメート！　〜異世界チートで奴隷化ハーレム〜')
+//			console.log(data);
+
+			await runSegment(data);
+
+			/*
+			if (1 || 1 && data.pathMain == 'cm')
 			{
 				await doSegmentGlob({
 					pathMain: data.pathMain,
@@ -34,13 +41,108 @@ export default {
 					{
 						console.error(err.toString());
 					})
+					.then(async function (ret)
+					{
+						if (ret && ret.count && ret.count.changed)
+						{
+							await crossSpawnAsync('git', [
+								'commit',
+								'-a',
+								'-m',
+								`[Segment] ${data.pathMain} ${data.novelID}`,
+							], {
+								stdio: 'inherit',
+								cwd: DIST_NOVEL,
+							})
+								.then(function (r)
+								{
+									return r;
+								})
+							;
+						}
+
+						return ret;
+					})
 				;
 			}
+			*/
 		},
-		file(data: IListFileRow, file: string)
+		async file(data: IListFileRow, file: string)
 		{
 			//console.log('FILE', data.subpath);
 			//console.log(data);
+
+			//console.log(data, file);
+
+//			if (data.basename.match(/\.txt$/))
+//			{
+//				await runSegment(data, data.subpath);
+//			}
+
 		},
 	},
+}
+
+async function runSegment(data: IListNovelRow | IListFileRow, file?: string)
+{
+	let bin = path.join(ProjectConfig.project_root, 'bin/_do_segment.js');
+
+	let argv = [
+		bin,
+
+		'--pathMain',
+		data.pathMain,
+		'--novelID',
+		data.novelID,
+	];
+
+	let files: string[];
+
+	if (file)
+	{
+		files = [file];
+	}
+
+//	if (0 && data.length)
+//	{
+//		files = [];
+//
+//		data.forEach(function (row)
+//		{
+//			files.push(row.subpath)
+//		})
+//	}
+
+	if (files)
+	{
+		files.forEach(function (v)
+		{
+			argv.push('--file', v);
+		});
+	}
+
+	let cp = await crossSpawnAsync('node', argv, {
+		stdio: 'inherit',
+		cwd: DIST_NOVEL,
+	});
+
+	if (cp.status > 0 && !cp.error)
+	{
+		await crossSpawnAsync('git', [
+			'commit',
+			'-a',
+			'-m',
+			`[Segment] ${data.pathMain} ${data.novelID}`,
+		], {
+			stdio: 'inherit',
+			cwd: DIST_NOVEL,
+		})
+			.then(function (r)
+			{
+				return r;
+			})
+		;
+	}
+
+	return cp.status;
 }

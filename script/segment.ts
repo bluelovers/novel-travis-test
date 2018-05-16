@@ -24,6 +24,8 @@ export function doSegmentGlob(options: {
 	segment?: Segment,
 
 	novel_root?: string,
+
+	globPattern?: string[],
 })
 {
 	const novel_root = options.novel_root || ProjectConfig.novel_root;
@@ -35,10 +37,12 @@ export function doSegmentGlob(options: {
 	let CWD_IN = _path(options.pathMain, options.novelID, novel_root);
 	let CWD_OUT = _path(options.pathMain_out, options.novelID, novel_root);
 
+	let globPattern = options.globPattern || [
+		'**/*.txt',
+	];
+
 	return Promise
-		.resolve(FastGlob([
-			'**/*.txt',
-		], {
+		.resolve(FastGlob(globPattern, {
 			cwd: CWD_IN,
 			//absolute: true,
 		}) as any as Promise<string[]>)
@@ -74,7 +78,7 @@ export function doSegmentGlob(options: {
 
 				if (!text.replace(/\s+/g, ''))
 				{
-					console.warn('[skin]', label);
+					console.warn('[skip]', label);
 
 					return {
 						file,
@@ -111,11 +115,13 @@ export function doSegmentGlob(options: {
 					console.log('[done]', label);
 				}
 
+				ks = null;
+
 				return {
 					file,
 					changed,
 				};
-			}, { concurrency: 3 });
+			}, { concurrency: 2 });
 
 			console.timeEnd(label);
 

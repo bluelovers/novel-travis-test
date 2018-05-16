@@ -7,7 +7,7 @@ declare const _default: {
     task: {
         main(data: IListMainRow, name: string): void;
         novel(data: IListNovelRow, name: string): Promise<void>;
-        file(data: IListFileRow, file: string): void;
+        file(data: IListFileRow, file: string): Promise<void>;
     };
 };
 export default _default;
