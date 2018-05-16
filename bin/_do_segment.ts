@@ -1,36 +1,77 @@
 #!/usr/bin/env node
 
+import * as fs from 'fs-extra';
 import * as yargs from 'yargs';
 import { doSegmentGlob } from '../script/segment';
+import ProjectConfig from '../project.config';
+import path = require('upath2');
 
-let { pathMain, novelID, file, novel_root } = yargs.argv;
+let { pathMain, novelID, novel_root } = yargs.argv;
 
 if (pathMain && novelID)
 {
 	(async () =>
 	{
-		if (file)
+		let dir = path.join(ProjectConfig.cache_root, 'files', pathMain);
+		let jsonfile = path.join(dir, novelID + '.json');
+
+		if (!fs.existsSync(jsonfile))
 		{
-			return doSegmentGlob({
-				pathMain,
-				novelID,
-				novel_root,
-				globPattern: Array.isArray(file) ? file : [file],
-			});
+			return 0;
 		}
-		else
+
+		let ls = await fs.readJSON(jsonfile) as string[];
+
+		if (!Array.isArray(ls) || !ls.length)
 		{
-			return doSegmentGlob({
-				pathMain,
-				novelID,
-				novel_root,
-			});
+			return 0;
 		}
+
+		return doSegmentGlob({
+			pathMain,
+			novelID,
+			novel_root,
+
+			files: Array.isArray(ls) ? ls : null,
+
+			callback(done_list, file, index, length)
+			{
+				if ((index % 5) == 0 || ((index + 1) >= length))
+				{
+					ls = ls.filter(function (v)
+					{
+						return done_list.indexOf(v) == -1
+					});
+
+//					console.log(ls.length);
+
+					if (ls.length == 0)
+					{
+						fs.removeSync(jsonfile);
+					}
+					else
+					{
+						fs.writeJSONSync(jsonfile, ls, {
+							spaces: '\t',
+						});
+					}
+				}
+			},
+		})
+			.then(async function (ret)
+			{
+				if (ls.length == 0)
+				{
+					fs.removeSync(jsonfile);
+				}
+
+				return ret.count.changed;
+			})
+			;
 	})()
-		.then(function (r)
+		.then(function (n)
 		{
-			process.exit(r.count.changed)
+			process.exit(n || 0)
 		})
 	;
 }
-

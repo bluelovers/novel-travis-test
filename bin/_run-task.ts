@@ -9,11 +9,14 @@ import { config as dotenvConfig } from 'dotenv';
 import * as fs from 'fs-extra';
 import { crossSpawnAsync, crossSpawnSync } from '..';
 import { crossSpawnOutput, isGitRoot } from '../index';
+import { loadMainConfig } from '@node-novel/task/lib/config';
 
 const DEBUG = false;
 let label: string;
 
 const PROJECT_ROOT = path.resolve(__dirname, '..');
+
+let MyConfig = loadMainConfig(PROJECT_ROOT);
 
 let GITEE_TOKEN = process.env.GITEE_TOKEN || '';
 const DIST_NOVEL = path.resolve(PROJECT_ROOT, 'dist_novel');
@@ -28,7 +31,7 @@ if (!GITEE_TOKEN)
 	}
 }
 
-if (GITEE_TOKEN)
+if (!/@$/.test(GITEE_TOKEN))
 {
 	GITEE_TOKEN += '@';
 }
@@ -41,13 +44,22 @@ if (fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
 	console.log(label);
 	console.time(label);
 
-//	crossSpawnSync('git', [
-//		'fetch',
-//		'--all',
-//	], {
-//		stdio: 'inherit',
-//		cwd: DIST_NOVEL,
-//	});
+	crossSpawnSync('git', [
+		'fetch',
+		'--all',
+	], {
+		stdio: 'inherit',
+		cwd: DIST_NOVEL,
+	});
+
+	crossSpawnSync('git', [
+		'reset',
+		'--hard',
+		'FETCH_HEAD',
+	], {
+		stdio: 'inherit',
+		cwd: DIST_NOVEL,
+	});
 
 	pullGit();
 
@@ -98,7 +110,13 @@ label = `--- PUSH ---`;
 console.log(label);
 console.time(label);
 
-pushGit();
+if (MyConfig.config.debug && MyConfig.config.debug.no_push)
+{
+	console.log(`[DEBUG] skip push`);
+}
+else {
+	pushGit();
+}
 
 console.timeEnd(label);
 
@@ -107,6 +125,8 @@ console.timeEnd(label);
 function runTask()
 {
 	let bin = path.join(path.dirname(require.resolve('@node-novel/task')), 'bin/_novel-task.js');
+
+	console.log(bin);
 
 	crossSpawnSync('node', [
 		bin,

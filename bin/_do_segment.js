@@ -1,28 +1,53 @@
 #!/usr/bin/env node
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const fs = require("fs-extra");
 const yargs = require("yargs");
 const segment_1 = require("../script/segment");
-let { pathMain, novelID, file, novel_root } = yargs.argv;
+const project_config_1 = require("../project.config");
+const path = require("upath2");
+let { pathMain, novelID, novel_root } = yargs.argv;
 if (pathMain && novelID) {
     (async () => {
-        if (file) {
-            return segment_1.doSegmentGlob({
-                pathMain,
-                novelID,
-                novel_root,
-                globPattern: Array.isArray(file) ? file : [file],
-            });
+        let dir = path.join(project_config_1.default.cache_root, 'files', pathMain);
+        let jsonfile = path.join(dir, novelID + '.json');
+        if (!fs.existsSync(jsonfile)) {
+            return 0;
         }
-        else {
-            return segment_1.doSegmentGlob({
-                pathMain,
-                novelID,
-                novel_root,
-            });
+        let ls = await fs.readJSON(jsonfile);
+        if (!Array.isArray(ls) || !ls.length) {
+            return 0;
         }
+        return segment_1.doSegmentGlob({
+            pathMain,
+            novelID,
+            novel_root,
+            files: Array.isArray(ls) ? ls : null,
+            callback(done_list, file, index, length) {
+                if ((index % 5) == 0 || ((index + 1) >= length)) {
+                    ls = ls.filter(function (v) {
+                        return done_list.indexOf(v) == -1;
+                    });
+                    //					console.log(ls.length);
+                    if (ls.length == 0) {
+                        fs.removeSync(jsonfile);
+                    }
+                    else {
+                        fs.writeJSONSync(jsonfile, ls, {
+                            spaces: '\t',
+                        });
+                    }
+                }
+            },
+        })
+            .then(async function (ret) {
+            if (ls.length == 0) {
+                fs.removeSync(jsonfile);
+            }
+            return ret.count.changed;
+        });
     })()
-        .then(function (r) {
-        process.exit(r.count.changed);
+        .then(function (n) {
+        process.exit(n || 0);
     });
 }

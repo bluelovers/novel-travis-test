@@ -16,7 +16,7 @@ export let CACHE_TIMEOUT = 3600;
 
 export let _segmentObject: Segment;
 
-export function doSegmentGlob(options: {
+export type IOptions = {
 	pathMain: string,
 	pathMain_out?: string,
 	novelID: string,
@@ -26,7 +26,15 @@ export function doSegmentGlob(options: {
 	novel_root?: string,
 
 	globPattern?: string[],
-})
+
+	files?: string[],
+
+	hideLog?: boolean,
+
+	callback?(done_list: string[], file: string, index: number, length: number),
+};
+
+export function doSegmentGlob(options: IOptions)
 {
 	const novel_root = options.novel_root || ProjectConfig.novel_root;
 
@@ -41,16 +49,35 @@ export function doSegmentGlob(options: {
 		'**/*.txt',
 	];
 
+	return Promise.resolve(options.files || FastGlob(globPattern, {
+		cwd: CWD_IN,
+		//absolute: true,
+	}) as any as Promise<string[]>)
+		.then(function (ls)
+		{
+			return _doSegmentGlob(ls, options);
+		})
+	;
+}
+
+export function _doSegmentGlob(ls: string[], options: IOptions)
+{
+	const novel_root = options.novel_root || ProjectConfig.novel_root;
+
+	const segment = options.segment = getSegment(options.segment);
+
+	options.pathMain_out = options.pathMain_out || options.pathMain;
+
+	let CWD_IN = _path(options.pathMain, options.novelID, novel_root);
+	let CWD_OUT = _path(options.pathMain_out, options.novelID, novel_root);
+
 	return Promise
-		.resolve(FastGlob(globPattern, {
-			cwd: CWD_IN,
-			//absolute: true,
-		}) as any as Promise<string[]>)
+		.resolve(ls)
 		.tap(function (ls)
 		{
 			if (ls.length == 0)
 			{
-				console.log(CWD_IN);
+				//console.log(CWD_IN);
 
 				return Promise.reject(`沒有搜尋到任何檔案 請檢查搜尋條件`);
 			}
@@ -64,7 +91,9 @@ export function doSegmentGlob(options: {
 
 			let count_changed = 0;
 
-			let rs = await Promise.map(ls, async function (file)
+			let done_list = [] as string[];
+
+			let rs = await Promise.mapSeries(ls, async function (file, index, length)
 			{
 				let label = file;
 
@@ -72,13 +101,40 @@ export function doSegmentGlob(options: {
 
 				console.log('[start]', label);
 
-				let text = await fs.readFile(path.join(CWD_IN, file)) as any as string;
+				let fillpath = path.join(CWD_IN, file);
+				let fillpath_out = path.join(CWD_OUT, file);
+
+//				console.log(fillpath);
+//				console.log(fillpath_out);
+
+				if (!fs.pathExistsSync(fillpath))
+				{
+					if (options.callback)
+					{
+						done_list.push(file);
+						await options.callback(done_list, file, index, length);
+					}
+
+					return {
+						file,
+						changed: false,
+						exists: false,
+					};
+				}
+
+				let text = await fs.readFile(fillpath) as any as string;
 
 				text = crlf(text.toString());
 
 				if (!text.replace(/\s+/g, ''))
 				{
-					console.warn('[skip]', label);
+					//console.warn('[skip]', label);
+
+					if (options.callback)
+					{
+						done_list.push(file);
+						await options.callback(done_list, file, index, length);
+					}
 
 					return {
 						file,
@@ -101,7 +157,7 @@ export function doSegmentGlob(options: {
 				{
 					console.warn('[changed]', label);
 
-					await fs.outputFile(path.join(CWD_OUT, file), text_new);
+					await fs.outputFile(fillpath_out, text_new);
 
 					count_changed++;
 				}
@@ -112,7 +168,13 @@ export function doSegmentGlob(options: {
 				}
 				else
 				{
-					console.log('[done]', label);
+					//console.log('[done]', label);
+				}
+
+				if (options.callback)
+				{
+					done_list.push(file);
+					await options.callback(done_list, file, index, length);
 				}
 
 				ks = null;
@@ -120,8 +182,9 @@ export function doSegmentGlob(options: {
 				return {
 					file,
 					changed,
+					exists: true,
 				};
-			}, { concurrency: 2 });
+			});
 
 			console.timeEnd(label);
 
@@ -188,19 +251,19 @@ export function createSegment(useCache: boolean = true)
 	 */
 	if (useCache && fs.existsSync(cache_file))
 	{
-		console.log(`發現 cache.db`);
+		//console.log(`發現 cache.db`);
 
 		let st = fs.statSync(cache_file);
 
 		let md = (Date.now() - st.mtimeMs) / 1000;
 
-		console.log(`距離上次緩存已過 ${md}s`);
+		//console.log(`距離上次緩存已過 ${md}s`);
 
 		if (md < CACHE_TIMEOUT)
 		{
 			//console.log(st, md);
 
-			console.log(`開始載入緩存字典`);
+			//console.log(`開始載入緩存字典`);
 
 			let data = JSON.parse(fs.readFileSync(cache_file).toString());
 
@@ -219,7 +282,7 @@ export function createSegment(useCache: boolean = true)
 
 	if (!segment.inited)
 	{
-		console.log(`重新載入分析字典`);
+		//console.log(`重新載入分析字典`);
 		segment.autoInit(options);
 
 		// 簡轉繁專用
@@ -232,13 +295,13 @@ export function createSegment(useCache: boolean = true)
 
 	db_dict.options.autoCjk = true;
 
-	console.log('主字典總數', db_dict.size());
+	//console.log('主字典總數', db_dict.size());
 
 	console.timeEnd(`讀取模組與字典`);
 
 	if (useCache && cache_file)
 	{
-		console.log(`緩存字典於 cache.db`);
+		//console.log(`緩存字典於 cache.db`);
 
 		fs.outputFileSync(cache_file, JSON.stringify({
 			DICT: segment.DICT,

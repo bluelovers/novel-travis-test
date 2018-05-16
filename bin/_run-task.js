@@ -9,9 +9,11 @@ const dotenv_1 = require("dotenv");
 const fs = require("fs-extra");
 const __1 = require("..");
 const index_1 = require("../index");
+const config_1 = require("@node-novel/task/lib/config");
 const DEBUG = false;
 let label;
 const PROJECT_ROOT = path.resolve(__dirname, '..');
+let MyConfig = config_1.loadMainConfig(PROJECT_ROOT);
 let GITEE_TOKEN = process.env.GITEE_TOKEN || '';
 const DIST_NOVEL = path.resolve(PROJECT_ROOT, 'dist_novel');
 if (!GITEE_TOKEN) {
@@ -20,7 +22,7 @@ if (!GITEE_TOKEN) {
         GITEE_TOKEN = env.parsed.GITEE_TOKEN;
     }
 }
-if (GITEE_TOKEN) {
+if (!/@$/.test(GITEE_TOKEN)) {
     GITEE_TOKEN += '@';
 }
 if (fs.pathExistsSync(DIST_NOVEL) && index_1.isGitRoot(DIST_NOVEL)) {
@@ -28,13 +30,21 @@ if (fs.pathExistsSync(DIST_NOVEL) && index_1.isGitRoot(DIST_NOVEL)) {
     label = `--- PULL ---`;
     console.log(label);
     console.time(label);
-    //	crossSpawnSync('git', [
-    //		'fetch',
-    //		'--all',
-    //	], {
-    //		stdio: 'inherit',
-    //		cwd: DIST_NOVEL,
-    //	});
+    __1.crossSpawnSync('git', [
+        'fetch',
+        '--all',
+    ], {
+        stdio: 'inherit',
+        cwd: DIST_NOVEL,
+    });
+    __1.crossSpawnSync('git', [
+        'reset',
+        '--hard',
+        'FETCH_HEAD',
+    ], {
+        stdio: 'inherit',
+        cwd: DIST_NOVEL,
+    });
     pullGit();
     console.timeEnd(label);
 }
@@ -69,11 +79,17 @@ console.timeEnd(label);
 label = `--- PUSH ---`;
 console.log(label);
 console.time(label);
-pushGit();
+if (MyConfig.config.debug && MyConfig.config.debug.no_push) {
+    console.log(`[DEBUG] skip push`);
+}
+else {
+    pushGit();
+}
 console.timeEnd(label);
 // ----------------
 function runTask() {
     let bin = path.join(path.dirname(require.resolve('@node-novel/task')), 'bin/_novel-task.js');
+    console.log(bin);
     __1.crossSpawnSync('node', [
         bin,
     ], {
