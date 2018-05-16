@@ -1,0 +1,33 @@
+{
+  "name": "novel-travis-test",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "do-task": "yarn run _novel-task",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@node-novel/task": "^1.0.1",
+    "bluebird": "^3.5.1",
+    "crlf-normalize": "^1.0.2",
+    "cross-spawn": "^6.0.5",
+    "dotenv": "^5.0.1",
+    "fast-glob": "^2.2.2",
+    "fs-extra": "^6.0.1",
+    "git-root": "^1.0.0",
+    "git-root2": "^1.0.3",
+    "novel-segment": "^2.0.4",
+    "upath2": "^2.1.2"
+  },
+  "bin": {
+    "novel-travis-test": "_run-task.js"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {},
+  "description": ""
+}
