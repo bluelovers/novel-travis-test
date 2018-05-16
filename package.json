@@ -28,8 +28,17 @@
     "novel-travis-test": "./bin/_run-task.js"
   },
   "directories": {
+    "lib": "lib",
     "test": "test"
   },
   "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bluelovers/novel-travis-test.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bluelovers/novel-travis-test/issues"
+  },
+  "homepage": "https://github.com/bluelovers/novel-travis-test#readme",
   "description": ""
 }
