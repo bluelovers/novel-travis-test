@@ -15,13 +15,15 @@ cache:
 before_install:
 - git config --global user.email "testbot@test.test"
 - git config --global user.name "testbot"
-#- travis_wait git clone --depth=50 --progress https://gitee.com/bluelovers/novel.git dist_novel
+- travis_wait git clone --depth=1 --progress https://gitee.com/bluelovers/novel.git dist_novel
 - npm i -g yarn
 install:
 - yarn
 before_script:
 script:
 - node ./bin/_travis-encrypt.js
+- cd dist_novel
+- git push "https://${GITEE_TOKEN}gitee.com/demogitee/novel.git"
 env:
   global:
   - secure: vz13IjFLZaTGJFFxOkksSZu9bOKhuSZa4+sSSMUD4O495XZ62x+5FkG729zeTb+US9Q5ar3reqQuDR4b30hHVDkWOqspM9gdaX+5tT/xbr2dCkTFWi9cRLLrBq7bAArVioIFtvfXuTIDLeE6VPgHW/jWpea8RyIaFvzE33AEjgERyOQMQPckWqIHkPQmzIKoghYFPdjscZipT/X123KdB4wsGv8/voT/HQ0rvYczCk6nC+4nBepzi05mqTpLpP+sjPi55+MD/hmPLRlUdTe2hzHfba6H98pmWqgHdIrpe/7s6nVzdbZ2I+c6cc4WBKVlah/3BysdObadoNbPeBaINL8p5qp06/gwFn37uPs+E0hujBK7eqhtOt1iH15Htfq64QmGKVJ/vPE1j+UZ6jODavzXP+ATP/nGZHFxB+z4BiVSFvtrC/uUX9okCwNvjCGZmM2wp3CHGkTMQf2dz5fO+jQ+t4EL4gWiaAPpbbyH88MWPV0Byb5SfqwJQzGnSJrcf9FLMTM/zPxpNoWJuOFp6LaqmqwRNJYciqqkImMVmVl6O3/bdCJqRq/Wj6bHk8CWZg3Pk0DHLWOsa/t44JNH/HoUmfs0jGBhSbwzuJgppI/SK376SM5zGu/hOZZJGh4X4Y9fH1NijLCifD+Q0iFzMoXoQh4dueSxlnpjZg1DgbM=
