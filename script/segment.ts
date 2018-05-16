@@ -99,7 +99,7 @@ export function _doSegmentGlob(ls: string[], options: IOptions)
 
 				//console.time(label);
 
-				console.log('[start]', label);
+//				console.log('[start]', label);
 
 				let fillpath = path.join(CWD_IN, file);
 				let fillpath_out = path.join(CWD_OUT, file);

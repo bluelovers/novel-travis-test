@@ -52,7 +52,7 @@ function _doSegmentGlob(ls, options) {
         let rs = await Promise.mapSeries(ls, async function (file, index, length) {
             let label = file;
             //console.time(label);
-            console.log('[start]', label);
+            //				console.log('[start]', label);
             let fillpath = path.join(CWD_IN, file);
             let fillpath_out = path.join(CWD_OUT, file);
             //				console.log(fillpath);

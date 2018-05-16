@@ -20,7 +20,7 @@
     "fs-extra": "^6.0.1",
     "git-root": "^1.0.0",
     "git-root2": "^1.0.3",
-    "novel-segment": "^2.0.4",
+    "novel-segment": "2.0.5",
     "upath2": "^2.1.2",
     "yargs": "^11.0.0"
   },
