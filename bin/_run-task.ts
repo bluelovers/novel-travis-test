@@ -14,167 +14,16 @@ import ProjectConfig from '../project.config';
 import moment = require('moment');
 import * as FastGlob from 'fast-glob';
 
-const DEBUG = false;
+import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, MyConfig, CacheConfig } from '../script/init';
+import { pushGit } from '../script/git';
+
 let label: string;
-
-const PROJECT_ROOT = path.resolve(__dirname, '..');
-
-let MyConfig = loadMainConfig(PROJECT_ROOT);
-let CacheConfig = loadCacheConfig(PROJECT_ROOT);
-
-let GITEE_TOKEN = process.env.GITEE_TOKEN || '';
-const DIST_NOVEL = path.resolve(PROJECT_ROOT, 'dist_novel');
-
-if (!GITEE_TOKEN)
-{
-	let env = dotenvConfig({ path: path.join(PROJECT_ROOT, '.env') });
-
-	if (env.parsed && env.parsed.GITEE_TOKEN)
-	{
-		GITEE_TOKEN = env.parsed.GITEE_TOKEN;
-	}
-}
-
-if (!/@$/.test(GITEE_TOKEN))
-{
-	GITEE_TOKEN += '@';
-}
-
-let NOT_DONE: boolean;
-
-if (CacheConfig && CacheConfig.config && CacheConfig.config.done == -1)
-{
-	NOT_DONE = true;
-
-	console.log(`上次的任務未完成 本次繼續執行`);
-}
-else
-{
-	let ls = FastGlob.sync([
-		'*/*.json',
-	], {
-		cwd: path.join(ProjectConfig.cache_root, 'files'),
-	});
-
-	if (ls.length)
-	{
-		NOT_DONE = true;
-		console.log(`上次的任務未完成 本次繼續執行`);
-	}
-}
-
-const BR_NAME = 'auto/' + moment().format('YYYY-MM-DD-HH-mm-ss');
-
-if (NOT_DONE && fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
-{
-
-	crossSpawnSync('git', [
-		'commit',
-		'-a',
-		'-m',
-		`[Segment] NOT_DONE`,
-	], {
-		stdio: 'inherit',
-		cwd: DIST_NOVEL,
-	});
-
-	pushGit();
-
-	crossSpawnSync('git', [
-		'checkout',
-		'-B',
-		BR_NAME,
-		'master',
-	], {
-		stdio: 'inherit',
-		cwd: DIST_NOVEL,
-	});
-}
-else if (fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
-{
-	console.warn(`dist_novel already exists`);
-
-	let waitpush = path.join(ProjectConfig.cache_root, '.waitpush');
-
-	if (fs.existsSync(waitpush))
-	{
-		pushGit();
-
-		fs.removeSync(waitpush);
-	}
-
-	label = `--- PULL ---`;
-	console.log(label);
-	console.time(label);
-
-	crossSpawnSync('git', [
-		'fetch',
-		'--all',
-	], {
-		stdio: 'inherit',
-		cwd: DIST_NOVEL,
-	});
-
-	crossSpawnSync('git', [
-		'reset',
-		'--hard',
-		'FETCH_HEAD',
-	], {
-		stdio: 'inherit',
-		cwd: DIST_NOVEL,
-	});
-
-	pullGit();
-
-	crossSpawnSync('git', [
-		'checkout',
-		'-B',
-		BR_NAME,
-		'master',
-	], {
-		stdio: 'inherit',
-		cwd: DIST_NOVEL,
-	});
-
-	console.timeEnd(label);
-}
-else
-{
-	label = `--- CLONE ---`;
-	console.log(label);
-	console.time(label);
-
-	//fs.emptyDirSync(DIST_NOVEL);
-
-	crossSpawnSync('travis_wait', [
-		'git',
-		'clone',
-		'--depth=50',
-		'--verbose',
-		//'--progress ',
-		'https://gitee.com/bluelovers/novel.git',
-		'dist_novel',
-	], {
-		stdio: 'inherit',
-		cwd: PROJECT_ROOT,
-	});
-
-	crossSpawnSync('git', [
-		'checkout',
-		'-B',
-		BR_NAME,
-		'master',
-	], {
-		stdio: 'inherit',
-		cwd: DIST_NOVEL,
-	});
-
-	console.timeEnd(label);
-}
 
 {
 	if (!isGitRoot(DIST_NOVEL))
 	{
+		console.warn(`dist_novel not a git: ${DIST_NOVEL}`);
+
 		throw new Error(`something wrong when create git`);
 	}
 
@@ -245,41 +94,4 @@ function runTask()
 	});
 }
 
-function pullGit()
-{
-	return crossSpawn.sync('git', [
-		'pull',
-	], {
-		stdio: 'inherit',
-		cwd: DIST_NOVEL,
-	});
-}
 
-function pushGit()
-{
-	let cp = crossSpawnSync('git', [
-		'push',
-		'--progress',
-		'--force',
-		`https://${GITEE_TOKEN ? GITEE_TOKEN : ''}gitee.com/demogitee/novel.git`,
-	], {
-		stdio: 'inherit',
-		cwd: DIST_NOVEL,
-	});
-
-	if (cp.output)
-	{
-		let s = crossSpawnOutput(cp.output);
-
-		if (s.indexOf('Everything up-to-date') != -1)
-		{
-			console.log(s);
-		}
-		else if (DEBUG)
-		{
-			console.log(s);
-		}
-	}
-
-	return cp;
-}

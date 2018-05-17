@@ -4,8 +4,9 @@
 
 import NodeNovelTask from '@node-novel/task';
 //import * as child_process from 'child_process';
-import { SpawnOptions } from 'child_process';
+import { SpawnOptions, SpawnSyncReturns } from 'child_process';
 import * as crossSpawn from 'cross-spawn';
+
 import { config as dotenvConfig } from 'dotenv';
 import path = require('upath2');
 // @ts-ignore
@@ -14,6 +15,8 @@ import { crlf, LF } from 'crlf-normalize';
 import ProjectConfig from './project.config';
 
 export { isGitRoot }
+
+export { SpawnOptions, SpawnSyncReturns }
 
 export let DIST_NOVEL = ProjectConfig.novel_root;
 

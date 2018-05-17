@@ -4,6 +4,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
+    "do-git-init": "node ./bin/_do_git_init.js",
     "do-task": "node ./bin/_run-task.js",
     "test": "node -v"
   },
