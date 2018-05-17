@@ -16,6 +16,7 @@ if (pathMain && novelID) {
         }
         let ls = await fs.readJSON(jsonfile);
         if (!Array.isArray(ls) || !ls.length) {
+            fs.removeSync(jsonfile);
             return 0;
         }
         return segment_1.doSegmentGlob({

@@ -24,6 +24,8 @@ if (pathMain && novelID)
 
 		if (!Array.isArray(ls) || !ls.length)
 		{
+			fs.removeSync(jsonfile);
+
 			return 0;
 		}
 
