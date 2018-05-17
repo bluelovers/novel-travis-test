@@ -25,7 +25,7 @@ before_script:
 script:
 #- node ./bin/_travis-encrypt.js
 #- travis_wait 50 npm run do-task
-- travis_wait npm run do-git-init
+- travis_wait 30 npm run do-git-init
 - npm run do-task
 #- cd dist_novel
 #- git push "https://${GITEE_TOKEN}gitee.com/demogitee/novel.git"
