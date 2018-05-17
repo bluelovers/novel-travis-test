@@ -140,7 +140,7 @@ else
 	crossSpawnSync('git', [
 		'clone',
 		'--depth=50',
-		'--progress ',
+		//'--progress ',
 		'https://gitee.com/bluelovers/novel.git',
 		'dist_novel',
 	], {
