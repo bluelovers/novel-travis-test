@@ -40,7 +40,7 @@ if (!/@$/.test(GITEE_TOKEN))
 
 let NOT_DONE: boolean;
 
-if (CacheConfig.config && CacheConfig.config.done == -1)
+if (CacheConfig && CacheConfig.config && CacheConfig.config.done == -1)
 {
 	NOT_DONE = true;
 }

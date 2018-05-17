@@ -28,7 +28,7 @@ if (!/@$/.test(GITEE_TOKEN)) {
     GITEE_TOKEN += '@';
 }
 let NOT_DONE;
-if (CacheConfig.config && CacheConfig.config.done == -1) {
+if (CacheConfig && CacheConfig.config && CacheConfig.config.done == -1) {
     NOT_DONE = true;
 }
 const BR_NAME = 'auto/' + moment().format('YYYY-MM-DD-HH-mm-ss');
