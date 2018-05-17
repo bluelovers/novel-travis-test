@@ -10,6 +10,7 @@ import * as fs from 'fs-extra';
 import { crossSpawnAsync, crossSpawnSync } from '..';
 import { crossSpawnOutput, isGitRoot } from '../index';
 import { loadMainConfig } from '@node-novel/task/lib/config';
+import moment = require('moment');
 
 const DEBUG = false;
 let label: string;
@@ -35,6 +36,8 @@ if (!/@$/.test(GITEE_TOKEN))
 {
 	GITEE_TOKEN += '@';
 }
+
+const BR_NAME = 'auto/' + moment().format('YYYY-MM-DD-HH-mm-ss')
 
 if (fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
 {
@@ -66,7 +69,7 @@ if (fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
 	crossSpawnSync('git', [
 		'checkout',
 		'-B',
-		'segment',
+		BR_NAME,
 		'master',
 	], {
 		stdio: 'inherit',
@@ -97,7 +100,7 @@ else
 	crossSpawnSync('git', [
 		'checkout',
 		'-B',
-		'segment',
+		BR_NAME,
 		'master',
 	], {
 		stdio: 'inherit',

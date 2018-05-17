@@ -10,6 +10,7 @@ const fs = require("fs-extra");
 const __1 = require("..");
 const index_1 = require("../index");
 const config_1 = require("@node-novel/task/lib/config");
+const moment = require("moment");
 const DEBUG = false;
 let label;
 const PROJECT_ROOT = path.resolve(__dirname, '..');
@@ -25,6 +26,7 @@ if (!GITEE_TOKEN) {
 if (!/@$/.test(GITEE_TOKEN)) {
     GITEE_TOKEN += '@';
 }
+const BR_NAME = 'auto/' + moment().format('YYYY-MM-DD-HH-mm-ss');
 if (fs.pathExistsSync(DIST_NOVEL) && index_1.isGitRoot(DIST_NOVEL)) {
     console.warn(`dist_novel already exists`);
     label = `--- PULL ---`;
@@ -49,7 +51,7 @@ if (fs.pathExistsSync(DIST_NOVEL) && index_1.isGitRoot(DIST_NOVEL)) {
     __1.crossSpawnSync('git', [
         'checkout',
         '-B',
-        'segment',
+        BR_NAME,
         'master',
     ], {
         stdio: 'inherit',
@@ -75,7 +77,7 @@ else {
     __1.crossSpawnSync('git', [
         'checkout',
         '-B',
-        'segment',
+        BR_NAME,
         'master',
     ], {
         stdio: 'inherit',
