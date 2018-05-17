@@ -10,7 +10,9 @@ const fs = require("fs-extra");
 const __1 = require("..");
 const index_1 = require("../index");
 const config_1 = require("@node-novel/task/lib/config");
+const project_config_1 = require("../project.config");
 const moment = require("moment");
+const FastGlob = require("fast-glob");
 const DEBUG = false;
 let label;
 const PROJECT_ROOT = path.resolve(__dirname, '..');
@@ -31,6 +33,17 @@ let NOT_DONE;
 if (CacheConfig && CacheConfig.config && CacheConfig.config.done == -1) {
     NOT_DONE = true;
     console.log(`上次的任務未完成 本次繼續執行`);
+}
+else {
+    let ls = FastGlob.sync([
+        '*/*.json',
+    ], {
+        cwd: path.join(project_config_1.default.cache_root, 'files'),
+    });
+    if (ls.length) {
+        NOT_DONE = true;
+        console.log(`上次的任務未完成 本次繼續執行`);
+    }
 }
 const BR_NAME = 'auto/' + moment().format('YYYY-MM-DD-HH-mm-ss');
 if (NOT_DONE && fs.pathExistsSync(DIST_NOVEL) && index_1.isGitRoot(DIST_NOVEL)) {

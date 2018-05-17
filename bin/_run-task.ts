@@ -10,7 +10,9 @@ import * as fs from 'fs-extra';
 import { crossSpawnAsync, crossSpawnSync } from '..';
 import { crossSpawnOutput, isGitRoot } from '../index';
 import { loadCacheConfig, loadMainConfig } from '@node-novel/task/lib/config';
+import ProjectConfig from '../project.config';
 import moment = require('moment');
+import * as FastGlob from 'fast-glob';
 
 const DEBUG = false;
 let label: string;
@@ -45,6 +47,20 @@ if (CacheConfig && CacheConfig.config && CacheConfig.config.done == -1)
 	NOT_DONE = true;
 
 	console.log(`上次的任務未完成 本次繼續執行`);
+}
+else
+{
+	let ls = FastGlob.sync([
+		'*/*.json',
+	], {
+		cwd: path.join(ProjectConfig.cache_root, 'files'),
+	});
+
+	if (ls.length)
+	{
+		NOT_DONE = true;
+		console.log(`上次的任務未完成 本次繼續執行`);
+	}
 }
 
 const BR_NAME = 'auto/' + moment().format('YYYY-MM-DD-HH-mm-ss');
