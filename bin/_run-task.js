@@ -183,9 +183,11 @@ function pullGit() {
 function pushGit() {
     let cp = __1.crossSpawnSync('git', [
         'push',
+        '--progress',
         '--force',
         `https://${GITEE_TOKEN ? GITEE_TOKEN : ''}gitee.com/demogitee/novel.git`,
     ], {
+        stdio: 'inherit',
         cwd: DIST_NOVEL,
     });
     if (cp.output) {
