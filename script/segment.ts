@@ -206,9 +206,26 @@ export function _doSegmentGlob(ls: string[], options: IOptions)
 		;
 }
 
-export function _path(pathMain, novelID, novel_root = ProjectConfig.novel_root)
+export function _path(pathMain, novelID, novel_root = ProjectConfig.novel_root): string
 {
-	return path.resolve(novel_root, pathMain, novelID);
+	let p: string;
+
+	try
+	{
+		p = path.resolve(novel_root, pathMain, novelID)
+	}
+	catch (e)
+	{
+		console.dir({
+			novel_root,
+			pathMain,
+			novelID,
+		});
+
+		throw e;
+	}
+
+	return p;
 }
 
 export function getSegment(segment?: Segment)

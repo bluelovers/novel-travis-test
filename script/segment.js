@@ -124,7 +124,19 @@ function _doSegmentGlob(ls, options) {
 }
 exports._doSegmentGlob = _doSegmentGlob;
 function _path(pathMain, novelID, novel_root = project_config_1.default.novel_root) {
-    return path.resolve(novel_root, pathMain, novelID);
+    let p;
+    try {
+        p = path.resolve(novel_root, pathMain, novelID);
+    }
+    catch (e) {
+        console.dir({
+            novel_root,
+            pathMain,
+            novelID,
+        });
+        throw e;
+    }
+    return p;
 }
 exports._path = _path;
 function getSegment(segment) {
