@@ -73,7 +73,7 @@ else {
     //fs.emptyDirSync(DIST_NOVEL);
     __1.crossSpawnSync('git', [
         'clone',
-        '--depth=50',
+        `--depth=${init_1.CLONE_DEPTH}`,
         //'--verbose',
         //'--progress ',
         'https://gitee.com/bluelovers/novel.git',

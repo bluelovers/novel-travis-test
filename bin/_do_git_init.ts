@@ -10,7 +10,7 @@ import ProjectConfig from '../project.config';
 import moment = require('moment');
 import * as FastGlob from 'fast-glob';
 
-import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME } from '../script/init';
+import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, CLONE_DEPTH } from '../script/init';
 import { pushGit, pullGit } from '../script/git';
 
 let label: string;
@@ -98,7 +98,7 @@ else
 
 	crossSpawnSync('git', [
 		'clone',
-		'--depth=50',
+		`--depth=${CLONE_DEPTH}`,
 		//'--verbose',
 		//'--progress ',
 		'https://gitee.com/bluelovers/novel.git',

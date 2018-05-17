@@ -21,6 +21,7 @@ if (!exports.GITEE_TOKEN) {
         exports.GITEE_TOKEN = env.parsed.GITEE_TOKEN;
     }
 }
+exports.CLONE_DEPTH = process.env.CLONE_DEPTH || 50;
 if (!/@$/.test(exports.GITEE_TOKEN)) {
     exports.GITEE_TOKEN += '@';
 }

@@ -35,6 +35,8 @@ if (!GITEE_TOKEN)
 	}
 }
 
+export let CLONE_DEPTH = process.env.CLONE_DEPTH || 50;
+
 if (!/@$/.test(GITEE_TOKEN))
 {
 	GITEE_TOKEN += '@';
