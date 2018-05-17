@@ -47,6 +47,15 @@ else {
 }
 const BR_NAME = 'auto/' + moment().format('YYYY-MM-DD-HH-mm-ss');
 if (NOT_DONE && fs.pathExistsSync(DIST_NOVEL) && index_1.isGitRoot(DIST_NOVEL)) {
+    __1.crossSpawnSync('git', [
+        'commit',
+        '-a',
+        '-m',
+        `[Segment] NOT_DONE`,
+    ], {
+        stdio: 'inherit',
+        cwd: DIST_NOVEL,
+    });
     pushGit();
     __1.crossSpawnSync('git', [
         'checkout',
