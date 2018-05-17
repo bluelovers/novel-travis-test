@@ -18,4 +18,4 @@ export declare function deleteBranch(name: string): SpawnSyncReturns<Buffer> & {
     errorCrossSpawn?: Error;
 };
 export declare function oldBranch(): string;
-export declare function diffOrigin(): number;
+export declare function diffOrigin(): boolean;

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const crossSpawn = require("cross-spawn");
-const git_diff_from_1 = require("git-diff-from");
+const gitlog2_1 = require("gitlog2");
 const __1 = require("..");
 const index_1 = require("../index");
 const init_1 = require("./init");
@@ -94,8 +94,10 @@ function oldBranch() {
 }
 exports.oldBranch = oldBranch;
 function diffOrigin() {
-    return git_diff_from_1.gitDiffFrom(currentBranchName(), 'origin/master', {
-        cwd: init_1.DIST_NOVEL,
-    }).length;
+    return gitlog2_1.default({
+        repo: init_1.DIST_NOVEL,
+        branch: [currentBranchName(), 'origin/master'].join('..'),
+        number: 5,
+    }).length > 1;
 }
 exports.diffOrigin = diffOrigin;

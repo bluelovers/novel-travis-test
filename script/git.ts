@@ -4,6 +4,7 @@ import { gitDiffFrom, IGitDiffFrom, IGitDiffFromRow } from 'git-diff-from';
 import gitRoot from 'git-root2';
 import { config as dotenvConfig } from 'dotenv';
 import * as fs from 'fs-extra';
+import gitlog from 'gitlog2';
 import { crossSpawnAsync, crossSpawnSync } from '..';
 import { crossSpawnOutput, isGitRoot, SpawnOptions, SpawnSyncReturns } from '../index';
 import { loadCacheConfig, loadMainConfig } from '@node-novel/task/lib/config';
@@ -122,7 +123,9 @@ export function oldBranch()
 
 export function diffOrigin()
 {
-	return gitDiffFrom(currentBranchName(), 'origin/master',{
-		cwd: DIST_NOVEL,
-	}).length;
+	return gitlog({
+		repo: DIST_NOVEL,
+		branch: [currentBranchName(), 'origin/master'].join('..'),
+		number: 5,
+	}).length > 1;
 }
