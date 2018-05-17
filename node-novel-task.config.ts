@@ -40,7 +40,14 @@ export default {
 
 //			console.log(data);
 
-			await cacheFileList(data);
+			if (data.pathMain.indexOf('"') !== -1 || data.novelID.match(/^\d+$/))
+			{
+				console.error('[ERROR]', data);
+			}
+			else
+			{
+				await cacheFileList(data);
+			}
 
 //			await runSegment(data);
 

@@ -11,7 +11,7 @@ import moment = require('moment');
 import * as FastGlob from 'fast-glob';
 
 import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, CLONE_DEPTH } from '../script/init';
-import { pushGit, pullGit, fetchGit, newBranch } from '../script/git';
+import { pushGit, pullGit, fetchGit, newBranch, currentBranchName, oldBranch, deleteBranch } from '../script/git';
 
 let label: string;
 
@@ -30,9 +30,16 @@ if (NOT_DONE && fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
 
 	pushGit();
 
+	let branch_name = oldBranch();
+
 	fetchGit();
 
 	newBranch(BR_NAME);
+
+	if (branch_name)
+	{
+		deleteBranch(branch_name);
+	}
 }
 else if (fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
 {
@@ -46,6 +53,8 @@ else if (fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
 
 		fs.removeSync(waitpush);
 	}
+
+	let branch_name = oldBranch();
 
 	label = `--- FETCH ---`;
 	console.log(label);
@@ -67,6 +76,11 @@ else if (fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
 	*/
 
 	newBranch(BR_NAME);
+
+	if (branch_name)
+	{
+		deleteBranch(branch_name);
+	}
 
 	console.timeEnd(label);
 }

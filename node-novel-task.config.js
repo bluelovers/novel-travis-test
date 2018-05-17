@@ -23,7 +23,12 @@ exports.default = {
         async novel(data, name) {
             //			console.log('NOVEL', data.pathMain, data.novelID, data.length);
             //			console.log(data);
-            await cache_1.cacheFileList(data);
+            if (data.pathMain.indexOf('"') !== -1 || data.novelID.match(/^\d+$/)) {
+                console.error('[ERROR]', data);
+            }
+            else {
+                await cache_1.cacheFileList(data);
+            }
             //			await runSegment(data);
             /*
             if (1 || 1 && data.pathMain == 'cm')

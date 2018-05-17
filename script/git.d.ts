@@ -13,3 +13,8 @@ export declare function fetchGit(): SpawnSyncReturns<Buffer> & {
 export declare function newBranch(BR_NAME: string): SpawnSyncReturns<Buffer> & {
     errorCrossSpawn?: Error;
 };
+export declare function currentBranchName(): string;
+export declare function deleteBranch(name: string): SpawnSyncReturns<Buffer> & {
+    errorCrossSpawn?: Error;
+};
+export declare function oldBranch(): string;

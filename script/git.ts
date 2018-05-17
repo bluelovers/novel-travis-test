@@ -79,3 +79,42 @@ export function newBranch(BR_NAME: string)
 		cwd: DIST_NOVEL,
 	});
 }
+
+export function currentBranchName()
+{
+	let cp = crossSpawnSync('git', [
+		'rev-parse',
+		'--abbrev-ref',
+		'HEAD',
+	], {
+		cwd: DIST_NOVEL,
+	});
+
+	let name = crossSpawnOutput(cp.stdout);
+
+	return name;
+}
+
+export function deleteBranch(name: string)
+{
+	return crossSpawnSync('git', [
+		'branch',
+		'-d',
+		name,
+	], {
+		stdio: 'inherit',
+		cwd: DIST_NOVEL,
+	});
+}
+
+export function oldBranch()
+{
+	let name = currentBranchName();
+
+	if (name.indexOf('auto/') == 0)
+	{
+		return name;
+	}
+
+	return null;
+}

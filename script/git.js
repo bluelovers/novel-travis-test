@@ -61,3 +61,34 @@ function newBranch(BR_NAME) {
     });
 }
 exports.newBranch = newBranch;
+function currentBranchName() {
+    let cp = __1.crossSpawnSync('git', [
+        'rev-parse',
+        '--abbrev-ref',
+        'HEAD',
+    ], {
+        cwd: init_1.DIST_NOVEL,
+    });
+    let name = index_1.crossSpawnOutput(cp.stdout);
+    return name;
+}
+exports.currentBranchName = currentBranchName;
+function deleteBranch(name) {
+    return __1.crossSpawnSync('git', [
+        'branch',
+        '-d',
+        name,
+    ], {
+        stdio: 'inherit',
+        cwd: init_1.DIST_NOVEL,
+    });
+}
+exports.deleteBranch = deleteBranch;
+function oldBranch() {
+    let name = currentBranchName();
+    if (name.indexOf('auto/') == 0) {
+        return name;
+    }
+    return null;
+}
+exports.oldBranch = oldBranch;

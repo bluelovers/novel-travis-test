@@ -19,8 +19,12 @@ if (init_1.NOT_DONE && fs.pathExistsSync(init_1.DIST_NOVEL) && index_1.isGitRoot
         cwd: init_1.DIST_NOVEL,
     });
     git_1.pushGit();
+    let branch_name = git_1.oldBranch();
     git_1.fetchGit();
     git_1.newBranch(init_1.BR_NAME);
+    if (branch_name) {
+        git_1.deleteBranch(branch_name);
+    }
 }
 else if (fs.pathExistsSync(init_1.DIST_NOVEL) && index_1.isGitRoot(init_1.DIST_NOVEL)) {
     console.warn(`dist_novel already exists`);
@@ -29,6 +33,7 @@ else if (fs.pathExistsSync(init_1.DIST_NOVEL) && index_1.isGitRoot(init_1.DIST_N
         git_1.pushGit();
         fs.removeSync(waitpush);
     }
+    let branch_name = git_1.oldBranch();
     label = `--- FETCH ---`;
     console.log(label);
     console.time(label);
@@ -46,6 +51,9 @@ else if (fs.pathExistsSync(init_1.DIST_NOVEL) && index_1.isGitRoot(init_1.DIST_N
     pullGit();
     */
     git_1.newBranch(init_1.BR_NAME);
+    if (branch_name) {
+        git_1.deleteBranch(branch_name);
+    }
     console.timeEnd(label);
 }
 else {
