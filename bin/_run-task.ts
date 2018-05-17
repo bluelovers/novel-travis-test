@@ -146,7 +146,8 @@ else
 
 	//fs.emptyDirSync(DIST_NOVEL);
 
-	crossSpawnSync('git', [
+	crossSpawnSync('travis_wait', [
+		'git',
 		'clone',
 		'--depth=50',
 		'--verbose',

@@ -109,7 +109,8 @@ else {
     console.log(label);
     console.time(label);
     //fs.emptyDirSync(DIST_NOVEL);
-    __1.crossSpawnSync('git', [
+    __1.crossSpawnSync('travis_wait', [
+        'git',
         'clone',
         '--depth=50',
         '--verbose',
