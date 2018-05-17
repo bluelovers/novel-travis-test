@@ -349,6 +349,8 @@ export function runSegment()
 		{
 			let [pathMain, novelID] = id.split(/[\\\/]/);
 
+			console.log(id, pathMain, novelID);
+
 			novelID = path.basename(novelID, '.json');
 
 			let bin = path.join(ProjectConfig.project_root, 'bin/_do_segment.js');

@@ -216,6 +216,7 @@ function runSegment() {
         cwd: path.join(project_config_1.default.cache_root, 'files'),
     }), function (id) {
         let [pathMain, novelID] = id.split(/[\\\/]/);
+        console.log(id, pathMain, novelID);
         novelID = path.basename(novelID, '.json');
         let bin = path.join(project_config_1.default.project_root, 'bin/_do_segment.js');
         let cp = index_1.crossSpawnSync('node', [
