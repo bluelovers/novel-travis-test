@@ -124,5 +124,5 @@ export function diffOrigin()
 {
 	return gitDiffFrom(currentBranchName(), 'origin/master',{
 		cwd: DIST_NOVEL,
-	});
+	}).length;
 }

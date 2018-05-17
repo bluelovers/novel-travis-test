@@ -96,6 +96,6 @@ exports.oldBranch = oldBranch;
 function diffOrigin() {
     return git_diff_from_1.gitDiffFrom(currentBranchName(), 'origin/master', {
         cwd: init_1.DIST_NOVEL,
-    });
+    }).length;
 }
 exports.diffOrigin = diffOrigin;
