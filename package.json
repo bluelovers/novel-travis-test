@@ -21,7 +21,7 @@
     "git-root": "^1.0.0",
     "git-root2": "^1.0.3",
     "moment": "^2.22.1",
-    "novel-segment": "^2.0.7",
+    "novel-segment": "^2.0.8",
     "upath2": "^2.1.2",
     "yargs": "^11.0.0"
   },
