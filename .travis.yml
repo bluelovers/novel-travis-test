@@ -22,7 +22,7 @@ install:
 before_script:
 script:
 - node ./bin/_travis-encrypt.js
-- npm run do-task
+- travis_wait 60 npm run do-task
 #- cd dist_novel
 #- git push "https://${GITEE_TOKEN}gitee.com/demogitee/novel.git"
 env:

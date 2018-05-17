@@ -24,7 +24,8 @@ if (pathMain && novelID) {
             novel_root,
             files: Array.isArray(ls) ? ls : null,
             callback(done_list, file, index, length) {
-                if ((index % 5) == 0 || ((index + 1) >= length)) {
+                if ((index % 10) == 0 || ((index + 1) >= length)) {
+                    console.log(`[${index}/${length}]`, file);
                     ls = ls.filter(function (v) {
                         return done_list.indexOf(v) == -1;
                     });

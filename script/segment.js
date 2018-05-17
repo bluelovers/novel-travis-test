@@ -21,6 +21,7 @@ function doSegmentGlob(options) {
     let globPattern = options.globPattern || [
         '**/*.txt',
     ];
+    console.log('[do]', options.pathMain, options.novelID);
     return Promise.resolve(options.files || FastGlob(globPattern, {
         cwd: CWD_IN,
     }))
@@ -88,7 +89,7 @@ function _doSegmentGlob(ls, options) {
             let text_new = segment.stringify(ks);
             let changed = text_new != text;
             if (changed) {
-                console.warn('[changed]', label);
+                //					console.warn('[changed]', label);
                 await fs.outputFile(fillpath_out, text_new);
                 count_changed++;
             }
