@@ -216,8 +216,13 @@ function runSegment() {
         cwd: path.join(project_config_1.default.cache_root, 'files'),
     }), function (id) {
         let [pathMain, novelID] = id.split(/[\\\/]/);
-        console.log(id, pathMain, novelID);
         novelID = path.basename(novelID, '.json');
+        let np = _path(pathMain, novelID);
+        if (!fs.existsSync(np)) {
+            console.error(pathMain, novelID);
+            fs.removeSync(path.join(project_config_1.default.cache_root, 'files', id));
+            return -1;
+        }
         let bin = path.join(project_config_1.default.project_root, 'bin/_do_segment.js');
         let cp = index_1.crossSpawnSync('node', [
             bin,
@@ -240,6 +245,7 @@ function runSegment() {
                 cwd: exports.DIST_NOVEL,
             });
         }
+        return cp.status;
     });
 }
 exports.runSegment = runSegment;

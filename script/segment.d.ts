@@ -36,4 +36,4 @@ export declare function _path(pathMain: any, novelID: any, novel_root?: string):
 export declare function getSegment(segment?: Segment): Segment;
 export declare function createSegment(useCache?: boolean): Segment;
 export declare function getDictMain(segment: Segment): TableDict;
-export declare function runSegment(): Promise<void[]>;
+export declare function runSegment(): Promise<number[]>;

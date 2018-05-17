@@ -349,9 +349,18 @@ export function runSegment()
 		{
 			let [pathMain, novelID] = id.split(/[\\\/]/);
 
-			console.log(id, pathMain, novelID);
-
 			novelID = path.basename(novelID, '.json');
+
+			let np = _path(pathMain, novelID);
+
+			if (!fs.existsSync(np))
+			{
+				console.error(pathMain, novelID);
+
+				fs.removeSync(path.join(ProjectConfig.cache_root, 'files', id));
+
+				return -1;
+			}
 
 			let bin = path.join(ProjectConfig.project_root, 'bin/_do_segment.js');
 
@@ -378,6 +387,8 @@ export function runSegment()
 					cwd: DIST_NOVEL,
 				});
 			}
+
+			return cp.status;
 		})
 		;
 }
