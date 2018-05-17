@@ -26,6 +26,8 @@ export async function cacheFileList(data: IListNovelRow)
 
 	ls = arrayUniq(ls);
 
+	console.log('[CACHE]', path.join(data.pathMain, data.novelID + '.json'), ls.length);
+
 	await fs.outputJSON(file, ls, {
 		spaces: '\t',
 	});
