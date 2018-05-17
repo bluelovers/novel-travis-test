@@ -43,6 +43,8 @@ let NOT_DONE: boolean;
 if (CacheConfig && CacheConfig.config && CacheConfig.config.done == -1)
 {
 	NOT_DONE = true;
+
+	console.log(`上次的任務未完成 本次繼續執行`);
 }
 
 const BR_NAME = 'auto/' + moment().format('YYYY-MM-DD-HH-mm-ss');

@@ -30,6 +30,7 @@ if (!/@$/.test(GITEE_TOKEN)) {
 let NOT_DONE;
 if (CacheConfig && CacheConfig.config && CacheConfig.config.done == -1) {
     NOT_DONE = true;
+    console.log(`上次的任務未完成 本次繼續執行`);
 }
 const BR_NAME = 'auto/' + moment().format('YYYY-MM-DD-HH-mm-ss');
 if (NOT_DONE && fs.pathExistsSync(DIST_NOVEL) && index_1.isGitRoot(DIST_NOVEL)) {
