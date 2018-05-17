@@ -54,3 +54,28 @@ export function pullGit()
 		cwd: DIST_NOVEL,
 	});
 }
+
+export function fetchGit()
+{
+	return crossSpawnSync('git', [
+		'fetch',
+		'origin',
+		'master',
+	], {
+		stdio: 'inherit',
+		cwd: DIST_NOVEL,
+	});
+}
+
+export function newBranch(BR_NAME: string)
+{
+	return crossSpawnSync('git', [
+		'checkout',
+		'-B',
+		BR_NAME,
+		'origin/master',
+	], {
+		stdio: 'inherit',
+		cwd: DIST_NOVEL,
+	});
+}

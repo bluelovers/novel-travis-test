@@ -38,3 +38,26 @@ function pullGit() {
     });
 }
 exports.pullGit = pullGit;
+function fetchGit() {
+    return __1.crossSpawnSync('git', [
+        'fetch',
+        'origin',
+        'master',
+    ], {
+        stdio: 'inherit',
+        cwd: init_1.DIST_NOVEL,
+    });
+}
+exports.fetchGit = fetchGit;
+function newBranch(BR_NAME) {
+    return __1.crossSpawnSync('git', [
+        'checkout',
+        '-B',
+        BR_NAME,
+        'origin/master',
+    ], {
+        stdio: 'inherit',
+        cwd: init_1.DIST_NOVEL,
+    });
+}
+exports.newBranch = newBranch;

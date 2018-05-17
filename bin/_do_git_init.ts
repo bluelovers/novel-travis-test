@@ -11,7 +11,7 @@ import moment = require('moment');
 import * as FastGlob from 'fast-glob';
 
 import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, CLONE_DEPTH } from '../script/init';
-import { pushGit, pullGit } from '../script/git';
+import { pushGit, pullGit, fetchGit, newBranch } from '../script/git';
 
 let label: string;
 
@@ -30,15 +30,9 @@ if (NOT_DONE && fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
 
 	pushGit();
 
-	crossSpawnSync('git', [
-		'checkout',
-		'-B',
-		BR_NAME,
-		'origin/master',
-	], {
-		stdio: 'inherit',
-		cwd: DIST_NOVEL,
-	});
+	fetchGit();
+
+	newBranch(BR_NAME);
 }
 else if (fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
 {
@@ -57,14 +51,9 @@ else if (fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
 	console.log(label);
 	console.time(label);
 
-	crossSpawnSync('git', [
-		'fetch',
-		'--all',
-	], {
-		stdio: 'inherit',
-		cwd: DIST_NOVEL,
-	});
+	fetchGit();
 
+	/*
 	crossSpawnSync('git', [
 		'reset',
 		'--hard',
@@ -75,16 +64,9 @@ else if (fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
 	});
 
 	pullGit();
+	*/
 
-	crossSpawnSync('git', [
-		'checkout',
-		'-B',
-		BR_NAME,
-		'origin/master',
-	], {
-		stdio: 'inherit',
-		cwd: DIST_NOVEL,
-	});
+	newBranch(BR_NAME);
 
 	console.timeEnd(label);
 }
@@ -108,15 +90,7 @@ else
 		cwd: PROJECT_ROOT,
 	});
 
-	crossSpawnSync('git', [
-		'checkout',
-		'-B',
-		BR_NAME,
-		'master',
-	], {
-		stdio: 'inherit',
-		cwd: DIST_NOVEL,
-	});
+	newBranch(BR_NAME);
 
 	console.timeEnd(label);
 }

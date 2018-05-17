@@ -19,15 +19,8 @@ if (init_1.NOT_DONE && fs.pathExistsSync(init_1.DIST_NOVEL) && index_1.isGitRoot
         cwd: init_1.DIST_NOVEL,
     });
     git_1.pushGit();
-    __1.crossSpawnSync('git', [
-        'checkout',
-        '-B',
-        init_1.BR_NAME,
-        'origin/master',
-    ], {
-        stdio: 'inherit',
-        cwd: init_1.DIST_NOVEL,
-    });
+    git_1.fetchGit();
+    git_1.newBranch(init_1.BR_NAME);
 }
 else if (fs.pathExistsSync(init_1.DIST_NOVEL) && index_1.isGitRoot(init_1.DIST_NOVEL)) {
     console.warn(`dist_novel already exists`);
@@ -39,31 +32,20 @@ else if (fs.pathExistsSync(init_1.DIST_NOVEL) && index_1.isGitRoot(init_1.DIST_N
     label = `--- FETCH ---`;
     console.log(label);
     console.time(label);
-    __1.crossSpawnSync('git', [
-        'fetch',
-        '--all',
-    ], {
-        stdio: 'inherit',
-        cwd: init_1.DIST_NOVEL,
-    });
-    __1.crossSpawnSync('git', [
+    git_1.fetchGit();
+    /*
+    crossSpawnSync('git', [
         'reset',
         '--hard',
         'FETCH_HEAD',
     ], {
         stdio: 'inherit',
-        cwd: init_1.DIST_NOVEL,
+        cwd: DIST_NOVEL,
     });
-    git_1.pullGit();
-    __1.crossSpawnSync('git', [
-        'checkout',
-        '-B',
-        init_1.BR_NAME,
-        'origin/master',
-    ], {
-        stdio: 'inherit',
-        cwd: init_1.DIST_NOVEL,
-    });
+
+    pullGit();
+    */
+    git_1.newBranch(init_1.BR_NAME);
     console.timeEnd(label);
 }
 else {
@@ -82,14 +64,6 @@ else {
         stdio: 'inherit',
         cwd: init_1.PROJECT_ROOT,
     });
-    __1.crossSpawnSync('git', [
-        'checkout',
-        '-B',
-        init_1.BR_NAME,
-        'master',
-    ], {
-        stdio: 'inherit',
-        cwd: init_1.DIST_NOVEL,
-    });
+    git_1.newBranch(init_1.BR_NAME);
     console.timeEnd(label);
 }
