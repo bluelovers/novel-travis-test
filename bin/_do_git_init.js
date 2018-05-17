@@ -23,7 +23,7 @@ if (init_1.NOT_DONE && fs.pathExistsSync(init_1.DIST_NOVEL) && index_1.isGitRoot
         'checkout',
         '-B',
         init_1.BR_NAME,
-        'master',
+        'origin/master',
     ], {
         stdio: 'inherit',
         cwd: init_1.DIST_NOVEL,
@@ -36,7 +36,7 @@ else if (fs.pathExistsSync(init_1.DIST_NOVEL) && index_1.isGitRoot(init_1.DIST_N
         git_1.pushGit();
         fs.removeSync(waitpush);
     }
-    label = `--- PULL ---`;
+    label = `--- FETCH ---`;
     console.log(label);
     console.time(label);
     __1.crossSpawnSync('git', [
@@ -59,7 +59,7 @@ else if (fs.pathExistsSync(init_1.DIST_NOVEL) && index_1.isGitRoot(init_1.DIST_N
         'checkout',
         '-B',
         init_1.BR_NAME,
-        'master',
+        'origin/master',
     ], {
         stdio: 'inherit',
         cwd: init_1.DIST_NOVEL,

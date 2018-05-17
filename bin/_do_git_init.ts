@@ -34,7 +34,7 @@ if (NOT_DONE && fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
 		'checkout',
 		'-B',
 		BR_NAME,
-		'master',
+		'origin/master',
 	], {
 		stdio: 'inherit',
 		cwd: DIST_NOVEL,
@@ -53,7 +53,7 @@ else if (fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
 		fs.removeSync(waitpush);
 	}
 
-	label = `--- PULL ---`;
+	label = `--- FETCH ---`;
 	console.log(label);
 	console.time(label);
 
@@ -80,7 +80,7 @@ else if (fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
 		'checkout',
 		'-B',
 		BR_NAME,
-		'master',
+		'origin/master',
 	], {
 		stdio: 'inherit',
 		cwd: DIST_NOVEL,
