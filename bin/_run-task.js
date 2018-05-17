@@ -69,6 +69,11 @@ if (NOT_DONE && fs.pathExistsSync(DIST_NOVEL) && index_1.isGitRoot(DIST_NOVEL)) 
 }
 else if (fs.pathExistsSync(DIST_NOVEL) && index_1.isGitRoot(DIST_NOVEL)) {
     console.warn(`dist_novel already exists`);
+    let waitpush = path.join(project_config_1.default.cache_root, '.waitpush');
+    if (fs.existsSync(waitpush)) {
+        pushGit();
+        fs.removeSync(waitpush);
+    }
     label = `--- PULL ---`;
     console.log(label);
     console.time(label);
@@ -158,7 +163,9 @@ if (MyConfig.config.debug && MyConfig.config.debug.no_push) {
     console.log(`[DEBUG] skip push`);
 }
 else {
+    fs.ensureFileSync(path.join(project_config_1.default.cache_root, '.waitpush'));
     pushGit();
+    fs.removeSync(path.join(project_config_1.default.cache_root, '.waitpush'));
 }
 console.timeEnd(label);
 // ----------------
