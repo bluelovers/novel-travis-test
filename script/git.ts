@@ -1,12 +1,13 @@
 import path = require('upath2');
 import * as crossSpawn from 'cross-spawn';
+import { gitDiffFrom, IGitDiffFrom, IGitDiffFromRow } from 'git-diff-from';
 import gitRoot from 'git-root2';
 import { config as dotenvConfig } from 'dotenv';
 import * as fs from 'fs-extra';
 import { crossSpawnAsync, crossSpawnSync } from '..';
 import { crossSpawnOutput, isGitRoot, SpawnOptions, SpawnSyncReturns } from '../index';
 import { loadCacheConfig, loadMainConfig } from '@node-novel/task/lib/config';
-import ProjectConfig from '../project.config';
+import ProjectConfig, { novel_root } from '../project.config';
 import moment = require('moment');
 import * as FastGlob from 'fast-glob';
 
@@ -117,4 +118,11 @@ export function oldBranch()
 	}
 
 	return null;
+}
+
+export function diffOrigin()
+{
+	return gitDiffFrom(currentBranchName(), 'origin/master',{
+		cwd: DIST_NOVEL,
+	});
 }

@@ -1,4 +1,5 @@
 /// <reference types="node" />
+import { IGitDiffFrom } from 'git-diff-from';
 import { SpawnSyncReturns } from '../index';
 /**
  * Created by user on 2018/5/17/017.
@@ -18,3 +19,4 @@ export declare function deleteBranch(name: string): SpawnSyncReturns<Buffer> & {
     errorCrossSpawn?: Error;
 };
 export declare function oldBranch(): string;
+export declare function diffOrigin(): IGitDiffFrom;

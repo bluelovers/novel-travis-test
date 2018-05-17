@@ -44,8 +44,13 @@ if (init_1.MyConfig.config.debug && init_1.MyConfig.config.debug.no_push) {
     console.log(`[DEBUG] skip push`);
 }
 else {
-    fs.ensureFileSync(path.join(project_config_1.default.cache_root, '.waitpush'));
-    git_1.pushGit();
+    if (git_1.diffOrigin()) {
+        fs.ensureFileSync(path.join(project_config_1.default.cache_root, '.waitpush'));
+        git_1.pushGit();
+    }
+    else {
+        console.log(`沒有任何變更 忽略 PUSH`);
+    }
     fs.removeSync(path.join(project_config_1.default.cache_root, '.waitpush'));
 }
 console.timeEnd(label);

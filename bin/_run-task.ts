@@ -15,7 +15,7 @@ import moment = require('moment');
 import * as FastGlob from 'fast-glob';
 
 import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, MyConfig, CacheConfig } from '../script/init';
-import { pushGit } from '../script/git';
+import { diffOrigin, pushGit } from '../script/git';
 
 let label: string;
 
@@ -69,9 +69,16 @@ if (MyConfig.config.debug && MyConfig.config.debug.no_push)
 }
 else
 {
-	fs.ensureFileSync(path.join(ProjectConfig.cache_root, '.waitpush'));
+	if (diffOrigin())
+	{
+		fs.ensureFileSync(path.join(ProjectConfig.cache_root, '.waitpush'));
 
-	pushGit();
+		pushGit();
+	}
+	else
+	{
+		console.log(`沒有任何變更 忽略 PUSH`);
+	}
 
 	fs.removeSync(path.join(ProjectConfig.cache_root, '.waitpush'));
 }
