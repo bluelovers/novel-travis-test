@@ -8,6 +8,8 @@ const crossSpawn = require("cross-spawn");
 const git_root2_1 = require("git-root2");
 exports.isGitRoot = git_root2_1.isGitRoot;
 const crlf_normalize_1 = require("crlf-normalize");
+const project_config_1 = require("./project.config");
+exports.DIST_NOVEL = project_config_1.default.novel_root;
 function crossSpawnAsync(bin, argv, optiobs) {
     return new Promise(function (resolve, reject) {
         try {

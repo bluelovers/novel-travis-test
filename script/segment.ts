@@ -3,6 +3,7 @@
  */
 
 import * as path from "upath2";
+import { crossSpawnSync } from '../index';
 import ProjectConfig from '../project.config';
 import * as fs from 'fs-extra';
 import { useDefault, getDefaultModList } from 'novel-segment/lib';
@@ -11,6 +12,8 @@ import TableDict from 'novel-segment/lib/table/dict';
 import * as FastGlob from 'fast-glob';
 import * as Promise from 'bluebird';
 import { crlf } from 'crlf-normalize';
+
+export let DIST_NOVEL = ProjectConfig.novel_root;
 
 export let CACHE_TIMEOUT = 3600;
 
@@ -52,14 +55,14 @@ export function doSegmentGlob(options: IOptions)
 	console.log('[do]', options.pathMain, options.novelID);
 
 	return Promise.resolve(options.files || FastGlob(globPattern, {
-		cwd: CWD_IN,
-		//absolute: true,
-	}) as any as Promise<string[]>)
+			cwd: CWD_IN,
+			//absolute: true,
+		}) as any as Promise<string[]>)
 		.then(function (ls)
 		{
 			return _doSegmentGlob(ls, options);
 		})
-	;
+		;
 }
 
 export function _doSegmentGlob(ls: string[], options: IOptions)
@@ -316,4 +319,46 @@ export function createSegment(useCache: boolean = true)
 export function getDictMain(segment: Segment)
 {
 	return segment.getDictDatabase('TABLE');
+}
+
+export function runSegment()
+{
+	return Promise
+		.mapSeries(FastGlob([
+			'*/*.json',
+		], {
+			cwd: path.join(ProjectConfig.cache_root, 'files'),
+		}), function (id: string)
+		{
+			let [pathMain, novelID] = id.split(/[\\\/]/);
+
+			novelID = path.basename(novelID, '.json');
+
+			let bin = path.join(ProjectConfig.project_root, 'bin/_do_segment.js');
+
+			let cp = crossSpawnSync('node', [
+				bin,
+				'--pathMain',
+				pathMain,
+				'--novelID',
+				novelID,
+			], {
+				stdio: 'inherit',
+				cwd: DIST_NOVEL,
+			});
+
+			if (cp.status > 0)
+			{
+				crossSpawnSync('git', [
+					'commit',
+					'-a',
+					'-m',
+					`[Segment] ${pathMain} ${novelID}`,
+				], {
+					stdio: 'inherit',
+					cwd: DIST_NOVEL,
+				});
+			}
+		})
+		;
 }

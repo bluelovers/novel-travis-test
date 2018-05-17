@@ -15,6 +15,7 @@ const DEBUG = false;
 let label;
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 let MyConfig = config_1.loadMainConfig(PROJECT_ROOT);
+let CacheConfig = config_1.loadCacheConfig(PROJECT_ROOT);
 let GITEE_TOKEN = process.env.GITEE_TOKEN || '';
 const DIST_NOVEL = path.resolve(PROJECT_ROOT, 'dist_novel');
 if (!GITEE_TOKEN) {
@@ -26,8 +27,24 @@ if (!GITEE_TOKEN) {
 if (!/@$/.test(GITEE_TOKEN)) {
     GITEE_TOKEN += '@';
 }
+let NOT_DONE;
+if (CacheConfig.config && CacheConfig.config.done == -1) {
+    NOT_DONE = true;
+}
 const BR_NAME = 'auto/' + moment().format('YYYY-MM-DD-HH-mm-ss');
-if (fs.pathExistsSync(DIST_NOVEL) && index_1.isGitRoot(DIST_NOVEL)) {
+if (NOT_DONE && fs.pathExistsSync(DIST_NOVEL) && index_1.isGitRoot(DIST_NOVEL)) {
+    pushGit();
+    __1.crossSpawnSync('git', [
+        'checkout',
+        '-B',
+        BR_NAME,
+        'master',
+    ], {
+        stdio: 'inherit',
+        cwd: DIST_NOVEL,
+    });
+}
+else if (fs.pathExistsSync(DIST_NOVEL) && index_1.isGitRoot(DIST_NOVEL)) {
     console.warn(`dist_novel already exists`);
     label = `--- PULL ---`;
     console.log(label);
@@ -91,10 +108,24 @@ else {
     }
     console.log(`dist_novel: ${DIST_NOVEL}`);
 }
-label = `--- TASK ---`;
-console.log(label);
-console.time(label);
-runTask();
+if (NOT_DONE) {
+    label = `--- NOT_DONE ---`;
+    console.log(label);
+    console.time(label);
+    let bin = path.join(PROJECT_ROOT, 'bin/_do_segment_all.js');
+    __1.crossSpawnSync('node', [
+        bin,
+    ], {
+        stdio: 'inherit',
+        cwd: PROJECT_ROOT,
+    });
+}
+else {
+    label = `--- TASK ---`;
+    console.log(label);
+    console.time(label);
+    runTask();
+}
 console.timeEnd(label);
 label = `--- PUSH ---`;
 console.log(label);
@@ -109,7 +140,7 @@ console.timeEnd(label);
 // ----------------
 function runTask() {
     let bin = path.join(path.dirname(require.resolve('@node-novel/task')), 'bin/_novel-task.js');
-    console.log(bin);
+    //	console.log(bin);
     __1.crossSpawnSync('node', [
         bin,
     ], {

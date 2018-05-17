@@ -4,6 +4,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("upath2");
+const index_1 = require("../index");
 const project_config_1 = require("../project.config");
 const fs = require("fs-extra");
 const lib_1 = require("novel-segment/lib");
@@ -11,6 +12,7 @@ const Segment_1 = require("novel-segment/lib/Segment");
 const FastGlob = require("fast-glob");
 const Promise = require("bluebird");
 const crlf_normalize_1 = require("crlf-normalize");
+exports.DIST_NOVEL = project_config_1.default.novel_root;
 exports.CACHE_TIMEOUT = 3600;
 function doSegmentGlob(options) {
     const novel_root = options.novel_root || project_config_1.default.novel_root;
@@ -194,3 +196,37 @@ function getDictMain(segment) {
     return segment.getDictDatabase('TABLE');
 }
 exports.getDictMain = getDictMain;
+function runSegment() {
+    return Promise
+        .mapSeries(FastGlob([
+        '*/*.json',
+    ], {
+        cwd: path.join(project_config_1.default.cache_root, 'files'),
+    }), function (id) {
+        let [pathMain, novelID] = id.split(/[\\\/]/);
+        novelID = path.basename(novelID, '.json');
+        let bin = path.join(project_config_1.default.project_root, 'bin/_do_segment.js');
+        let cp = index_1.crossSpawnSync('node', [
+            bin,
+            '--pathMain',
+            pathMain,
+            '--novelID',
+            novelID,
+        ], {
+            stdio: 'inherit',
+            cwd: exports.DIST_NOVEL,
+        });
+        if (cp.status > 0) {
+            index_1.crossSpawnSync('git', [
+                'commit',
+                '-a',
+                '-m',
+                `[Segment] ${pathMain} ${novelID}`,
+            ], {
+                stdio: 'inherit',
+                cwd: exports.DIST_NOVEL,
+            });
+        }
+    });
+}
+exports.runSegment = runSegment;

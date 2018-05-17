@@ -9,7 +9,7 @@ import { config as dotenvConfig } from 'dotenv';
 import * as fs from 'fs-extra';
 import { crossSpawnAsync, crossSpawnSync } from '..';
 import { crossSpawnOutput, isGitRoot } from '../index';
-import { loadMainConfig } from '@node-novel/task/lib/config';
+import { loadCacheConfig, loadMainConfig } from '@node-novel/task/lib/config';
 import moment = require('moment');
 
 const DEBUG = false;
@@ -18,6 +18,7 @@ let label: string;
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 
 let MyConfig = loadMainConfig(PROJECT_ROOT);
+let CacheConfig = loadCacheConfig(PROJECT_ROOT);
 
 let GITEE_TOKEN = process.env.GITEE_TOKEN || '';
 const DIST_NOVEL = path.resolve(PROJECT_ROOT, 'dist_novel');
@@ -37,9 +38,30 @@ if (!/@$/.test(GITEE_TOKEN))
 	GITEE_TOKEN += '@';
 }
 
-const BR_NAME = 'auto/' + moment().format('YYYY-MM-DD-HH-mm-ss')
+let NOT_DONE: boolean;
 
-if (fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
+if (CacheConfig.config && CacheConfig.config.done == -1)
+{
+	NOT_DONE = true;
+}
+
+const BR_NAME = 'auto/' + moment().format('YYYY-MM-DD-HH-mm-ss');
+
+if (NOT_DONE && fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
+{
+	pushGit();
+
+	crossSpawnSync('git', [
+		'checkout',
+		'-B',
+		BR_NAME,
+		'master',
+	], {
+		stdio: 'inherit',
+		cwd: DIST_NOVEL,
+	});
+}
+else if (fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
 {
 	console.warn(`dist_novel already exists`);
 
@@ -119,12 +141,31 @@ else
 	console.log(`dist_novel: ${DIST_NOVEL}`);
 }
 
-label = `--- TASK ---`;
+if (NOT_DONE)
+{
+	label = `--- NOT_DONE ---`;
 
-console.log(label);
-console.time(label);
+	console.log(label);
+	console.time(label);
 
-runTask();
+	let bin = path.join(PROJECT_ROOT, 'bin/_do_segment_all.js');
+
+	crossSpawnSync('node', [
+		bin,
+	], {
+		stdio: 'inherit',
+		cwd: PROJECT_ROOT,
+	});
+}
+else
+{
+	label = `--- TASK ---`;
+
+	console.log(label);
+	console.time(label);
+
+	runTask();
+}
 
 console.timeEnd(label);
 
@@ -149,7 +190,7 @@ function runTask()
 {
 	let bin = path.join(path.dirname(require.resolve('@node-novel/task')), 'bin/_novel-task.js');
 
-	console.log(bin);
+//	console.log(bin);
 
 	crossSpawnSync('node', [
 		bin,

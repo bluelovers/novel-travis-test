@@ -12,6 +12,7 @@ node_js:
 cache:
   directories:
   - ".cache"
+  - dist_novel
 before_install:
 - git config --global user.email "testbot@test.test"
 - git config --global user.name "testbot"
@@ -21,7 +22,7 @@ install:
 - yarn
 before_script:
 script:
-- node ./bin/_travis-encrypt.js
+#- node ./bin/_travis-encrypt.js
 - travis_wait 60 npm run do-task
 #- cd dist_novel
 #- git push "https://${GITEE_TOKEN}gitee.com/demogitee/novel.git"

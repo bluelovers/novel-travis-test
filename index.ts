@@ -11,8 +11,11 @@ import path = require('upath2');
 // @ts-ignore
 import gitRoot, { isGitRoot } from 'git-root2';
 import { crlf, LF } from 'crlf-normalize';
+import ProjectConfig from './project.config';
 
 export { isGitRoot }
+
+export let DIST_NOVEL = ProjectConfig.novel_root;
 
 export function crossSpawnAsync(bin: string, argv?: string[], optiobs?: SpawnOptions): Promise<ReturnType<typeof crossSpawn.sync> & {
 	errorCrossSpawn?: Error,
