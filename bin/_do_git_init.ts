@@ -56,7 +56,7 @@ else if (fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
 
 	let waitpush = path.join(ProjectConfig.cache_root, '.waitpush');
 
-	if (fs.existsSync(waitpush) || getHashHEAD() != getHashHEAD('origin/master'))
+	if (fs.existsSync(waitpush) || 0 && getHashHEAD() != getHashHEAD('origin/master'))
 	{
 		pushGit();
 
