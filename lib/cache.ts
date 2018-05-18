@@ -23,7 +23,7 @@ export async function cacheDiffNovelList(data: ReturnType<typeof novelDiffFromLo
 	Object.keys(data.list)
 		.forEach(function (pathMain)
 		{
-			Object.keys(data[pathMain]).forEach(function (novelID)
+			Object.keys(data.list[pathMain]).forEach(function (novelID)
 			{
 				ls.push({ pathMain, novelID })
 			})
