@@ -169,7 +169,7 @@ function createGit(options) {
         label = `--- CREATE_AFTER ---`;
         console.log(label);
         console.time(label);
-        options.on.create_before(data, temp);
+        options.on.create_after(data, temp);
         console.timeEnd(label);
     }
     return { data, temp };
