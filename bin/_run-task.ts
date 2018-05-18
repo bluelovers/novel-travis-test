@@ -97,6 +97,15 @@ else
 	if (ok)
 	{
 		fs.removeSync(path.join(ProjectConfig.cache_root, '.waitpush'));
+
+		if (CacheConfig)
+		{
+			CacheConfig.config.done = 1;
+
+			fs.writeJSONSync(CacheConfig.filepath, CacheConfig.config, {
+				spaces: 2,
+			});
+		}
 	}
 }
 
