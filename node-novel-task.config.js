@@ -78,7 +78,7 @@ exports.default = {
             //				await runSegment(data, data.subpath);
             //			}
         },
-        async before_end() {
+        async before_end(data, ls_map, temp) {
             await segment_1.runSegment();
         }
     },

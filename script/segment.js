@@ -177,7 +177,10 @@ function createSegment(useCache = true) {
             //console.log(st, md);
             //console.log(`開始載入緩存字典`);
             let data = JSON.parse(fs.readFileSync(cache_file).toString());
-            lib_1.useDefault(segment, Object.assign({}, options, { nodict: true }));
+            lib_1.useDefault(segment, {
+                ...options,
+                nodict: true,
+            });
             segment.DICT = data.DICT;
             segment.inited = true;
             cache_file = null;

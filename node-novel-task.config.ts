@@ -3,6 +3,7 @@
  */
 
 import { IConfig, IListFileRow, IListMainRow, IListNovelRow } from '@node-novel/task';
+import novelDiffFromLog, { ITemp } from '@node-novel/task';
 import { crossSpawnAsync, crossSpawnOutput, crossSpawnSync } from './index';
 import { cacheFileList } from './lib/cache';
 import { doSegmentGlob, runSegment } from './script/segment';
@@ -105,9 +106,11 @@ export default {
 
 		},
 
-		async before_end()
+		async before_end(data: ReturnType<typeof novelDiffFromLog>, ls_map: any[], temp?: ITemp)
 		{
 			await runSegment();
+
+
 		}
 	},
 } as IConfig
