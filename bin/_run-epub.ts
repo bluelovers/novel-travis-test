@@ -176,6 +176,10 @@ console.log(`git: ${GIT_SETTING_EPUB.targetPath}`);
 
 				await fs.ensureFile(waitpush);
 
+				fs.outputJSONSync(epub_json, ls, {
+					spaces: '\t',
+				});
+
 				/*
 				await pushGit(GIT_SETTING_EPUB.targetPath, getPushUrl(GIT_SETTING_EPUB.url));
 
