@@ -133,3 +133,8 @@ export function diffOrigin()
 
 	return log.length;
 }
+
+export function getHashHEAD()
+{
+	return gitlog({ repo: DIST_NOVEL, number: 1, })[0].abbrevHash;
+}

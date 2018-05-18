@@ -10,12 +10,13 @@ import * as fs from 'fs-extra';
 import { crossSpawnAsync, crossSpawnSync } from '..';
 import { crossSpawnOutput, isGitRoot } from '../index';
 import { loadCacheConfig, loadMainConfig } from '@node-novel/task/lib/config';
-import ProjectConfig from '../project.config';
+import ProjectConfig, { novel_root } from '../project.config';
 import moment = require('moment');
 import * as FastGlob from 'fast-glob';
+import gitlog from 'gitlog2';
 
 import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, MyConfig, CacheConfig } from '../script/init';
-import { diffOrigin, pushGit } from '../script/git';
+import { diffOrigin, getHashHEAD, pushGit } from '../script/git';
 
 let label: string;
 
@@ -29,6 +30,8 @@ let label: string;
 
 	console.log(`dist_novel: ${DIST_NOVEL}`);
 }
+
+let currentHEAD =  getHashHEAD();
 
 if (NOT_DONE)
 {
@@ -69,7 +72,7 @@ if (MyConfig.config.debug && MyConfig.config.debug.no_push)
 }
 else
 {
-	if (diffOrigin())
+	if (currentHEAD !=  getHashHEAD() || diffOrigin())
 	{
 		fs.ensureFileSync(path.join(ProjectConfig.cache_root, '.waitpush'));
 
@@ -77,7 +80,7 @@ else
 	}
 	else
 	{
-		console.log(`沒有任何變更 忽略 PUSH`);
+		console.error(`沒有任何變更 忽略 PUSH`);
 	}
 
 	fs.removeSync(path.join(ProjectConfig.cache_root, '.waitpush'));
