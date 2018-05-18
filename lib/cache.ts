@@ -20,7 +20,7 @@ export async function cacheDiffNovelList(data: ReturnType<typeof novelDiffFromLo
 		ls = await fs.readJSON(jsonfile);
 	}
 
-	Object.keys(data)
+	Object.keys(data.list)
 		.forEach(function (pathMain)
 		{
 			Object.keys(data[pathMain]).forEach(function (novelID)
@@ -32,7 +32,7 @@ export async function cacheDiffNovelList(data: ReturnType<typeof novelDiffFromLo
 
 	ls = arrayUniq(ls.filter(v => v));
 
-	fs.outputJSONSync(path.join(ProjectConfig.cache_root, 'diff-novel.json'), ls, {
+	fs.outputJSONSync(jsonfile, ls, {
 		spaces: '\t',
 	});
 

@@ -94,6 +94,7 @@ function diffOrigin(REPO_PATH) {
         repo: REPO_PATH,
         branch: [currentBranchName(REPO_PATH), 'origin/master'].join('..'),
         number: 3,
+        nameStatus: false,
     });
     console.log(log, log.length);
     return log.length;

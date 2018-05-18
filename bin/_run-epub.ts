@@ -69,7 +69,6 @@ console.log(`git: ${GIT_SETTING_EPUB.targetPath}`);
 	}
 	else
 	{
-
 		ls2 = fs.readJSONSync(epub_json);
 	}
 
