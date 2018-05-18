@@ -24,12 +24,14 @@ install:
 - npm install
 before_script:
 script:
+- git --version
 #- node ./bin/_travis-encrypt.js
 #- travis_wait 50 npm run do-task
 - travis_wait 30 npm run do-git-init
 - npm run do-task
 - travis_wait 30 npm run do-epub-init
 - npm run do-epub
+- travis_wait 30 npm run do-epub-push
 #- cd dist_novel
 #- git push "https://${GITEE_TOKEN}gitee.com/demogitee/novel.git"
 env:

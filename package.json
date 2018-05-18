@@ -8,6 +8,7 @@
     "do-git-init": "node ./bin/_do_git_init.js",
     "do-task": "node ./bin/_run-task.js",
     "do-epub": "node ./bin/_run-epub.js",
+    "do-epub-push": "node ./bin/_do_epub_push.js",
     "test": "node -v"
   },
   "author": "",

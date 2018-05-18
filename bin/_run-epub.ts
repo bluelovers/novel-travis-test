@@ -173,7 +173,15 @@ console.log(`git: ${GIT_SETTING_EPUB.targetPath}`);
 			})
 			.tap(async function ()
 			{
+				let waitpush = path.join(ProjectConfig.cache_root, 'epub.waitpush');
+
+				await fs.ensureFile(waitpush);
+
+				/*
 				await pushGit(GIT_SETTING_EPUB.targetPath, getPushUrl(GIT_SETTING_EPUB.url));
+
+				await fs.remove(waitpush);
+				*/
 			})
 		;
 	}

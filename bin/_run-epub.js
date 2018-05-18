@@ -10,7 +10,6 @@ const project_config_1 = require("../project.config");
 const path = require("upath2");
 const Promise = require("bluebird");
 const novel_epub_1 = require("novel-epub");
-const git_2 = require("../script/git");
 const segment_1 = require("../script/segment");
 const FastGlob = require("fast-glob");
 const novel_txt_merge_1 = require("novel-txt-merge");
@@ -121,7 +120,13 @@ console.log(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
             console.log(`本次共更新 ${count} 小說`);
         })
             .tap(async function () {
-            await git_2.pushGit(git_1.GIT_SETTING_EPUB.targetPath, git_2.getPushUrl(git_1.GIT_SETTING_EPUB.url));
+            let waitpush = path.join(project_config_1.default.cache_root, 'epub.waitpush');
+            await fs.ensureFile(waitpush);
+            /*
+            await pushGit(GIT_SETTING_EPUB.targetPath, getPushUrl(GIT_SETTING_EPUB.url));
+
+            await fs.remove(waitpush);
+            */
         });
     }
 })();
