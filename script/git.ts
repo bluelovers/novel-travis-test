@@ -47,6 +47,7 @@ export function fetchGit(REPO_PATH: string)
 {
 	return crossSpawnSync('git', [
 		'fetch',
+		'--force',
 		'origin',
 		'master',
 	], {
@@ -142,6 +143,11 @@ export type IOptionsCreateGit = {
 	},
 };
 
+export function getPushUrl(url: string)
+{
+	return `https://${GITEE_TOKEN ? GITEE_TOKEN : ''}${url}`;
+}
+
 export function createGit(options: IOptionsCreateGit)
 {
 	let targetName = path.basename(options.targetPath);
@@ -165,7 +171,7 @@ export function createGit(options: IOptionsCreateGit)
 		url: options.url,
 		urlClone: options.urlClone,
 
-		pushUrl: `https://${GITEE_TOKEN ? GITEE_TOKEN : ''}${options.url}`,
+		pushUrl: getPushUrl(options.url),
 	};
 
 	let temp: {

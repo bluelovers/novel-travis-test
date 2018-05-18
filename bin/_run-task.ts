@@ -15,8 +15,12 @@ import moment = require('moment');
 import * as FastGlob from 'fast-glob';
 import gitlog from 'gitlog2';
 
+import {
+	GIT_SETTING_DIST_NOVEL,
+} from '../data/git';
+
 import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, MyConfig, CacheConfig } from '../script/init';
-import { diffOrigin, getHashHEAD, pushGit } from '../script/git';
+import { diffOrigin, getHashHEAD, getPushUrl, pushGit } from '../script/git';
 
 let label: string;
 
@@ -31,7 +35,7 @@ let label: string;
 	console.log(`dist_novel: ${DIST_NOVEL}`);
 }
 
-let currentHEAD =  getHashHEAD();
+let currentHEAD =  getHashHEAD(DIST_NOVEL);
 
 if (NOT_DONE)
 {
@@ -74,11 +78,11 @@ else
 {
 	let ok = true;
 
-	if (currentHEAD !=  getHashHEAD() || diffOrigin())
+	if (currentHEAD !=  getHashHEAD(DIST_NOVEL) || diffOrigin(DIST_NOVEL))
 	{
 		fs.ensureFileSync(path.join(ProjectConfig.cache_root, '.waitpush'));
 
-		let cp = pushGit();
+		let cp = pushGit(DIST_NOVEL, getPushUrl(GIT_SETTING_DIST_NOVEL.url));
 
 		if (cp.error || cp.stderr && cp.stderr.toString())
 		{

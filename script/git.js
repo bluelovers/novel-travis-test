@@ -35,6 +35,7 @@ exports.pullGit = pullGit;
 function fetchGit(REPO_PATH) {
     return __1.crossSpawnSync('git', [
         'fetch',
+        '--force',
         'origin',
         'master',
     ], {
@@ -100,6 +101,10 @@ function getHashHEAD(REPO_PATH, branch = 'HEAD') {
     return gitlog2_1.default({ repo: REPO_PATH, number: 1, branch })[0].abbrevHash;
 }
 exports.getHashHEAD = getHashHEAD;
+function getPushUrl(url) {
+    return `https://${init_1.GITEE_TOKEN ? init_1.GITEE_TOKEN : ''}${url}`;
+}
+exports.getPushUrl = getPushUrl;
 function createGit(options) {
     let targetName = path.basename(options.targetPath);
     let targetPath = path.normalize(options.targetPath);
@@ -114,7 +119,7 @@ function createGit(options) {
         NOT_DONE: init_1.NOT_DONE,
         url: options.url,
         urlClone: options.urlClone,
-        pushUrl: `https://${init_1.GITEE_TOKEN ? init_1.GITEE_TOKEN : ''}${options.url}`,
+        pushUrl: getPushUrl(options.url),
     };
     let temp = {
         cp: null,

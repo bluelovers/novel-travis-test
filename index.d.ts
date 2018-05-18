@@ -1,3 +1,6 @@
+/**
+ * Created by user on 2018/5/16/016.
+ */
 /// <reference types="node" />
 import { SpawnOptions, SpawnSyncReturns } from 'child_process';
 import * as crossSpawn from 'cross-spawn';

@@ -49,3 +49,48 @@ exports.GIT_SETTING_DIST_NOVEL = {
         },
     }
 };
+exports.GIT_SETTING_EPUB = {
+    url: 'gitee.com/demogitee/epub-txt.git',
+    urlClone: 'https://gitee.com/demogitee/epub-txt.git',
+    targetPath: path.join(project_config_1.default.project_root, 'dist_epub'),
+    NOT_DONE: init_1.NOT_DONE,
+    newBranchName: init_1.BR_NAME,
+    on: {
+        create_before(data, temp) {
+            if (data.exists) {
+                __1.crossSpawnSync('git', [
+                    'commit',
+                    '-a',
+                    '-m',
+                    `[epub] NOT_DONE`,
+                ], {
+                    stdio: 'inherit',
+                    cwd: data.targetPath,
+                });
+                git_1.pushGit(data.targetPath, data.pushUrl);
+            }
+        },
+        create(data, temp) {
+            __1.crossSpawnSync('git', [
+                'checkout',
+                '-f',
+                '-B',
+                `master`,
+                `origin/master`,
+            ], {
+                stdio: 'inherit',
+                cwd: data.targetPath,
+            });
+            __1.crossSpawnSync('git', [
+                'clean',
+                '-d',
+                '-fx',
+            ], {
+                stdio: 'inherit',
+                cwd: data.targetPath,
+            });
+        },
+        create_after(data, temp) {
+        },
+    }
+};

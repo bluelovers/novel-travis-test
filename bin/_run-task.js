@@ -8,8 +8,9 @@ const fs = require("fs-extra");
 const __1 = require("..");
 const index_1 = require("../index");
 const project_config_1 = require("../project.config");
+const git_1 = require("../data/git");
 const init_1 = require("../script/init");
-const git_1 = require("../script/git");
+const git_2 = require("../script/git");
 let label;
 {
     if (!index_1.isGitRoot(init_1.DIST_NOVEL)) {
@@ -18,7 +19,7 @@ let label;
     }
     console.log(`dist_novel: ${init_1.DIST_NOVEL}`);
 }
-let currentHEAD = git_1.getHashHEAD();
+let currentHEAD = git_2.getHashHEAD(init_1.DIST_NOVEL);
 if (init_1.NOT_DONE) {
     label = `--- NOT_DONE ---`;
     console.log(label);
@@ -46,9 +47,9 @@ if (init_1.MyConfig.config.debug && init_1.MyConfig.config.debug.no_push) {
 }
 else {
     let ok = true;
-    if (currentHEAD != git_1.getHashHEAD() || git_1.diffOrigin()) {
+    if (currentHEAD != git_2.getHashHEAD(init_1.DIST_NOVEL) || git_2.diffOrigin(init_1.DIST_NOVEL)) {
         fs.ensureFileSync(path.join(project_config_1.default.cache_root, '.waitpush'));
-        let cp = git_1.pushGit();
+        let cp = git_2.pushGit(init_1.DIST_NOVEL, git_2.getPushUrl(git_1.GIT_SETTING_DIST_NOVEL.url));
         if (cp.error || cp.stderr && cp.stderr.toString()) {
             ok = false;
         }

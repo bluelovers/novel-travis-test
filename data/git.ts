@@ -83,3 +83,60 @@ export const GIT_SETTING_DIST_NOVEL: IOptionsCreateGit = {
 		},
 	}
 };
+
+export const GIT_SETTING_EPUB: IOptionsCreateGit = {
+	url: 'gitee.com/demogitee/epub-txt.git',
+	urlClone: 'https://gitee.com/demogitee/epub-txt.git',
+	targetPath: path.join(ProjectConfig.project_root, 'dist_epub'),
+	NOT_DONE,
+
+	newBranchName: BR_NAME,
+
+	on: {
+		create_before(data, temp)
+		{
+			if (data.exists)
+			{
+				crossSpawnSync('git', [
+					'commit',
+					'-a',
+					'-m',
+					`[epub] NOT_DONE`,
+				], {
+					stdio: 'inherit',
+					cwd: data.targetPath,
+				});
+
+				pushGit(data.targetPath, data.pushUrl);
+			}
+		},
+
+		create(data, temp)
+		{
+			crossSpawnSync('git', [
+				'checkout',
+				'-f',
+				'-B',
+				`master`,
+				`origin/master`,
+			], {
+				stdio: 'inherit',
+				cwd: data.targetPath,
+			});
+
+			crossSpawnSync('git', [
+				'clean',
+				'-d',
+				'-fx',
+			], {
+				stdio: 'inherit',
+				cwd: data.targetPath,
+			});
+		},
+
+		create_after(data, temp)
+		{
+
+		},
+	}
+};

@@ -5,8 +5,8 @@
 import { IConfig, IListFileRow, IListMainRow, IListNovelRow } from '@node-novel/task';
 import novelDiffFromLog, { ITemp } from '@node-novel/task';
 import { crossSpawnAsync, crossSpawnOutput, crossSpawnSync } from './index';
-import { cacheFileList } from './lib/cache';
-import { doSegmentGlob, runSegment } from './script/segment';
+import { cacheDiffNovelList, cacheFileList } from './lib/cache';
+import { _path, doSegmentGlob, runSegment } from './script/segment';
 import path = require('upath2');
 import ProjectConfig from './project.config';
 import { filterNotDelete } from '@node-novel/task/lib/index';
@@ -108,9 +108,9 @@ export default {
 
 		async before_end(data: ReturnType<typeof novelDiffFromLog>, ls_map: any[], temp?: ITemp)
 		{
+			await cacheDiffNovelList(data);
+
 			await runSegment();
-
-
 		}
 	},
 } as IConfig

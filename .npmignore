@@ -24,3 +24,4 @@ test
 .cache/*
 !/.cache/.gitkeep
 /dist_novel/
+/dist_epub/

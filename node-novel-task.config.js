@@ -79,6 +79,7 @@ exports.default = {
             //			}
         },
         async before_end(data, ls_map, temp) {
+            await cache_1.cacheDiffNovelList(data);
             await segment_1.runSegment();
         }
     },

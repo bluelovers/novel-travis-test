@@ -25,13 +25,14 @@ export declare type IOptionsCreateGit = {
     targetPath: string;
     newBranchName: string;
     urlClone: string;
-    NOT_DONE;
+    NOT_DONE: any;
     on?: {
-        create_before?(data: ReturnType<typeof createGit>["data"], temp?: ReturnType<typeof createGit>["temp"]);
-        create?(data: ReturnType<typeof createGit>["data"], temp?: ReturnType<typeof createGit>["temp"]);
-        create_after?(data: ReturnType<typeof createGit>["data"], temp?: ReturnType<typeof createGit>["temp"]);
+        create_before?(data: ReturnType<typeof createGit>["data"], temp?: ReturnType<typeof createGit>["temp"]): any;
+        create?(data: ReturnType<typeof createGit>["data"], temp?: ReturnType<typeof createGit>["temp"]): any;
+        create_after?(data: ReturnType<typeof createGit>["data"], temp?: ReturnType<typeof createGit>["temp"]): any;
     };
 };
+export declare function getPushUrl(url: string): string;
 export declare function createGit(options: IOptionsCreateGit): {
     data: {
         targetName: string;

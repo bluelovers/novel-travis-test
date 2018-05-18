@@ -1,4 +1,6 @@
-/// <reference types="bluebird" />
+/**
+ * Created by user on 2018/5/16/016.
+ */
 import Segment from 'novel-segment/lib/Segment';
 import TableDict from 'novel-segment/lib/table/dict';
 import * as Promise from 'bluebird';
@@ -14,7 +16,7 @@ export declare type IOptions = {
     globPattern?: string[];
     files?: string[];
     hideLog?: boolean;
-    callback?(done_list: string[], file: string, index: number, length: number);
+    callback?(done_list: string[], file: string, index: number, length: number): any;
 };
 export declare function doSegmentGlob(options: IOptions): Promise<{
     ls: string[];
