@@ -103,7 +103,7 @@ function diffOrigin() {
     return log.length;
 }
 exports.diffOrigin = diffOrigin;
-function getHashHEAD() {
-    return gitlog2_1.default({ repo: init_1.DIST_NOVEL, number: 1, })[0].abbrevHash;
+function getHashHEAD(branch = 'HEAD') {
+    return gitlog2_1.default({ repo: init_1.DIST_NOVEL, number: 1, branch })[0].abbrevHash;
 }
 exports.getHashHEAD = getHashHEAD;

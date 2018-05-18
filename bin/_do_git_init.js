@@ -29,7 +29,7 @@ if (init_1.NOT_DONE && fs.pathExistsSync(init_1.DIST_NOVEL) && index_1.isGitRoot
 else if (fs.pathExistsSync(init_1.DIST_NOVEL) && index_1.isGitRoot(init_1.DIST_NOVEL)) {
     console.warn(`dist_novel already exists`);
     let waitpush = path.join(project_config_1.default.cache_root, '.waitpush');
-    if (fs.existsSync(waitpush)) {
+    if (fs.existsSync(waitpush) || git_1.getHashHEAD() != git_1.getHashHEAD('origin/master')) {
         git_1.pushGit();
         fs.removeSync(waitpush);
     }

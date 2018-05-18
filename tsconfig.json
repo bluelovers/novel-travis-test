@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "CommonJS",
-    "target": "es2017",
+    "target": "es2018",
 
     "moduleResolution": "node",
     "allowJs": false,
@@ -23,7 +23,7 @@
     "locale": "zh-TW",
     "pretty": true,
 
-//    "removeComments": true,
+    //    "removeComments": true,
 
 //    "baseUrl": ".",
 //    "sourceRoot": ".",

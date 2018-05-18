@@ -45,14 +45,20 @@ if (init_1.MyConfig.config.debug && init_1.MyConfig.config.debug.no_push) {
     console.log(`[DEBUG] skip push`);
 }
 else {
+    let ok = true;
     if (currentHEAD != git_1.getHashHEAD() || git_1.diffOrigin()) {
         fs.ensureFileSync(path.join(project_config_1.default.cache_root, '.waitpush'));
-        git_1.pushGit();
+        let cp = git_1.pushGit();
+        if (cp.error || cp.stderr && cp.stderr.toString()) {
+            ok = false;
+        }
     }
     else {
         console.error(`沒有任何變更 忽略 PUSH`);
     }
-    fs.removeSync(path.join(project_config_1.default.cache_root, '.waitpush'));
+    if (ok) {
+        fs.removeSync(path.join(project_config_1.default.cache_root, '.waitpush'));
+    }
 }
 console.timeEnd(label);
 // ----------------

@@ -11,7 +11,16 @@ import moment = require('moment');
 import * as FastGlob from 'fast-glob';
 
 import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, CLONE_DEPTH } from '../script/init';
-import { pushGit, pullGit, fetchGit, newBranch, currentBranchName, oldBranch, deleteBranch } from '../script/git';
+import {
+	pushGit,
+	pullGit,
+	fetchGit,
+	newBranch,
+	currentBranchName,
+	oldBranch,
+	deleteBranch,
+	getHashHEAD
+} from '../script/git';
 
 let label: string;
 
@@ -47,7 +56,7 @@ else if (fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
 
 	let waitpush = path.join(ProjectConfig.cache_root, '.waitpush');
 
-	if (fs.existsSync(waitpush))
+	if (fs.existsSync(waitpush) || getHashHEAD() != getHashHEAD('origin/master'))
 	{
 		pushGit();
 

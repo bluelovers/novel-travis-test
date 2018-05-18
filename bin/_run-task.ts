@@ -72,18 +72,28 @@ if (MyConfig.config.debug && MyConfig.config.debug.no_push)
 }
 else
 {
+	let ok = true;
+
 	if (currentHEAD !=  getHashHEAD() || diffOrigin())
 	{
 		fs.ensureFileSync(path.join(ProjectConfig.cache_root, '.waitpush'));
 
-		pushGit();
+		let cp = pushGit();
+
+		if (cp.error || cp.stderr && cp.stderr.toString())
+		{
+			ok = false;
+		}
 	}
 	else
 	{
 		console.error(`沒有任何變更 忽略 PUSH`);
 	}
 
-	fs.removeSync(path.join(ProjectConfig.cache_root, '.waitpush'));
+	if (ok)
+	{
+		fs.removeSync(path.join(ProjectConfig.cache_root, '.waitpush'));
+	}
 }
 
 console.timeEnd(label);

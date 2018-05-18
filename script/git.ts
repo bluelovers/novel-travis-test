@@ -134,7 +134,7 @@ export function diffOrigin()
 	return log.length;
 }
 
-export function getHashHEAD()
+export function getHashHEAD(branch: string = 'HEAD')
 {
-	return gitlog({ repo: DIST_NOVEL, number: 1, })[0].abbrevHash;
+	return gitlog({ repo: DIST_NOVEL, number: 1, branch })[0].abbrevHash;
 }
