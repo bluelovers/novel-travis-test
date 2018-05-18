@@ -46,7 +46,7 @@ export const GIT_SETTING_DIST_NOVEL: IOptionsCreateGit = {
 					cwd: data.targetPath,
 				});
 
-				pushGit(data.targetPath, data.pushUrl);
+				pushGit(data.targetPath, data.pushUrl, true);
 			}
 			else if (data.exists)
 			{
@@ -54,7 +54,7 @@ export const GIT_SETTING_DIST_NOVEL: IOptionsCreateGit = {
 
 				if (fs.existsSync(waitpush) || 0 && getHashHEAD(data.targetPath) != getHashHEAD('origin/master'))
 				{
-					pushGit(data.targetPath, data.pushUrl);
+					pushGit(data.targetPath, data.pushUrl, true);
 					fs.removeSync(waitpush);
 				}
 			}

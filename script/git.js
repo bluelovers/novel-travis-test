@@ -10,13 +10,15 @@ const init_1 = require("./init");
 /**
  * Created by user on 2018/5/17/017.
  */
-function pushGit(REPO_PATH, repo) {
-    let cp = __1.crossSpawnSync('git', [
+function pushGit(REPO_PATH, repo, force) {
+    let argv = [
         'push',
         '--progress',
-        '--force',
+        force ? '--force' : undefined,
         repo,
-    ], {
+    ];
+    argv = argv.filter(v => v);
+    let cp = __1.crossSpawnSync('git', argv, {
         stdio: 'inherit',
         cwd: REPO_PATH,
     });

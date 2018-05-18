@@ -18,14 +18,18 @@ import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, GITEE_TOKEN, DEBUG } from 
  * Created by user on 2018/5/17/017.
  */
 
-export function pushGit(REPO_PATH: string, repo: string)
+export function pushGit(REPO_PATH: string, repo: string, force?: boolean)
 {
-	let cp = crossSpawnSync('git', [
+	let argv = [
 		'push',
 		'--progress',
-		'--force',
+		force ? '--force' : undefined,
 		repo,
-	], {
+	];
+
+	argv = argv.filter(v => v);
+
+	let cp = crossSpawnSync('git', argv, {
 		stdio: 'inherit',
 		cwd: REPO_PATH,
 	});

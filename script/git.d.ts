@@ -3,7 +3,7 @@ import { SpawnSyncReturns } from '../index';
 /**
  * Created by user on 2018/5/17/017.
  */
-export declare function pushGit(REPO_PATH: string, repo: string): SpawnSyncReturns<Buffer> & {
+export declare function pushGit(REPO_PATH: string, repo: string, force?: boolean): SpawnSyncReturns<Buffer> & {
     errorCrossSpawn?: Error;
 };
 export declare function pullGit(REPO_PATH: string): SpawnSyncReturns<Buffer>;

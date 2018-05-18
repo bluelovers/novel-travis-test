@@ -82,7 +82,7 @@ else
 	{
 		fs.ensureFileSync(path.join(ProjectConfig.cache_root, '.waitpush'));
 
-		let cp = pushGit(DIST_NOVEL, getPushUrl(GIT_SETTING_DIST_NOVEL.url));
+		let cp = pushGit(DIST_NOVEL, getPushUrl(GIT_SETTING_DIST_NOVEL.url), true);
 
 		if (cp.error || cp.stderr && cp.stderr.toString())
 		{

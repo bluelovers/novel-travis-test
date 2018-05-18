@@ -49,7 +49,7 @@ else {
     let ok = true;
     if (currentHEAD != git_2.getHashHEAD(init_1.DIST_NOVEL) || git_2.diffOrigin(init_1.DIST_NOVEL)) {
         fs.ensureFileSync(path.join(project_config_1.default.cache_root, '.waitpush'));
-        let cp = git_2.pushGit(init_1.DIST_NOVEL, git_2.getPushUrl(git_1.GIT_SETTING_DIST_NOVEL.url));
+        let cp = git_2.pushGit(init_1.DIST_NOVEL, git_2.getPushUrl(git_1.GIT_SETTING_DIST_NOVEL.url), true);
         if (cp.error || cp.stderr && cp.stderr.toString()) {
             ok = false;
         }

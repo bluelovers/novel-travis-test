@@ -24,12 +24,12 @@ exports.GIT_SETTING_DIST_NOVEL = {
                     stdio: 'inherit',
                     cwd: data.targetPath,
                 });
-                git_1.pushGit(data.targetPath, data.pushUrl);
+                git_1.pushGit(data.targetPath, data.pushUrl, true);
             }
             else if (data.exists) {
                 let waitpush = path.join(project_config_1.default.cache_root, '.waitpush');
                 if (fs.existsSync(waitpush) || 0 && git_1.getHashHEAD(data.targetPath) != git_1.getHashHEAD('origin/master')) {
-                    git_1.pushGit(data.targetPath, data.pushUrl);
+                    git_1.pushGit(data.targetPath, data.pushUrl, true);
                     fs.removeSync(waitpush);
                 }
             }
