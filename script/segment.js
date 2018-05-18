@@ -71,6 +71,13 @@ function _doSegmentGlob(ls, options) {
                     exists: false,
                 };
             }
+            else if (!file.match(/\.txt$/i)) {
+                return {
+                    file,
+                    changed: false,
+                    exists: true,
+                };
+            }
             let text = await fs.readFile(fillpath);
             text = crlf_normalize_1.crlf(text.toString());
             if (!text.replace(/\s+/g, '')) {

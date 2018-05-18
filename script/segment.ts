@@ -126,6 +126,14 @@ export function _doSegmentGlob(ls: string[], options: IOptions)
 						exists: false,
 					};
 				}
+				else if (!file.match(/\.txt$/i))
+				{
+					return {
+						file,
+						changed: false,
+						exists: true,
+					};
+				}
 
 				let text = await fs.readFile(fillpath) as any as string;
 
