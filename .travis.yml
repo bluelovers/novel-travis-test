@@ -20,8 +20,8 @@ before_install:
 #- travis_wait git clone --depth=50 --progress https://gitee.com/bluelovers/novel.git dist_novel
 - npm i -g yarn
 install:
-#- yarn
-- npm install
+- yarn
+#- npm install
 before_script:
 script:
 - git --version
