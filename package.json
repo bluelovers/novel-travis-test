@@ -23,6 +23,7 @@
     "dotenv": "^5.0.1",
     "fast-glob": "^2.2.2",
     "fs-extra": "^6.0.1",
+    "git-diff-from": "^1.0.6",
     "git-root2": "^1.0.4",
     "gitlog2": "^3.1.3",
     "moment": "^2.22.1",
