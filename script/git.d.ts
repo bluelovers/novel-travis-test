@@ -14,8 +14,8 @@ export declare function newBranch(BR_NAME: string): SpawnSyncReturns<Buffer> & {
     errorCrossSpawn?: Error;
 };
 export declare function currentBranchName(): string;
-export declare function deleteBranch(name: string): SpawnSyncReturns<Buffer> & {
+export declare function deleteBranch(name: string, force?: boolean): SpawnSyncReturns<Buffer> & {
     errorCrossSpawn?: Error;
 };
 export declare function oldBranch(): string;
-export declare function diffOrigin(): boolean;
+export declare function diffOrigin(): number;

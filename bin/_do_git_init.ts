@@ -38,7 +38,7 @@ if (NOT_DONE && fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
 
 	if (branch_name)
 	{
-		deleteBranch(branch_name);
+		deleteBranch(branch_name, true);
 	}
 }
 else if (fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
@@ -79,7 +79,7 @@ else if (fs.pathExistsSync(DIST_NOVEL) && isGitRoot(DIST_NOVEL))
 
 	if (branch_name)
 	{
-		deleteBranch(branch_name);
+		deleteBranch(branch_name, true);
 	}
 
 	console.timeEnd(label);

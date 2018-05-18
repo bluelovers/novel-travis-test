@@ -74,10 +74,10 @@ function currentBranchName() {
     return name;
 }
 exports.currentBranchName = currentBranchName;
-function deleteBranch(name) {
+function deleteBranch(name, force) {
     return __1.crossSpawnSync('git', [
         'branch',
-        '-d',
+        force ? '-D' : '-d',
         name,
     ], {
         stdio: 'inherit',
@@ -94,10 +94,12 @@ function oldBranch() {
 }
 exports.oldBranch = oldBranch;
 function diffOrigin() {
-    return gitlog2_1.default({
+    let log = gitlog2_1.default({
         repo: init_1.DIST_NOVEL,
         branch: [currentBranchName(), 'origin/master'].join('..'),
-        number: 5,
-    }).length > 1;
+        number: 3,
+    });
+    console.log(log, log.length);
+    return log.length;
 }
 exports.diffOrigin = diffOrigin;
