@@ -4,6 +4,7 @@ const path = require("upath2");
 const fs = require("fs-extra");
 const __1 = require("..");
 const project_config_1 = require("../project.config");
+const gitlog2_1 = require("gitlog2");
 const init_1 = require("../script/init");
 const git_1 = require("../script/git");
 exports.GIT_SETTING_DIST_NOVEL = {
@@ -14,6 +15,24 @@ exports.GIT_SETTING_DIST_NOVEL = {
     newBranchName: init_1.BR_NAME,
     on: {
         create_before(data, temp) {
+            __1.crossSpawnSync('git', [
+                'remote',
+                'add',
+                'origin',
+                data.urlClone,
+            ], {
+                stdio: 'inherit',
+                cwd: data.targetPath,
+            });
+            __1.crossSpawnSync('git', [
+                'remote',
+                'add',
+                'gitee',
+                data.pushUrl,
+            ], {
+                stdio: 'inherit',
+                cwd: data.targetPath,
+            });
             if (data.NOT_DONE && data.exists) {
                 __1.crossSpawnSync('git', [
                     'commit',
@@ -37,6 +56,7 @@ exports.GIT_SETTING_DIST_NOVEL = {
         create(data, temp) {
         },
         create_after(data, temp) {
+            console.log(`new branch: ${data.newBranchName}`);
             git_1.newBranch(data.targetPath, data.newBranchName);
             if (data.exists) {
                 if (data.existsBranchName) {
@@ -46,6 +66,12 @@ exports.GIT_SETTING_DIST_NOVEL = {
             else {
                 // do something
             }
+            let log = gitlog2_1.default({
+                repo: data.targetPath,
+                number: 5,
+                nameStatus: false,
+            });
+            console.log(log);
         },
     }
 };
