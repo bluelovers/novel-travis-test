@@ -13,7 +13,7 @@ export async function cacheDiffNovelList(data: ReturnType<typeof novelDiffFromLo
 {
 	let jsonfile = path.join(ProjectConfig.cache_root, 'diff-novel.json');
 
-	let ls: { pathMain: string, novelID: string }[];
+	let ls: { pathMain: string, novelID: string }[] = [];
 
 	if (fs.existsSync(jsonfile))
 	{
