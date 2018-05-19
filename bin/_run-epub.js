@@ -48,6 +48,7 @@ console.log(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
     else {
         ls2 = fs.readJSONSync(epub_json);
     }
+    console.log(`${ls.length}+${ls2.length}`);
     ls = (ls || []).concat(ls2 || []);
     ls = ls.filter(v => v);
     ls = arrayUniq(ls);
@@ -112,7 +113,7 @@ console.log(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
             }
             else {
                 ls = filterCache(ls, pathMain, novelID);
-                console.log(pathMain, novelID);
+                console.log(ls.length, pathMain, novelID);
             }
         })
             .tap(function (ls) {
