@@ -33,8 +33,8 @@ console.log(`git: ${GIT_SETTING_EPUB.targetPath}`);
 	let jsonfile = path.join(ProjectConfig.cache_root, 'diff-novel.json');
 	let epub_json = path.join(ProjectConfig.cache_root, 'epub.json');
 
-	let ls: { pathMain: string, novelID: string }[];
-	let ls2: { pathMain: string, novelID: string }[];
+	let ls: { pathMain: string, novelID: string }[] = [];
+	let ls2: { pathMain: string, novelID: string }[] = [];
 
 	if (fs.existsSync(jsonfile))
 	{
@@ -76,7 +76,10 @@ console.log(`git: ${GIT_SETTING_EPUB.targetPath}`);
 
 	ls = (ls || []).concat(ls2 || []);
 
-	ls = ls.filter(v => v);
+	ls = ls.filter(function (v)
+	{
+		return v
+	});
 
 	ls = arrayUniq(ls);
 

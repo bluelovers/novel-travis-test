@@ -22,8 +22,8 @@ console.log(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
 (async () => {
     let jsonfile = path.join(project_config_1.default.cache_root, 'diff-novel.json');
     let epub_json = path.join(project_config_1.default.cache_root, 'epub.json');
-    let ls;
-    let ls2;
+    let ls = [];
+    let ls2 = [];
     if (fs.existsSync(jsonfile)) {
         ls = fs.readJSONSync(jsonfile);
     }
@@ -50,7 +50,9 @@ console.log(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
     }
     console.log(`${ls.length}+${ls2.length}`);
     ls = (ls || []).concat(ls2 || []);
-    ls = ls.filter(v => v);
+    ls = ls.filter(function (v) {
+        return v;
+    });
     ls = arrayUniq(ls);
     fs.outputJSONSync(epub_json, ls, {
         spaces: '\t',
