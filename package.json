@@ -18,7 +18,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@node-novel/task": "^1.0.6",
+    "@node-novel/task": "^1.0.7",
     "arr-unique": "^1.0.2",
     "array-uniq": "^2.0.0",
     "bluebird": "^3.5.1",
