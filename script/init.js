@@ -27,7 +27,7 @@ if (!/@$/.test(exports.GITEE_TOKEN)) {
 }
 if (exports.CacheConfig && exports.CacheConfig.config && exports.CacheConfig.config.done == -1) {
     exports.NOT_DONE = true;
-    console.log(`上次的任務未完成 本次繼續執行`);
+    console.log(`上次的任務未完成 本次繼續執行 (1)`);
 }
 else {
     let ls = FastGlob.sync([
@@ -37,7 +37,8 @@ else {
     });
     if (ls.length) {
         exports.NOT_DONE = true;
-        console.log(`上次的任務未完成 本次繼續執行`);
+        console.log(`上次的任務未完成 本次繼續執行 (2)`);
+        console.log(ls);
     }
 }
 exports.BR_NAME = 'auto/' + moment().format('YYYY-MM-DD-HH-mm-ss');

@@ -48,7 +48,7 @@ if (CacheConfig && CacheConfig.config && CacheConfig.config.done == -1)
 {
 	NOT_DONE = true;
 
-	console.log(`上次的任務未完成 本次繼續執行`);
+	console.log(`上次的任務未完成 本次繼續執行 (1)`);
 }
 else
 {
@@ -61,7 +61,9 @@ else
 	if (ls.length)
 	{
 		NOT_DONE = true;
-		console.log(`上次的任務未完成 本次繼續執行`);
+		console.log(`上次的任務未完成 本次繼續執行 (2)`);
+
+		console.log(ls);
 	}
 }
 
