@@ -20,16 +20,20 @@ export declare type IOptions = {
 };
 export declare function doSegmentGlob(options: IOptions): Promise<{
     ls: string[];
+    done_list: string[];
     count: {
         file: number;
         changed: number;
+        done: number;
     };
 }>;
 export declare function _doSegmentGlob(ls: string[], options: IOptions): Promise<{
     ls: string[];
+    done_list: string[];
     count: {
         file: number;
         changed: number;
+        done: number;
     };
 }>;
 export declare function _path(pathMain: any, novelID: any, novel_root?: string): string;

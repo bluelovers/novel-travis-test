@@ -123,9 +123,11 @@ function _doSegmentGlob(ls, options) {
         console.log(`file changed: ${count_changed}`);
         return {
             ls,
+            done_list,
             count: {
                 file: ls.length,
                 changed: count_changed,
+                done: done_list.length,
             },
         };
     });

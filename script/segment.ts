@@ -210,9 +210,11 @@ export function _doSegmentGlob(ls: string[], options: IOptions)
 
 			return {
 				ls,
+				done_list,
 				count: {
 					file: ls.length,
 					changed: count_changed,
+					done: done_list.length,
 				},
 			}
 		})

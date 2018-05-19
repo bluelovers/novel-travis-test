@@ -64,13 +64,16 @@ if (pathMain && novelID)
 		})
 			.then(async function (ret)
 			{
-				if (ls.length == 0)
+				ls = ls.filter(function (v)
+				{
+					return ret.done_list.indexOf(v) == -1
+				});
+
+				console.error(`ls: ${ls.length}`);
+
+				if (ls.length == 0 || 1)
 				{
 					fs.removeSync(jsonfile);
-				}
-				else
-				{
-					console.error('[unknow error]', `${ls.length}`);
 				}
 
 				return ret.count.changed;
