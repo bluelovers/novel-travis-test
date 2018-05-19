@@ -100,9 +100,11 @@ else
 
 		if (CacheConfig)
 		{
-			CacheConfig.config.done = 1;
+			let config = fs.readJSONSync(CacheConfig.filepath);
 
-			fs.writeJSONSync(CacheConfig.filepath, CacheConfig.config, {
+			config.done = 1;
+
+			fs.writeJSONSync(CacheConfig.filepath, config, {
 				spaces: 2,
 			});
 		}

@@ -60,8 +60,9 @@ else {
     if (ok) {
         fs.removeSync(path.join(project_config_1.default.cache_root, '.waitpush'));
         if (init_1.CacheConfig) {
-            init_1.CacheConfig.config.done = 1;
-            fs.writeJSONSync(init_1.CacheConfig.filepath, init_1.CacheConfig.config, {
+            let config = fs.readJSONSync(init_1.CacheConfig.filepath);
+            config.done = 1;
+            fs.writeJSONSync(init_1.CacheConfig.filepath, config, {
                 spaces: 2,
             });
         }
