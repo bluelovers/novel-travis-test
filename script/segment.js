@@ -61,8 +61,8 @@ function _doSegmentGlob(ls, options) {
             //				console.log(fillpath);
             //				console.log(fillpath_out);
             if (!fs.pathExistsSync(fillpath)) {
+                done_list.push(file);
                 if (options.callback) {
-                    done_list.push(file);
                     await options.callback(done_list, file, index, length);
                 }
                 return {
@@ -72,6 +72,7 @@ function _doSegmentGlob(ls, options) {
                 };
             }
             else if (!file.match(/\.txt$/i)) {
+                done_list.push(file);
                 return {
                     file,
                     changed: false,
@@ -82,8 +83,8 @@ function _doSegmentGlob(ls, options) {
             text = crlf_normalize_1.crlf(text.toString());
             if (!text.replace(/\s+/g, '')) {
                 //console.warn('[skip]', label);
+                done_list.push(file);
                 if (options.callback) {
-                    done_list.push(file);
                     await options.callback(done_list, file, index, length);
                 }
                 return {
@@ -107,8 +108,8 @@ function _doSegmentGlob(ls, options) {
             else {
                 //console.log('[done]', label);
             }
+            done_list.push(file);
             if (options.callback) {
-                done_list.push(file);
                 await options.callback(done_list, file, index, length);
             }
             ks = null;

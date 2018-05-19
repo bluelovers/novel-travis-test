@@ -114,9 +114,10 @@ export function _doSegmentGlob(ls: string[], options: IOptions)
 
 				if (!fs.pathExistsSync(fillpath))
 				{
+					done_list.push(file);
+
 					if (options.callback)
 					{
-						done_list.push(file);
 						await options.callback(done_list, file, index, length);
 					}
 
@@ -128,6 +129,8 @@ export function _doSegmentGlob(ls: string[], options: IOptions)
 				}
 				else if (!file.match(/\.txt$/i))
 				{
+					done_list.push(file);
+
 					return {
 						file,
 						changed: false,
@@ -143,9 +146,10 @@ export function _doSegmentGlob(ls: string[], options: IOptions)
 				{
 					//console.warn('[skip]', label);
 
+					done_list.push(file);
+
 					if (options.callback)
 					{
-						done_list.push(file);
 						await options.callback(done_list, file, index, length);
 					}
 
@@ -184,9 +188,10 @@ export function _doSegmentGlob(ls: string[], options: IOptions)
 					//console.log('[done]', label);
 				}
 
+				done_list.push(file);
+
 				if (options.callback)
 				{
-					done_list.push(file);
 					await options.callback(done_list, file, index, length);
 				}
 
