@@ -46,6 +46,9 @@ if (pathMain && novelID) {
             if (ls.length == 0) {
                 fs.removeSync(jsonfile);
             }
+            else {
+                console.error('[unknow error]', `${ls.length}`);
+            }
             return ret.count.changed;
         });
     })()

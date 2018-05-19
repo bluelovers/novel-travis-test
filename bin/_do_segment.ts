@@ -68,6 +68,10 @@ if (pathMain && novelID)
 				{
 					fs.removeSync(jsonfile);
 				}
+				else
+				{
+					console.error('[unknow error]', `${ls.length}`);
+				}
 
 				return ret.count.changed;
 			})
