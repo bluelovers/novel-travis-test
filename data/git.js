@@ -15,7 +15,8 @@ exports.GIT_SETTING_DIST_NOVEL = {
     newBranchName: init_1.BR_NAME,
     on: {
         create_before(data, temp) {
-            __1.crossSpawnSync('git', [
+            /*
+            crossSpawnSync('git', [
                 'remote',
                 'add',
                 'origin',
@@ -24,7 +25,8 @@ exports.GIT_SETTING_DIST_NOVEL = {
                 stdio: 'inherit',
                 cwd: data.targetPath,
             });
-            __1.crossSpawnSync('git', [
+
+            crossSpawnSync('git', [
                 'remote',
                 'add',
                 'gitee',
@@ -33,6 +35,7 @@ exports.GIT_SETTING_DIST_NOVEL = {
                 stdio: 'inherit',
                 cwd: data.targetPath,
             });
+            */
             if (data.NOT_DONE && data.exists) {
                 __1.crossSpawnSync('git', [
                     'commit',

@@ -15,7 +15,7 @@ export async function cacheDiffNovelList(data: ReturnType<typeof novelDiffFromLo
 
 	let ls: { pathMain: string, novelID: string }[] = [];
 
-	if (fs.existsSync(jsonfile))
+	if (0 && fs.existsSync(jsonfile))
 	{
 		ls = await fs.readJSON(jsonfile);
 	}

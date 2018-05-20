@@ -18,6 +18,9 @@ function pushGit(REPO_PATH, repo, force) {
         repo,
     ];
     argv = argv.filter(v => v);
+    if (init_1.NO_PUSH) {
+        return null;
+    }
     let cp = __1.crossSpawnSync('git', argv, {
         stdio: 'inherit',
         cwd: REPO_PATH,
@@ -71,6 +74,9 @@ function currentBranchName(REPO_PATH) {
 }
 exports.currentBranchName = currentBranchName;
 function deleteBranch(REPO_PATH, name, force) {
+    if (name == 'master' || !name) {
+        throw new Error();
+    }
     return __1.crossSpawnSync('git', [
         'branch',
         force ? '-D' : '-d',

@@ -69,3 +69,4 @@ else
 
 export const BR_NAME = 'auto/' + moment().format('YYYY-MM-DD-HH-mm-ss');
 
+export const NO_PUSH = MyConfig && MyConfig.config.debug && MyConfig.config.debug.no_push;

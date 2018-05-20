@@ -35,6 +35,7 @@ export const GIT_SETTING_DIST_NOVEL: IOptionsCreateGit = {
 	on: {
 		create_before(data, temp)
 		{
+			/*
 			crossSpawnSync('git', [
 				'remote',
 				'add',
@@ -54,6 +55,7 @@ export const GIT_SETTING_DIST_NOVEL: IOptionsCreateGit = {
 				stdio: 'inherit',
 				cwd: data.targetPath,
 			});
+			*/
 
 			if (data.NOT_DONE && data.exists)
 			{

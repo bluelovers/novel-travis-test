@@ -42,3 +42,4 @@ else {
     }
 }
 exports.BR_NAME = 'auto/' + moment().format('YYYY-MM-DD-HH-mm-ss');
+exports.NO_PUSH = exports.MyConfig && exports.MyConfig.config.debug && exports.MyConfig.config.debug.no_push;

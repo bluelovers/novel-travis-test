@@ -12,7 +12,7 @@ import ProjectConfig, { novel_root } from '../project.config';
 import moment = require('moment');
 import * as FastGlob from 'fast-glob';
 
-import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, GITEE_TOKEN, DEBUG } from './init';
+import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, GITEE_TOKEN, DEBUG, NO_PUSH } from './init';
 
 /**
  * Created by user on 2018/5/17/017.
@@ -28,6 +28,11 @@ export function pushGit(REPO_PATH: string, repo: string, force?: boolean)
 	];
 
 	argv = argv.filter(v => v);
+
+	if (NO_PUSH)
+	{
+		return null;
+	}
 
 	let cp = crossSpawnSync('git', argv, {
 		stdio: 'inherit',
@@ -90,6 +95,11 @@ export function currentBranchName(REPO_PATH: string)
 
 export function deleteBranch(REPO_PATH: string, name: string, force?: boolean)
 {
+	if (name == 'master' || !name)
+	{
+		throw new Error();
+	}
+
 	return crossSpawnSync('git', [
 		'branch',
 		force ? '-D' : '-d',

@@ -21,3 +21,4 @@ export declare const DIST_NOVEL: string;
 export declare let CLONE_DEPTH: string | number;
 export declare let NOT_DONE: boolean;
 export declare const BR_NAME: string;
+export declare const NO_PUSH: boolean;
