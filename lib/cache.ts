@@ -44,6 +44,12 @@ export async function cacheDiffNovelList(data: ReturnType<typeof novelDiffFromLo
 
 export async function cacheFileList(data: IListNovelRow)
 {
+	if (data.pathMain.match(/_out$/))
+	{
+		console.log('[CACHE (1)]', 'SKIP: ', data.pathMain);
+		return;
+	}
+
 	let dir = path.join(ProjectConfig.cache_root, 'files', data.pathMain);
 	let file = path.join(dir, data.novelID + '.json');
 
