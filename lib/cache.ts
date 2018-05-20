@@ -25,6 +25,7 @@ export async function cacheDiffNovelList(data: ReturnType<typeof novelDiffFromLo
 		{
 			Object.keys(data.list[pathMain]).forEach(function (novelID)
 			{
+				console.log('[CACHE (2)]', pathMain, novelID);
 				ls.push({ pathMain, novelID })
 			})
 		})
@@ -60,7 +61,7 @@ export async function cacheFileList(data: IListNovelRow)
 
 	ls = arrayUniq(ls);
 
-	console.log('[CACHE]', path.join(data.pathMain, data.novelID + '.json'), ls.length);
+	console.log('[CACHE (1)]', path.join(data.pathMain, data.novelID + '.json'), ls.length);
 
 	await fs.outputJSON(file, ls, {
 		spaces: '\t',

@@ -72,7 +72,7 @@ console.log(`git: ${GIT_SETTING_EPUB.targetPath}`);
 		ls2 = fs.readJSONSync(epub_json);
 	}
 
-	console.log(`${ls.length}+${ls2.length}`);
+	console.log(`本次新增 ${ls.length} , 上次未完成 ${ls2.length}`);
 
 	ls = (ls || []).concat(ls2 || []);
 
