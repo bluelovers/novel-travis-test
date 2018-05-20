@@ -27,6 +27,8 @@ export async function cacheDiffNovelList(data: ReturnType<typeof novelDiffFromLo
 			{
 				console.log('[CACHE (2)]', pathMain, novelID);
 				ls.push({ pathMain, novelID })
+
+				console.log(data.list[pathMain][novelID]);
 			})
 		})
 	;
