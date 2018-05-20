@@ -25,10 +25,10 @@ export async function cacheDiffNovelList(data: ReturnType<typeof novelDiffFromLo
 		{
 			Object.keys(data.list[pathMain]).forEach(function (novelID)
 			{
-				console.log('[CACHE (2)]', pathMain, novelID);
+				console.log('[CACHE (2)]', pathMain, novelID, data.list[pathMain][novelID].length);
 				ls.push({ pathMain, novelID })
 
-				console.log(data.list[pathMain][novelID]);
+				//console.log(data.list[pathMain][novelID]);
 			})
 		})
 	;
