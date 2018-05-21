@@ -61,7 +61,14 @@ console.log(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
         await Promise
             .mapSeries(ls, async function (data) {
             const { pathMain, novelID } = data;
+            let _do = false;
             if (pathMain == 'cm' || pathMain.match(/_out$/)) {
+                _do = true;
+            }
+            else if (!fs.existsSync(path.join(segment_1._path(pathMain + '_out', novelID), 'README.md'))) {
+                _do = true;
+            }
+            if (_do) {
                 const outputPath = path.join(git_1.GIT_SETTING_EPUB.targetPath, pathMain);
                 const inputPath = segment_1._path(pathMain, novelID);
                 await Promise.resolve(novel_epub_1.default({

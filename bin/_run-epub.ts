@@ -94,7 +94,18 @@ console.log(`git: ${GIT_SETTING_EPUB.targetPath}`);
 			{
 				const { pathMain, novelID } = data;
 
+				let _do = false;
+
 				if (pathMain == 'cm' || pathMain.match(/_out$/))
+				{
+					_do = true;
+				}
+				else if (!fs.existsSync(path.join(_path(pathMain + '_out', novelID), 'README.md')))
+				{
+					_do = true;
+				}
+
+				if (_do)
 				{
 					const outputPath = path.join(GIT_SETTING_EPUB.targetPath, pathMain);
 					const inputPath = _path(pathMain, novelID);
