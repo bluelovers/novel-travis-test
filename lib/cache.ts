@@ -46,7 +46,7 @@ export async function cacheFileList(data: IListNovelRow)
 {
 	if (data.pathMain.match(/_out$/))
 	{
-		console.log('[CACHE (1)]', 'SKIP: ', data.pathMain);
+		console.log('[CACHE (1)]', 'SKIP: ', data.pathMain, data.novelID);
 		return;
 	}
 
