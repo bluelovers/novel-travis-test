@@ -4,15 +4,12 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-
     "do-epub-init": "node ./bin/_do_epub_init.js",
     "do-git-init": "node ./bin/_do_git_init.js",
     "do-task": "node ./bin/_run-task.js",
     "do-epub": "node ./bin/_run-epub.js",
     "do-epub-push": "node ./bin/_do_epub_push.js",
-
     "set-cache": "node ./bin/_set_cache.js",
-
     "test": "node -v"
   },
   "author": "",
@@ -27,9 +24,9 @@
     "dotenv": "^5.0.1",
     "fast-glob": "^2.2.2",
     "fs-extra": "^6.0.1",
-    "git-diff-from": "^1.0.7",
+    "git-diff-from": "^1.1.0",
     "git-root2": "^1.0.4",
-    "gitlog2": "^4.0.1",
+    "gitlog2": "^4.1.0",
     "moment": "^2.22.1",
     "novel-epub": "^1.0.21",
     "novel-segment": "^2.0.9",
