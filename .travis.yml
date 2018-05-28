@@ -11,7 +11,8 @@ before_install:
 - git config --global user.name "testbot"
 - npm i -g yarn
 install:
-- npm install
+- yarn install
+- yarn list
 before_script:
 script:
 - git --version
