@@ -11,8 +11,8 @@ before_install:
 - git config --global user.name "testbot"
 - npm i -g yarn
 install:
-- yarn
-before_script: 
+- npm install
+before_script:
 script:
 - git --version
 - travis_wait 30 npm run do-git-init
