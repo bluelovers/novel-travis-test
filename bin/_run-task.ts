@@ -18,6 +18,7 @@ import gitlog from 'gitlog2';
 import {
 	GIT_SETTING_DIST_NOVEL,
 } from '../data/git';
+import { createPullRequests } from '../script/gitee-pr';
 
 import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, MyConfig, CacheConfig } from '../script/init';
 import { diffOrigin, getHashHEAD, getPushUrl, pushGit } from '../script/git';
@@ -88,6 +89,8 @@ else
 		{
 			ok = false;
 		}
+
+		createPullRequests();
 	}
 	else
 	{

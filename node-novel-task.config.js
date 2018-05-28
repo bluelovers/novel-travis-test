@@ -7,7 +7,7 @@ const cache_1 = require("./lib/cache");
 const segment_1 = require("./script/segment");
 const project_config_1 = require("./project.config");
 let DIST_NOVEL = project_config_1.default.novel_root;
-console.log(`目前設定為 預設值 ${__filename}`);
+//console.log(`目前設定為 預設值 ${__filename}`);
 exports.default = {
     cwd: DIST_NOVEL,
     dist_novel: DIST_NOVEL,

@@ -9,6 +9,7 @@ const __1 = require("..");
 const index_1 = require("../index");
 const project_config_1 = require("../project.config");
 const git_1 = require("../data/git");
+const gitee_pr_1 = require("../script/gitee-pr");
 const init_1 = require("../script/init");
 const git_2 = require("../script/git");
 let label;
@@ -53,6 +54,7 @@ else {
         if (cp.error || cp.stderr && cp.stderr.toString()) {
             ok = false;
         }
+        gitee_pr_1.createPullRequests();
     }
     else {
         console.error(`沒有任何變更 忽略 PUSH`);

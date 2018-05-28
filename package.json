@@ -2,23 +2,40 @@
   "name": "novel-travis-test",
   "version": "1.0.0",
   "private": true,
+  "description": "",
+  "homepage": "https://github.com/bluelovers/novel-travis-test#readme",
+  "bugs": {
+    "url": "https://github.com/bluelovers/novel-travis-test/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bluelovers/novel-travis-test.git"
+  },
+  "license": "ISC",
+  "author": "",
   "main": "index.js",
+  "bin": {
+    "novel-travis-test": "./bin/_run-task.js"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
   "scripts": {
+    "do-epub": "node ./bin/_run-epub.js",
     "do-epub-init": "node ./bin/_do_epub_init.js",
+    "do-epub-push": "node ./bin/_do_epub_push.js",
     "do-git-init": "node ./bin/_do_git_init.js",
     "do-task": "node ./bin/_run-task.js",
-    "do-epub": "node ./bin/_run-epub.js",
-    "do-epub-push": "node ./bin/_do_epub_push.js",
     "set-cache": "node ./bin/_set_cache.js",
     "test": "node -v"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@node-novel/task": "^1.0.11",
     "arr-unique": "^1.0.2",
     "array-uniq": "^2.0.0",
     "bluebird": "^3.5.1",
+    "client-oauth2-request": "^1.0.0",
     "crlf-normalize": "^1.0.2",
     "cross-spawn": "^6.0.5",
     "dotenv": "^5.0.1",
@@ -26,6 +43,7 @@
     "fs-extra": "^6.0.1",
     "git-diff-from": "^1.1.0",
     "git-root2": "^1.0.4",
+    "gitee-api-token": "^1.0.1",
     "gitlog2": "^4.1.0",
     "moment": "^2.22.1",
     "novel-epub": "^1.0.21",
@@ -34,21 +52,5 @@
     "upath2": "^2.1.2",
     "yargs": "^11.0.0"
   },
-  "bin": {
-    "novel-travis-test": "./bin/_run-task.js"
-  },
-  "directories": {
-    "lib": "lib",
-    "test": "test"
-  },
-  "devDependencies": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bluelovers/novel-travis-test.git"
-  },
-  "bugs": {
-    "url": "https://github.com/bluelovers/novel-travis-test/issues"
-  },
-  "homepage": "https://github.com/bluelovers/novel-travis-test#readme",
-  "description": ""
+  "devDependencies": {}
 }

@@ -17,7 +17,7 @@ import * as Promise from 'bluebird';
 
 let DIST_NOVEL = ProjectConfig.novel_root;
 
-console.log(`目前設定為 預設值 ${__filename}`);
+//console.log(`目前設定為 預設值 ${__filename}`);
 
 export default {
 	cwd: DIST_NOVEL,
