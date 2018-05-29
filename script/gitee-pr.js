@@ -52,9 +52,9 @@ async function createPullRequests() {
             body: 'auto pr',
         },
     })
-        .then(function (ret) {
-        console.log(`成功建立 PR`);
-        console.dir(ret);
+        .tap(function (ret) {
+        console.log(`成功建立 PR #${ret.number} ${ret.title}`);
+        //console.dir(ret);
     })
         .catch(function (err) {
         console.error(err.toString());

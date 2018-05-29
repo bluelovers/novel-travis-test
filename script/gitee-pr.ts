@@ -73,10 +73,13 @@ export async function createPullRequests()
 				body: 'auto pr',
 			},
 		})
-		.then(function (ret)
+		.tap(function (ret: {
+			number: number,
+			title: string,
+		})
 		{
-			console.log(`成功建立 PR`);
-			console.dir(ret);
+			console.log(`成功建立 PR #${ret.number} ${ret.title}`);
+			//console.dir(ret);
 		})
 		.catch(function (err)
 		{
