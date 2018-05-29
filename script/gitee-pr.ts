@@ -16,6 +16,8 @@ export async function createPullRequests()
 	let GITEE_ACCESS_TOKEN = process.env.GITEE_ACCESS_TOKEN || '';
 	let GITEE_CLIENT_ID = process.env.GITEE_CLIENT_ID || '';
 	let GITEE_CLIENT_SECRET = process.env.GITEE_CLIENT_SECRET || '';
+	let GITEE_TOKEN1 = process.env.GITEE_TOKEN1 || '';
+	let GITEE_TOKEN2 = process.env.GITEE_TOKEN2 || '';
 
 	if (!GITEE_ACCESS_TOKEN || !GITEE_CLIENT_ID || !GITEE_CLIENT_SECRET)
 	{
@@ -26,12 +28,18 @@ export async function createPullRequests()
 			GITEE_ACCESS_TOKEN = GITEE_ACCESS_TOKEN || env.parsed.GITEE_ACCESS_TOKEN;
 			GITEE_CLIENT_ID = GITEE_CLIENT_ID || env.parsed.GITEE_CLIENT_ID;
 			GITEE_CLIENT_SECRET = GITEE_CLIENT_SECRET || env.parsed.GITEE_CLIENT_SECRET;
+
+			GITEE_TOKEN1 = GITEE_TOKEN1 || env.parsed.GITEE_TOKEN1;
+			GITEE_TOKEN2 = GITEE_TOKEN2 || env.parsed.GITEE_TOKEN2;
 		}
 	}
 
 	let token = await getToken({
 
-		access_token: GITEE_ACCESS_TOKEN,
+		//access_token: GITEE_ACCESS_TOKEN,
+
+		username: GITEE_TOKEN1,
+		password: GITEE_TOKEN2,
 
 		clientId: GITEE_CLIENT_ID,
 		clientSecret: GITEE_CLIENT_SECRET,
