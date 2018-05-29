@@ -47,7 +47,7 @@
     "gitlog2": "^4.1.0",
     "moment": "^2.22.1",
     "novel-epub": "^1.0.21",
-    "novel-segment": "^2.0.11",
+    "novel-segment": "^2.0.12",
     "novel-txt-merge": "^1.0.8",
     "upath2": "^2.1.2",
     "yargs": "^11.0.0"
