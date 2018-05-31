@@ -9,7 +9,7 @@ cache:
 before_install:
 - git config --global user.email "testbot@test.test"
 - git config --global user.name "testbot"
-- npm i -g yarn
+#- npm i -g yarn
 install:
 - yarn install
 - yarn list
