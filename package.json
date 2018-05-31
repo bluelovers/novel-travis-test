@@ -31,7 +31,7 @@
     "test": "node -v"
   },
   "dependencies": {
-    "@node-novel/task": "^1.0.15",
+    "@node-novel/task": "^1.0.17",
     "arr-unique": "^1.0.2",
     "array-uniq": "^2.0.0",
     "bluebird": "^3.5.1",

@@ -79,7 +79,9 @@ else
 {
 	let ok = true;
 
-	if (currentHEAD !=  getHashHEAD(DIST_NOVEL) || diffOrigin(DIST_NOVEL))
+	let currentHEADNew = getHashHEAD(DIST_NOVEL);
+
+	if (currentHEAD != currentHEADNew || diffOrigin(DIST_NOVEL))
 	{
 		fs.ensureFileSync(path.join(ProjectConfig.cache_root, '.waitpush'));
 
@@ -106,6 +108,8 @@ else
 			let config = fs.readJSONSync(CacheConfig.filepath);
 
 			config.done = 1;
+
+			config.last_push_head = currentHEADNew;
 
 			fs.writeJSONSync(CacheConfig.filepath, config, {
 				spaces: 2,

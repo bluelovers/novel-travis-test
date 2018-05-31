@@ -48,7 +48,8 @@ if (init_1.MyConfig.config.debug && init_1.MyConfig.config.debug.no_push) {
 }
 else {
     let ok = true;
-    if (currentHEAD != git_2.getHashHEAD(init_1.DIST_NOVEL) || git_2.diffOrigin(init_1.DIST_NOVEL)) {
+    let currentHEADNew = git_2.getHashHEAD(init_1.DIST_NOVEL);
+    if (currentHEAD != currentHEADNew || git_2.diffOrigin(init_1.DIST_NOVEL)) {
         fs.ensureFileSync(path.join(project_config_1.default.cache_root, '.waitpush'));
         let cp = git_2.pushGit(init_1.DIST_NOVEL, git_2.getPushUrl(git_1.GIT_SETTING_DIST_NOVEL.url), true);
         if (cp.error || cp.stderr && cp.stderr.toString()) {
@@ -64,6 +65,7 @@ else {
         if (init_1.CacheConfig) {
             let config = fs.readJSONSync(init_1.CacheConfig.filepath);
             config.done = 1;
+            config.last_push_head = currentHEADNew;
             fs.writeJSONSync(init_1.CacheConfig.filepath, config, {
                 spaces: 2,
             });
