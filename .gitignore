@@ -32,5 +32,3 @@ dist_novel
 dist_epub
 /dist_novel/
 /dist_epub/
-/dist_novel/**/*
-/dist_epub/**/*
