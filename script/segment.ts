@@ -397,6 +397,17 @@ export function runSegment()
 	_cache_segment = _cache_segment || {};
 	_cache_segment.list = _cache_segment.list || {};
 
+	{
+		let { last_s_ver, last_d_ver, s_ver, d_ver } = _cache_segment;
+		console.log({
+			_s_ver,
+			_d_ver,
+
+			s_ver,
+			d_ver,
+		});
+	}
+
 	return Promise
 		.mapSeries(FastGlob([
 			'*/*.json',
@@ -429,6 +440,13 @@ export function runSegment()
 
 			if (_current_data.d_ver != _d_ver || _current_data.s_ver != _s_ver)
 			{
+				console.log({
+					pathMain,
+					novelID,
+					s_ver: _current_data.s_ver,
+					d_ver: _current_data.d_ver,
+				});
+
 				_run_all = true;
 			}
 
