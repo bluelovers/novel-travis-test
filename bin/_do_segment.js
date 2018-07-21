@@ -6,7 +6,7 @@ const yargs = require("yargs");
 const segment_1 = require("../script/segment");
 const project_config_1 = require("../project.config");
 const path = require("upath2");
-let { pathMain, novelID, novel_root } = yargs.argv;
+let { pathMain, novelID, novel_root, runAll } = yargs.argv;
 if (pathMain && novelID) {
     (async () => {
         let dir = path.join(project_config_1.default.cache_root, 'files', pathMain);
@@ -15,7 +15,7 @@ if (pathMain && novelID) {
             return 0;
         }
         let ls = await fs.readJSON(jsonfile);
-        if (!Array.isArray(ls) || !ls.length) {
+        if (!runAll && (!Array.isArray(ls) || !ls.length)) {
             fs.removeSync(jsonfile);
             return 0;
         }
@@ -23,7 +23,7 @@ if (pathMain && novelID) {
             pathMain,
             novelID,
             novel_root,
-            files: Array.isArray(ls) ? ls : null,
+            files: (!runAll && Array.isArray(ls)) ? ls : null,
             callback(done_list, file, index, length) {
                 if ((index % 10) == 0 || ((index + 1) >= length)) {
                     console.log(`[${index}/${length}]`, file);

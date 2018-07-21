@@ -355,6 +355,48 @@ export function getDictMain(segment: Segment)
 
 export function runSegment()
 {
+	let _cache_file_segment = path.join(ProjectConfig.cache_root, '.segment');
+
+	let _cache_segment: {
+
+		s_ver?: string,
+		d_ver?: string,
+
+		last_s_ver?: string,
+		last_d_ver?: string,
+
+		list: {
+			[k: string]: {
+				[k: string]: {
+					s_ver?: string,
+					d_ver?: string,
+
+					last_s_ver?: string,
+					last_d_ver?: string,
+				},
+			}
+		},
+	};
+
+	let _s_ver: string = String(require("novel-segment").version || '1');
+	let _d_ver: string = String(require("segment-dict").version || '1');
+
+	if (fs.existsSync(_cache_file_segment))
+	{
+		try
+		{
+			_cache_segment = fs.readJSONSync(_cache_file_segment);
+		}
+		catch (e)
+		{
+
+		}
+	}
+
+	// @ts-ignore
+	_cache_segment = _cache_segment || {};
+	_cache_segment.list = _cache_segment.list || {};
+
 	return Promise
 		.mapSeries(FastGlob([
 			'*/*.json',
@@ -379,12 +421,25 @@ export function runSegment()
 
 			let bin = path.join(ProjectConfig.project_root, 'bin/_do_segment.js');
 
+			let _run_all: boolean = false;
+
+			_cache_segment.list[novelID] = _cache_segment.list[novelID] || {};
+
+			let _current_data = _cache_segment.list[novelID][novelID] = _cache_segment.list[novelID][novelID] || {};
+
+			if (_current_data.d_ver != _d_ver || _current_data.s_ver != _s_ver)
+			{
+				_run_all = true;
+			}
+
 			let cp = crossSpawnSync('node', [
 				bin,
 				'--pathMain',
 				pathMain,
 				'--novelID',
 				novelID,
+				'--runAll',
+				String(_run_all),
 			], {
 				stdio: 'inherit',
 				cwd: DIST_NOVEL,
@@ -401,9 +456,31 @@ export function runSegment()
 					stdio: 'inherit',
 					cwd: DIST_NOVEL,
 				});
+
+				_current_data.last_s_ver = _current_data.s_ver;
+				_current_data.last_d_ver = _current_data.d_ver;
+
+				_current_data.s_ver = _s_ver;
+				_current_data.d_ver = _d_ver;
+
+				fs.outputJSONSync(_cache_file_segment, _cache_segment, {
+					spaces: "\t",
+				});
 			}
 
 			return cp.status;
+		})
+		.tap(function ()
+		{
+			_cache_segment.last_s_ver = _cache_segment.s_ver;
+			_cache_segment.last_d_ver = _cache_segment.d_ver;
+
+			_cache_segment.s_ver = _s_ver;
+			_cache_segment.d_ver = _d_ver;
+
+			fs.outputJSONSync(_cache_file_segment, _cache_segment, {
+				spaces: "\t",
+			});
 		})
 		;
 }

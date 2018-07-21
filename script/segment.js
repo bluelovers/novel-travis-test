@@ -222,6 +222,20 @@ function getDictMain(segment) {
 }
 exports.getDictMain = getDictMain;
 function runSegment() {
+    let _cache_file_segment = path.join(project_config_1.default.cache_root, '.segment');
+    let _cache_segment;
+    let _s_ver = String(require("novel-segment").version || '1');
+    let _d_ver = String(require("segment-dict").version || '1');
+    if (fs.existsSync(_cache_file_segment)) {
+        try {
+            _cache_segment = fs.readJSONSync(_cache_file_segment);
+        }
+        catch (e) {
+        }
+    }
+    // @ts-ignore
+    _cache_segment = _cache_segment || {};
+    _cache_segment.list = _cache_segment.list || {};
     return Promise
         .mapSeries(FastGlob([
         '*/*.json',
@@ -237,12 +251,20 @@ function runSegment() {
             return -1;
         }
         let bin = path.join(project_config_1.default.project_root, 'bin/_do_segment.js');
+        let _run_all = false;
+        _cache_segment.list[novelID] = _cache_segment.list[novelID] || {};
+        let _current_data = _cache_segment.list[novelID][novelID] = _cache_segment.list[novelID][novelID] || {};
+        if (_current_data.d_ver != _d_ver || _current_data.s_ver != _s_ver) {
+            _run_all = true;
+        }
         let cp = index_1.crossSpawnSync('node', [
             bin,
             '--pathMain',
             pathMain,
             '--novelID',
             novelID,
+            '--runAll',
+            String(_run_all),
         ], {
             stdio: 'inherit',
             cwd: exports.DIST_NOVEL,
@@ -257,8 +279,24 @@ function runSegment() {
                 stdio: 'inherit',
                 cwd: exports.DIST_NOVEL,
             });
+            _current_data.last_s_ver = _current_data.s_ver;
+            _current_data.last_d_ver = _current_data.d_ver;
+            _current_data.s_ver = _s_ver;
+            _current_data.d_ver = _d_ver;
+            fs.outputJSONSync(_cache_file_segment, _cache_segment, {
+                spaces: "\t",
+            });
         }
         return cp.status;
+    })
+        .tap(function () {
+        _cache_segment.last_s_ver = _cache_segment.s_ver;
+        _cache_segment.last_d_ver = _cache_segment.d_ver;
+        _cache_segment.s_ver = _s_ver;
+        _cache_segment.d_ver = _d_ver;
+        fs.outputJSONSync(_cache_file_segment, _cache_segment, {
+            spaces: "\t",
+        });
     });
 }
 exports.runSegment = runSegment;

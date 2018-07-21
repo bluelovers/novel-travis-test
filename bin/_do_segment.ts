@@ -6,7 +6,7 @@ import { doSegmentGlob } from '../script/segment';
 import ProjectConfig from '../project.config';
 import path = require('upath2');
 
-let { pathMain, novelID, novel_root } = yargs.argv;
+let { pathMain, novelID, novel_root, runAll } = yargs.argv;
 
 if (pathMain && novelID)
 {
@@ -22,7 +22,7 @@ if (pathMain && novelID)
 
 		let ls = await fs.readJSON(jsonfile) as string[];
 
-		if (!Array.isArray(ls) || !ls.length)
+		if (!runAll && (!Array.isArray(ls) || !ls.length))
 		{
 			fs.removeSync(jsonfile);
 
@@ -34,7 +34,7 @@ if (pathMain && novelID)
 			novelID,
 			novel_root,
 
-			files: Array.isArray(ls) ? ls : null,
+			files: (!runAll && Array.isArray(ls)) ? ls : null,
 
 			callback(done_list, file, index, length)
 			{
