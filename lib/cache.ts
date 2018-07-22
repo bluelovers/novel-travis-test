@@ -23,6 +23,12 @@ export async function cacheDiffNovelList(data: ReturnType<typeof novelDiffFromLo
 	Object.keys(data.list)
 		.forEach(function (pathMain)
 		{
+			if (pathMain.match(/^\./) || ['docs'].includes(pathMain))
+			{
+				console.log('[SKIP (2)]', pathMain, Object.keys(data.list[pathMain]));
+				return;
+			}
+
 			Object.keys(data.list[pathMain]).forEach(function (novelID)
 			{
 				console.log('[CACHE (2)]', pathMain, novelID, data.list[pathMain][novelID].length);
