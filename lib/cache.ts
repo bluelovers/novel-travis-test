@@ -25,13 +25,13 @@ export async function cacheDiffNovelList(data: ReturnType<typeof novelDiffFromLo
 		{
 			if (pathMain.match(/^\./) || ['docs'].includes(pathMain))
 			{
-				console.log('[SKIP (2)]', pathMain, Object.keys(data.list[pathMain]));
+				console.log('[SKIP (cacheDiffNovelList)]', pathMain, Object.keys(data.list[pathMain]));
 				return;
 			}
 
 			Object.keys(data.list[pathMain]).forEach(function (novelID)
 			{
-				console.log('[CACHE (2)]', pathMain, novelID, data.list[pathMain][novelID].length);
+				console.log('[CACHE (cacheDiffNovelList)]', pathMain, novelID, data.list[pathMain][novelID].length);
 				ls.push({ pathMain, novelID })
 
 				//console.log(data.list[pathMain][novelID]);
