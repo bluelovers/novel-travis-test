@@ -16,6 +16,7 @@ install:
 before_script:
 script:
 - git --version
+- npm run do-bugfix
 - travis_wait 30 npm run do-git-init
 - npm run do-task
 - travis_wait 30 npm run do-epub-init

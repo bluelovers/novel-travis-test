@@ -44,7 +44,7 @@ export async function cacheDiffNovelList(data: ReturnType<typeof novelDiffFromLo
 
 export async function cacheFileList(data: IListNovelRow)
 {
-	if (data.pathMain.match(/_out$/))
+	if (data.pathMain.match(/_out$|^\./) || ['docs'].includes(data.pathMain))
 	{
 		console.log('[CACHE (1)]', 'SKIP: ', data.pathMain, data.novelID);
 		return;

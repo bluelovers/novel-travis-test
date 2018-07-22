@@ -22,6 +22,7 @@
     "test": "test"
   },
   "scripts": {
+    "do-bugfix": "node ./bin/_bugfix.js",
     "do-epub": "node ./bin/_run-epub.js",
     "do-epub-init": "node ./bin/_do_epub_init.js",
     "do-epub-push": "node ./bin/_do_epub_push.js",
