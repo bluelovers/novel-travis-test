@@ -5,11 +5,26 @@
 import { crossSpawnSync, crossSpawnAsync } from '../index';
 import ProjectConfig from '../project.config';
 // @ts-ignore
-import { processToc } from '@node-novel/toc';
+import { processToc, Promise } from '@node-novel/toc';
+import path = require('path');
 
 processToc(ProjectConfig.novel_root)
-	.then(function (ls)
+	.then(async function (ls)
 	{
+		await Promise.each(Object.keys(ls), function(pathMain)
+		{
+			let file = path.join(ProjectConfig.novel_root, pathMain, 'README.md');
+
+			return crossSpawnAsync('git', [
+				'add',
+				'--verbose',
+				file,
+			], {
+				stdio: 'inherit',
+				cwd: ProjectConfig.novel_root,
+			});
+		});
+
 		return crossSpawnAsync('git', [
 			'commit',
 			'-a',
