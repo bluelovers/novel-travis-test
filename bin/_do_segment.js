@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const toc_contents_1 = require("@node-novel/toc/toc_contents");
 const fs = require("fs-extra");
 const yargs = require("yargs");
 const segment_1 = require("../script/segment");
 const project_config_1 = require("../project.config");
 const path = require("upath2");
+const Promise = require("bluebird");
 let { pathMain, novelID, novel_root, runAll } = yargs.argv;
 if (pathMain && novelID) {
-    (async () => {
+    Promise.resolve((async () => {
         let dir = path.join(project_config_1.default.cache_root, 'files', pathMain);
         let jsonfile = path.join(dir, novelID + '.json');
         if (!fs.existsSync(jsonfile)) {
@@ -60,7 +62,15 @@ if (pathMain && novelID) {
             }
             return Promise.reject(e);
         });
-    })()
+    })())
+        .tap(function () {
+        let basePath = path.join(novel_root, pathMain, novelID);
+        let file = path.join(basePath, '導航目錄.md');
+        return toc_contents_1.default(basePath, file)
+            .catch(function (e) {
+            console.error(`[Error:processTocContents]`, e);
+        });
+    })
         .then(function (n) {
         process.exit(n || 0);
     });

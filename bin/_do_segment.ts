@@ -1,16 +1,18 @@
 #!/usr/bin/env node
 
+import processTocContents from '@node-novel/toc/toc_contents';
 import * as fs from 'fs-extra';
 import * as yargs from 'yargs';
 import { doSegmentGlob, ERROR_MSG_001 } from '../script/segment';
 import ProjectConfig from '../project.config';
 import path = require('upath2');
+import * as Promise from 'bluebird';
 
 let { pathMain, novelID, novel_root, runAll } = yargs.argv;
 
 if (pathMain && novelID)
 {
-	(async () =>
+	Promise.resolve((async () =>
 	{
 		let dir = path.join(ProjectConfig.cache_root, 'files', pathMain);
 		let jsonfile = path.join(dir, novelID + '.json');
@@ -92,7 +94,20 @@ if (pathMain && novelID)
 				return Promise.reject(e)
 			})
 			;
-	})()
+	})())
+		.tap(function ()
+		{
+			let basePath = path.join(novel_root, pathMain, novelID);
+
+			let file = path.join(basePath, '導航目錄.md');
+
+			return processTocContents(basePath, file)
+				.catch(function (e)
+				{
+					console.error(`[Error:processTocContents]`, e);
+				})
+				;
+		})
 		.then(function (n)
 		{
 			process.exit(n || 0)
