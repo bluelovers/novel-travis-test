@@ -4,8 +4,10 @@
 
 import processTocContents from '@node-novel/toc/toc_contents';
 import * as Promise from 'bluebird';
-import { GIT_SETTING_EPUB } from '../data/git';
+import { GIT_SETTING_DIST_NOVEL, GIT_SETTING_EPUB } from '../data/git';
 import ProjectConfig from '../project.config';
+import { getPushUrl, pushGit } from '../script/git';
+import { DIST_NOVEL } from '../script/init';
 import { _path } from '../script/segment';
 import * as self from './_create_toc_contents';
 import { crossSpawnSync, crossSpawnAsync } from '../index';
@@ -63,6 +65,10 @@ import * as fs from 'fs-extra';
 						})
 						;
 				}
+			})
+			.then(function ()
+			{
+				let cp = pushGit(ProjectConfig.novel_root, getPushUrl(GIT_SETTING_DIST_NOVEL.url), true);
 			})
 		;
 	}

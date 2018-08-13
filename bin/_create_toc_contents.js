@@ -5,7 +5,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const toc_contents_1 = require("@node-novel/toc/toc_contents");
 const Promise = require("bluebird");
+const git_1 = require("../data/git");
 const project_config_1 = require("../project.config");
+const git_2 = require("../script/git");
 const index_1 = require("../index");
 const path = require("path");
 const fs = require("fs-extra");
@@ -44,6 +46,9 @@ const fs = require("fs-extra");
                     }
                 });
             }
+        })
+            .then(function () {
+            let cp = git_2.pushGit(project_config_1.default.novel_root, git_2.getPushUrl(git_1.GIT_SETTING_DIST_NOVEL.url), true);
         });
     }
 })();
