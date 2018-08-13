@@ -20,6 +20,7 @@ script:
 - travis_wait 30 npm run do-git-init
 - npm run do-toc
 - npm run do-task
+- npm run do-toc-contents
 - travis_wait 30 npm run do-epub-init
 - npm run do-epub
 - travis_wait 30 npm run do-epub-push

@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const toc_contents_1 = require("@node-novel/toc/toc_contents");
 const fs = require("fs-extra");
 const yargs = require("yargs");
 const segment_1 = require("../script/segment");
@@ -63,14 +62,6 @@ if (pathMain && novelID) {
             return Promise.reject(e);
         });
     })())
-        .tap(function () {
-        let basePath = path.join(novel_root || project_config_1.default.novel_root, pathMain, novelID);
-        let file = path.join(basePath, '導航目錄.md');
-        return toc_contents_1.default(basePath, file)
-            .catch(function (e) {
-            console.error(`[Error:processTocContents]`, e);
-        });
-    })
         .then(function (n) {
         process.exit(n || 0);
     });

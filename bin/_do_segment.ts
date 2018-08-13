@@ -95,19 +95,6 @@ if (pathMain && novelID)
 			})
 			;
 	})())
-		.tap(function ()
-		{
-			let basePath = path.join(novel_root || ProjectConfig.novel_root, pathMain, novelID);
-
-			let file = path.join(basePath, '導航目錄.md');
-
-			return processTocContents(basePath, file)
-				.catch(function (e)
-				{
-					console.error(`[Error:processTocContents]`, e);
-				})
-				;
-		})
 		.then(function (n)
 		{
 			process.exit(n || 0)

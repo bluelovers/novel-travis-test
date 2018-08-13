@@ -52,7 +52,7 @@ export async function cacheFileList(data: IListNovelRow)
 {
 	if (data.pathMain.match(/_out$|^\./) || ['docs'].includes(data.pathMain))
 	{
-		console.log('[CACHE (1)]', 'SKIP: ', data.pathMain, data.novelID);
+		console.log('[CACHE (cacheFileList)]', 'SKIP: ', data.pathMain, data.novelID);
 		return;
 	}
 
@@ -75,7 +75,7 @@ export async function cacheFileList(data: IListNovelRow)
 
 	ls = arrayUniq(ls);
 
-	console.log('[CACHE (1)]', path.join(data.pathMain, data.novelID + '.json'), ls.length);
+	console.log('[CACHE (cacheFileList)]', path.join(data.pathMain, data.novelID + '.json'), ls.length);
 
 	await fs.outputJSON(file, ls, {
 		spaces: '\t',

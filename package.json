@@ -22,6 +22,7 @@
     "test": "test"
   },
   "scripts": {
+    "do-toc-contents": "node ./bin/_create_toc_contents.js",
     "do-toc": "node ./bin/_create_toc.js",
     "do-bugfix": "node ./bin/_bugfix.js",
     "do-epub": "node ./bin/_run-epub.js",
