@@ -26,6 +26,7 @@ import * as FastGlob from 'fast-glob';
 
 	if (!fs.existsSync(_cache_init))
 	{
+		console.log(`初始化所有 小說 的 導航目錄`);
 		ls = await get_ids(ProjectConfig.novel_root)
 			.reduce(async function (memo, pathMain: string)
 			{
@@ -113,6 +114,8 @@ import * as FastGlob from 'fast-glob';
 			{
 				if (_update)
 				{
+					console.log(`完成 並且試圖 push 與 建立 PR`);
+
 					let cp = await pushGit(ProjectConfig.novel_root, getPushUrl(GIT_SETTING_DIST_NOVEL.url), true);
 
 					return createPullRequests();

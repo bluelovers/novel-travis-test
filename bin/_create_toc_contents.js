@@ -19,6 +19,7 @@ const FastGlob = require("fast-glob");
     let jsonfile = path.join(project_config_1.default.cache_root, 'diff-novel.json');
     let ls;
     if (!fs.existsSync(_cache_init)) {
+        console.log(`初始化所有 小說 的 導航目錄`);
         ls = await toc_1.get_ids(project_config_1.default.novel_root)
             .reduce(async function (memo, pathMain) {
             await Promise
@@ -79,6 +80,7 @@ const FastGlob = require("fast-glob");
         })
             .tap(async function () {
             if (_update) {
+                console.log(`完成 並且試圖 push 與 建立 PR`);
                 let cp = await git_2.pushGit(project_config_1.default.novel_root, git_2.getPushUrl(git_1.GIT_SETTING_DIST_NOVEL.url), true);
                 return gitee_pr_1.createPullRequests();
             }
