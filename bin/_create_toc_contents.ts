@@ -29,6 +29,8 @@ import * as fs from 'fs-extra';
 
 	if (ls && ls.length)
 	{
+		let _update: boolean;
+
 		await Promise
 			.mapSeries(ls, async function (data)
 			{
@@ -45,33 +47,48 @@ import * as fs from 'fs-extra';
 						{
 							if (ls)
 							{
-								await crossSpawnSync('git', [
-									'add',
-									file,
-								], {
-									stdio: 'inherit',
-									cwd: basePath,
-								});
+								let old = await fs.readFile(file)
+									.catch(function ()
+									{
+										return '';
+									})
+								;
 
-								await crossSpawnSync('git', [
-									'commit',
-									'-a',
-									'-m',
-									`[toc:contents] ${pathMain} ${novelID}`,
-								], {
-									stdio: 'inherit',
-									cwd: basePath,
-								});
+								if (old != ls)
+								{
+									await crossSpawnSync('git', [
+										'add',
+										file,
+									], {
+										stdio: 'inherit',
+										cwd: basePath,
+									});
+
+									await crossSpawnSync('git', [
+										'commit',
+										'-a',
+										'-m',
+										`[toc:contents] ${pathMain} ${novelID}`,
+									], {
+										stdio: 'inherit',
+										cwd: basePath,
+									});
+
+									_update = true;
+								}
 							}
 						})
 						;
 				}
 			})
-			.then(async function ()
+			.tap(async function ()
 			{
-				let cp = await pushGit(ProjectConfig.novel_root, getPushUrl(GIT_SETTING_DIST_NOVEL.url), true);
+				if (_update)
+				{
+					let cp = await pushGit(ProjectConfig.novel_root, getPushUrl(GIT_SETTING_DIST_NOVEL.url), true);
 
-				return createPullRequests();
+					return createPullRequests();
+				}
 			})
 		;
 	}

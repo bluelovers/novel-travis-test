@@ -19,6 +19,7 @@ const fs = require("fs-extra");
     }
     let ls = await fs.readJSON(jsonfile);
     if (ls && ls.length) {
+        let _update;
         await Promise
             .mapSeries(ls, async function (data) {
             const { pathMain, novelID } = data;
@@ -28,29 +29,38 @@ const fs = require("fs-extra");
                 return toc_contents_1.default(basePath, file)
                     .tap(async function (ls) {
                     if (ls) {
-                        await index_1.crossSpawnSync('git', [
-                            'add',
-                            file,
-                        ], {
-                            stdio: 'inherit',
-                            cwd: basePath,
+                        let old = await fs.readFile(file)
+                            .catch(function () {
+                            return '';
                         });
-                        await index_1.crossSpawnSync('git', [
-                            'commit',
-                            '-a',
-                            '-m',
-                            `[toc:contents] ${pathMain} ${novelID}`,
-                        ], {
-                            stdio: 'inherit',
-                            cwd: basePath,
-                        });
+                        if (old != ls) {
+                            await index_1.crossSpawnSync('git', [
+                                'add',
+                                file,
+                            ], {
+                                stdio: 'inherit',
+                                cwd: basePath,
+                            });
+                            await index_1.crossSpawnSync('git', [
+                                'commit',
+                                '-a',
+                                '-m',
+                                `[toc:contents] ${pathMain} ${novelID}`,
+                            ], {
+                                stdio: 'inherit',
+                                cwd: basePath,
+                            });
+                            _update = true;
+                        }
                     }
                 });
             }
         })
-            .then(async function () {
-            let cp = await git_2.pushGit(project_config_1.default.novel_root, git_2.getPushUrl(git_1.GIT_SETTING_DIST_NOVEL.url), true);
-            return gitee_pr_1.createPullRequests();
+            .tap(async function () {
+            if (_update) {
+                let cp = await git_2.pushGit(project_config_1.default.novel_root, git_2.getPushUrl(git_1.GIT_SETTING_DIST_NOVEL.url), true);
+                return gitee_pr_1.createPullRequests();
+            }
         });
     }
 })();
