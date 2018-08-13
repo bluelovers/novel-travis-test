@@ -26,11 +26,11 @@ import * as FastGlob from 'fast-glob';
 
 	let bool = fs.existsSync(_cache_init);
 
-	console.log(`是否已曾經初始化導航目錄`, bool, _cache_init);
+	console.log(`[toc:contents] 是否已曾經初始化導航目錄`, bool, _cache_init);
 
 	if (!bool)
 	{
-		console.log(`初始化所有 小說 的 導航目錄`);
+		console.log(`[toc:contents] 初始化所有 小說 的 導航目錄`);
 		ls = await get_ids(ProjectConfig.novel_root)
 			.reduce(async function (memo, pathMain: string)
 			{
@@ -53,7 +53,7 @@ import * as FastGlob from 'fast-glob';
 	}
 	else if (!fs.existsSync(jsonfile))
 	{
-		console.log(`本次沒有任何待更新列表 (1)`);
+		console.log(`[toc:contents] 本次沒有任何待更新列表 (1)`);
 		return;
 	}
 	else
@@ -76,7 +76,7 @@ import * as FastGlob from 'fast-glob';
 				{
 					let file = path.join(basePath, '導航目錄.md');
 
-					console.log(pathMain, novelID);
+					console.log(`[toc:contents]`, pathMain, novelID);
 
 					return processTocContents(basePath, file)
 						.tap(async function (ls)
@@ -118,7 +118,7 @@ import * as FastGlob from 'fast-glob';
 								}
 								else
 								{
-									console.log(`目錄檔案已存在並且沒有變化`);
+									console.log(`[toc:contents] 目錄檔案已存在並且沒有變化`);
 								}
 							}
 						})
@@ -129,7 +129,7 @@ import * as FastGlob from 'fast-glob';
 			{
 				if (_update)
 				{
-					console.log(`完成 並且試圖 push 與 建立 PR`);
+					console.log(`[toc:contents] 完成 並且試圖 push 與 建立 PR`);
 
 					let cp = await pushGit(ProjectConfig.novel_root, getPushUrl(GIT_SETTING_DIST_NOVEL.url), true);
 
@@ -139,17 +139,17 @@ import * as FastGlob from 'fast-glob';
 				}
 				else
 				{
-					console.log(`完成 本次無更新任何檔案`);
+					console.log(`[toc:contents] 完成 本次無更新任何檔案`);
 				}
 			})
 			.tap(function ()
 			{
-				console.log(`done.`);
+				console.log(`[toc:contents] done.`);
 			})
 		;
 	}
 	else
 	{
-		console.log(`本次沒有任何待更新列表 (2)`);
+		console.log(`[toc:contents] 本次沒有任何待更新列表 (2)`);
 	}
 })();
