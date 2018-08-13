@@ -105,6 +105,15 @@ export const GIT_SETTING_DIST_NOVEL: IOptionsCreateGit = {
 				// do something
 			}
 
+			crossSpawnSync('git', [
+				'clean',
+				'-d',
+				'-fx',
+			], {
+				stdio: 'inherit',
+				cwd: data.targetPath,
+			});
+
 			let log = gitlog({
 				repo: data.targetPath,
 				number: 5,
