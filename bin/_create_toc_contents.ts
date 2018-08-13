@@ -76,6 +76,8 @@ import * as FastGlob from 'fast-glob';
 				{
 					let file = path.join(basePath, '導航目錄.md');
 
+					console.log(pathMain, novelID);
+
 					return processTocContents(basePath, file)
 						.tap(async function (ls)
 						{
@@ -86,9 +88,13 @@ import * as FastGlob from 'fast-glob';
 									{
 										return '';
 									})
+									.then(function (ls)
+									{
+										return ls.toString();
+									})
 								;
 
-								if (old != ls)
+								if (!bool || old != ls)
 								{
 									await crossSpawnSync('git', [
 										'add',
@@ -109,6 +115,10 @@ import * as FastGlob from 'fast-glob';
 									});
 
 									_update = true;
+								}
+								else
+								{
+									console.log(`目錄檔案已存在並且沒有變化`);
 								}
 							}
 						})

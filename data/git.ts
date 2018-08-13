@@ -105,6 +105,7 @@ export const GIT_SETTING_DIST_NOVEL: IOptionsCreateGit = {
 				// do something
 			}
 
+			console.log(`[git:clean] Remove untracked files from the working tree`);
 			crossSpawnSync('git', [
 				'clean',
 				'-d',
@@ -165,6 +166,7 @@ export const GIT_SETTING_EPUB: IOptionsCreateGit = {
 				cwd: data.targetPath,
 			});
 
+			console.log(`[git:clean] Remove untracked files from the working tree`);
 			crossSpawnSync('git', [
 				'clean',
 				'-d',
