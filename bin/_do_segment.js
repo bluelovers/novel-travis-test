@@ -18,14 +18,13 @@ if (pathMain && novelID) {
         }
         let ls = await fs.readJSON(jsonfile);
         runAll = env_bool_1.default(runAll);
-        console.log(`[Segment]`, pathMain, novelID, `runAll: ${runAll}`, ls && ls.length);
         if (!runAll && (!Array.isArray(ls) || !ls.length)) {
+            console.log(`[Segment:skip]`, pathMain, novelID, ls);
             fs.removeSync(jsonfile);
             return 0;
         }
-        else {
-            console.log(`list:`, ls);
-        }
+        console.log(`[Segment]`, pathMain, novelID, `runAll: ${runAll}`);
+        console.log(`list:`, ls);
         return segment_1.doSegmentGlob({
             pathMain,
             novelID,
