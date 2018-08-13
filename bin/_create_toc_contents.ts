@@ -24,7 +24,11 @@ import * as FastGlob from 'fast-glob';
 
 	let ls: { pathMain: string, novelID: string }[];
 
-	if (!fs.existsSync(_cache_init))
+	let bool = fs.existsSync(_cache_init);
+
+	console.log(`是否已曾經初始化導航目錄`, bool, _cache_init);
+
+	if (!bool)
 	{
 		console.log(`初始化所有 小說 的 導航目錄`);
 		ls = await get_ids(ProjectConfig.novel_root)
@@ -49,6 +53,7 @@ import * as FastGlob from 'fast-glob';
 	}
 	else if (!fs.existsSync(jsonfile))
 	{
+		console.log(`本次沒有任何待更新列表 (1)`);
 		return;
 	}
 	else
@@ -120,11 +125,23 @@ import * as FastGlob from 'fast-glob';
 
 					return createPullRequests();
 				}
+				else
+				{
+					console.log(`完成 本次無更新任何檔案`);
+				}
 			})
 			.tap(function ()
 			{
 				return fs.ensureFile(_cache_init);
 			})
+			.tap(function ()
+			{
+				console.log(`done.`);
+			})
 		;
+	}
+	else
+	{
+		console.log(`本次沒有任何待更新列表 (2)`);
 	}
 })();

@@ -18,7 +18,9 @@ const FastGlob = require("fast-glob");
     let _cache_init = path.join(project_config_1.default.cache_root, '.toc_contents.cache');
     let jsonfile = path.join(project_config_1.default.cache_root, 'diff-novel.json');
     let ls;
-    if (!fs.existsSync(_cache_init)) {
+    let bool = fs.existsSync(_cache_init);
+    console.log(`是否已曾經初始化導航目錄`, bool, _cache_init);
+    if (!bool) {
         console.log(`初始化所有 小說 的 導航目錄`);
         ls = await toc_1.get_ids(project_config_1.default.novel_root)
             .reduce(async function (memo, pathMain) {
@@ -35,6 +37,7 @@ const FastGlob = require("fast-glob");
         }, []);
     }
     else if (!fs.existsSync(jsonfile)) {
+        console.log(`本次沒有任何待更新列表 (1)`);
         return;
     }
     else {
@@ -84,9 +87,18 @@ const FastGlob = require("fast-glob");
                 let cp = await git_2.pushGit(project_config_1.default.novel_root, git_2.getPushUrl(git_1.GIT_SETTING_DIST_NOVEL.url), true);
                 return gitee_pr_1.createPullRequests();
             }
+            else {
+                console.log(`完成 本次無更新任何檔案`);
+            }
         })
             .tap(function () {
             return fs.ensureFile(_cache_init);
+        })
+            .tap(function () {
+            console.log(`done.`);
         });
+    }
+    else {
+        console.log(`本次沒有任何待更新列表 (2)`);
     }
 })();
