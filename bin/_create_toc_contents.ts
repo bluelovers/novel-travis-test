@@ -2,6 +2,7 @@
  * Created by user on 2018/8/14/014.
  */
 
+import { get_ids } from '@node-novel/toc';
 import processTocContents from '@node-novel/toc/toc_contents';
 import * as Promise from 'bluebird';
 import { GIT_SETTING_DIST_NOVEL, GIT_SETTING_EPUB } from '../data/git';
@@ -14,18 +15,45 @@ import * as self from './_create_toc_contents';
 import { crossSpawnSync, crossSpawnAsync } from '../index';
 import path = require('path');
 import * as fs from 'fs-extra';
+import * as FastGlob from 'fast-glob';
 
 (async () =>
 {
-
+	let _cache_init = path.join(ProjectConfig.cache_root, '.toc_contents.cache');
 	let jsonfile = path.join(ProjectConfig.cache_root, 'diff-novel.json');
 
-	if (!fs.existsSync(jsonfile))
+	let ls: { pathMain: string, novelID: string }[];
+
+	if (!fs.existsSync(_cache_init))
+	{
+		ls = await get_ids(ProjectConfig.novel_root)
+			.reduce(async function (memo, pathMain: string)
+			{
+				await Promise
+					.mapSeries(FastGlob<string>([
+						'*/README.md',
+					], {
+						cwd: path.join(ProjectConfig.novel_root, pathMain),
+					}), function (p)
+					{
+						let novelID = path.basename(path.dirname(p));
+
+						memo.push({ pathMain, novelID });
+					})
+				;
+
+				return memo;
+			}, [])
+		;
+	}
+	else if (!fs.existsSync(jsonfile))
 	{
 		return;
 	}
-
-	let ls: { pathMain: string, novelID: string }[] = await fs.readJSON(jsonfile);
+	else
+	{
+		ls = await fs.readJSON(jsonfile);
+	}
 
 	if (ls && ls.length)
 	{
@@ -89,6 +117,10 @@ import * as fs from 'fs-extra';
 
 					return createPullRequests();
 				}
+			})
+			.tap(function ()
+			{
+				return fs.ensureFile(_cache_init);
 			})
 		;
 	}

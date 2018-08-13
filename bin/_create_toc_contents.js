@@ -3,6 +3,7 @@
  * Created by user on 2018/8/14/014.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
+const toc_1 = require("@node-novel/toc");
 const toc_contents_1 = require("@node-novel/toc/toc_contents");
 const Promise = require("bluebird");
 const git_1 = require("../data/git");
@@ -12,12 +13,32 @@ const gitee_pr_1 = require("../script/gitee-pr");
 const index_1 = require("../index");
 const path = require("path");
 const fs = require("fs-extra");
+const FastGlob = require("fast-glob");
 (async () => {
+    let _cache_init = path.join(project_config_1.default.cache_root, '.toc_contents.cache');
     let jsonfile = path.join(project_config_1.default.cache_root, 'diff-novel.json');
-    if (!fs.existsSync(jsonfile)) {
+    let ls;
+    if (!fs.existsSync(_cache_init)) {
+        ls = await toc_1.get_ids(project_config_1.default.novel_root)
+            .reduce(async function (memo, pathMain) {
+            await Promise
+                .mapSeries(FastGlob([
+                '*/README.md',
+            ], {
+                cwd: path.join(project_config_1.default.novel_root, pathMain),
+            }), function (p) {
+                let novelID = path.basename(path.dirname(p));
+                memo.push({ pathMain, novelID });
+            });
+            return memo;
+        }, []);
+    }
+    else if (!fs.existsSync(jsonfile)) {
         return;
     }
-    let ls = await fs.readJSON(jsonfile);
+    else {
+        ls = await fs.readJSON(jsonfile);
+    }
     if (ls && ls.length) {
         let _update;
         await Promise
@@ -61,6 +82,9 @@ const fs = require("fs-extra");
                 let cp = await git_2.pushGit(project_config_1.default.novel_root, git_2.getPushUrl(git_1.GIT_SETTING_DIST_NOVEL.url), true);
                 return gitee_pr_1.createPullRequests();
             }
+        })
+            .tap(function () {
+            return fs.ensureFile(_cache_init);
         });
     }
 })();
