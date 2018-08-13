@@ -2,7 +2,7 @@
 
 import * as fs from 'fs-extra';
 import * as yargs from 'yargs';
-import { doSegmentGlob } from '../script/segment';
+import { doSegmentGlob, ERROR_MSG_001 } from '../script/segment';
 import ProjectConfig from '../project.config';
 import path = require('upath2');
 
@@ -77,6 +77,19 @@ if (pathMain && novelID)
 				}
 
 				return ret.count.changed;
+			})
+			.catch(function (e)
+			{
+				if (e == ERROR_MSG_001)
+				{
+					console.warn(ERROR_MSG_001);
+
+					fs.removeSync(jsonfile);
+
+					return 0;
+				}
+
+				return Promise.reject(e)
 			})
 			;
 	})()

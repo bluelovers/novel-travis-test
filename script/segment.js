@@ -14,6 +14,7 @@ const Promise = require("bluebird");
 const crlf_normalize_1 = require("crlf-normalize");
 exports.DIST_NOVEL = project_config_1.default.novel_root;
 exports.CACHE_TIMEOUT = 3600;
+exports.ERROR_MSG_001 = `沒有搜尋到任何檔案 請檢查搜尋條件`;
 function doSegmentGlob(options) {
     const novel_root = options.novel_root || project_config_1.default.novel_root;
     const segment = options.segment = getSegment(options.segment);
@@ -43,7 +44,7 @@ function _doSegmentGlob(ls, options) {
         .tap(function (ls) {
         if (ls.length == 0) {
             //console.log(CWD_IN);
-            return Promise.reject(`沒有搜尋到任何檔案 請檢查搜尋條件`);
+            return Promise.reject(exports.ERROR_MSG_001);
         }
     })
         .then(async function (ls) {

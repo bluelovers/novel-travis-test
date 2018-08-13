@@ -51,6 +51,14 @@ if (pathMain && novelID) {
                 fs.removeSync(jsonfile);
             }
             return ret.count.changed;
+        })
+            .catch(function (e) {
+            if (e == segment_1.ERROR_MSG_001) {
+                console.warn(segment_1.ERROR_MSG_001);
+                fs.removeSync(jsonfile);
+                return 0;
+            }
+            return Promise.reject(e);
         });
     })()
         .then(function (n) {

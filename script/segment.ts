@@ -19,6 +19,8 @@ export let CACHE_TIMEOUT = 3600;
 
 export let _segmentObject: Segment;
 
+export const ERROR_MSG_001 = `沒有搜尋到任何檔案 請檢查搜尋條件`;
+
 export type IOptions = {
 	pathMain: string,
 	pathMain_out?: string,
@@ -84,7 +86,7 @@ export function _doSegmentGlob(ls: string[], options: IOptions)
 			{
 				//console.log(CWD_IN);
 
-				return Promise.reject(`沒有搜尋到任何檔案 請檢查搜尋條件`);
+				return Promise.reject(ERROR_MSG_001);
 			}
 		})
 		.then(async function (ls)
