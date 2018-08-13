@@ -123,16 +123,14 @@ import * as FastGlob from 'fast-glob';
 
 					let cp = await pushGit(ProjectConfig.novel_root, getPushUrl(GIT_SETTING_DIST_NOVEL.url), true);
 
-					return createPullRequests();
+					await createPullRequests();
+
+					await fs.ensureFile(_cache_init);
 				}
 				else
 				{
 					console.log(`完成 本次無更新任何檔案`);
 				}
-			})
-			.tap(function ()
-			{
-				return fs.ensureFile(_cache_init);
 			})
 			.tap(function ()
 			{

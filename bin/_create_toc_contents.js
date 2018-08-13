@@ -85,14 +85,12 @@ const FastGlob = require("fast-glob");
             if (_update) {
                 console.log(`完成 並且試圖 push 與 建立 PR`);
                 let cp = await git_2.pushGit(project_config_1.default.novel_root, git_2.getPushUrl(git_1.GIT_SETTING_DIST_NOVEL.url), true);
-                return gitee_pr_1.createPullRequests();
+                await gitee_pr_1.createPullRequests();
+                await fs.ensureFile(_cache_init);
             }
             else {
                 console.log(`完成 本次無更新任何檔案`);
             }
-        })
-            .tap(function () {
-            return fs.ensureFile(_cache_init);
         })
             .tap(function () {
             console.log(`done.`);
