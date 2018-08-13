@@ -64,7 +64,7 @@ if (pathMain && novelID) {
         });
     })())
         .tap(function () {
-        let basePath = path.join(novel_root, pathMain, novelID);
+        let basePath = path.join(novel_root || project_config_1.default.novel_root, pathMain, novelID);
         let file = path.join(basePath, '導航目錄.md');
         return toc_contents_1.default(basePath, file)
             .catch(function (e) {

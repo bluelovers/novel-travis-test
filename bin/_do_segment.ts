@@ -97,7 +97,7 @@ if (pathMain && novelID)
 	})())
 		.tap(function ()
 		{
-			let basePath = path.join(novel_root, pathMain, novelID);
+			let basePath = path.join(novel_root || ProjectConfig.novel_root, pathMain, novelID);
 
 			let file = path.join(basePath, '導航目錄.md');
 
