@@ -115,11 +115,11 @@ else
 
 			console.log(`將 cache 檔案內的 執行狀態 改為已完成`);
 
-			console.dir(cache);
-
 			fs.writeJSONSync(CacheConfig.filepath, config, {
 				spaces: 2,
 			});
+
+			console.dir(config);
 		}
 	}
 }
