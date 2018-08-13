@@ -477,16 +477,16 @@ export function runSegment()
 					cwd: DIST_NOVEL,
 				});
 
-				_current_data.last_s_ver = _current_data.s_ver;
-				_current_data.last_d_ver = _current_data.d_ver;
-
-				_current_data.s_ver = _s_ver;
-				_current_data.d_ver = _d_ver;
-
 				fs.outputJSONSync(_cache_file_segment, _cache_segment, {
 					spaces: "\t",
 				});
 			}
+
+			_current_data.last_s_ver = _current_data.s_ver;
+			_current_data.last_d_ver = _current_data.d_ver;
+
+			_current_data.s_ver = _s_ver;
+			_current_data.d_ver = _d_ver;
 
 			return cp.status;
 		})
