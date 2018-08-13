@@ -111,6 +111,12 @@ else
 
 			config.last_push_head = currentHEADNew;
 
+			config.last_task_datatime = Date.now();
+
+			console.log(`將 cache 檔案內的 執行狀態 改為已完成`);
+
+			console.dir(cache);
+
 			fs.writeJSONSync(CacheConfig.filepath, config, {
 				spaces: 2,
 			});
