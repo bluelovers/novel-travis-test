@@ -67,9 +67,9 @@ import * as fs from 'fs-extra';
 						;
 				}
 			})
-			.then(function ()
+			.then(async function ()
 			{
-				let cp = pushGit(ProjectConfig.novel_root, getPushUrl(GIT_SETTING_DIST_NOVEL.url), true);
+				let cp = await pushGit(ProjectConfig.novel_root, getPushUrl(GIT_SETTING_DIST_NOVEL.url), true);
 
 				return createPullRequests();
 			})

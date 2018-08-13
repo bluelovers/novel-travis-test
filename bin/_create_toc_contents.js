@@ -48,8 +48,8 @@ const fs = require("fs-extra");
                 });
             }
         })
-            .then(function () {
-            let cp = git_2.pushGit(project_config_1.default.novel_root, git_2.getPushUrl(git_1.GIT_SETTING_DIST_NOVEL.url), true);
+            .then(async function () {
+            let cp = await git_2.pushGit(project_config_1.default.novel_root, git_2.getPushUrl(git_1.GIT_SETTING_DIST_NOVEL.url), true);
             return gitee_pr_1.createPullRequests();
         });
     }

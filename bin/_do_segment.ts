@@ -22,6 +22,8 @@ if (pathMain && novelID)
 			return 0;
 		}
 
+		console.log(`runAll: ${runAll}`);
+
 		let ls = await fs.readJSON(jsonfile) as string[];
 
 		if (!runAll && (!Array.isArray(ls) || !ls.length))
@@ -29,6 +31,11 @@ if (pathMain && novelID)
 			fs.removeSync(jsonfile);
 
 			return 0;
+		}
+		else
+		{
+			console.log(`list:`);
+			console.log(ls);
 		}
 
 		return doSegmentGlob({

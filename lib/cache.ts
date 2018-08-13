@@ -90,10 +90,25 @@ export async function cacheFileList(data: IListNovelRow)
 		ls = await fs.readJSON(file);
 	}
 
-	ls = ls.concat(filterNotDelete(data).map(function (b)
+	ls = ls
+		.concat(filterNotDelete(data).map(function (b)
 	{
 		return b.subpath;
-	}));
+	}))
+		.filter(function (v)
+		{
+			let basename = path.basename(v);
+
+			let ext = path.extname(basename);
+
+			if (ext == '.md' && /readme/i.test(basename))
+			{
+				return true;
+			}
+
+			return ext == '.txt';
+		})
+	;
 
 	ls = arrayUniq(ls);
 

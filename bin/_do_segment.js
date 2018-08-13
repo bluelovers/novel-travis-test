@@ -15,10 +15,15 @@ if (pathMain && novelID) {
         if (!fs.existsSync(jsonfile)) {
             return 0;
         }
+        console.log(`runAll: ${runAll}`);
         let ls = await fs.readJSON(jsonfile);
         if (!runAll && (!Array.isArray(ls) || !ls.length)) {
             fs.removeSync(jsonfile);
             return 0;
+        }
+        else {
+            console.log(`list:`);
+            console.log(ls);
         }
         return segment_1.doSegmentGlob({
             pathMain,
