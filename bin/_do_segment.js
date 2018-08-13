@@ -7,6 +7,7 @@ const segment_1 = require("../script/segment");
 const project_config_1 = require("../project.config");
 const path = require("upath2");
 const Promise = require("bluebird");
+const env_bool_1 = require("env-bool");
 let { pathMain, novelID, novel_root, runAll } = yargs.argv;
 if (pathMain && novelID) {
     Promise.resolve((async () => {
@@ -15,15 +16,15 @@ if (pathMain && novelID) {
         if (!fs.existsSync(jsonfile)) {
             return 0;
         }
-        console.log(`runAll: ${runAll}`);
         let ls = await fs.readJSON(jsonfile);
+        runAll = env_bool_1.default(runAll);
+        console.log(`runAll: ${runAll}`, !runAll, typeof runAll, typeof ls);
         if (!runAll && (!Array.isArray(ls) || !ls.length)) {
             fs.removeSync(jsonfile);
             return 0;
         }
         else {
-            console.log(`list:`);
-            console.log(ls);
+            console.log(`list:`, ls);
         }
         return segment_1.doSegmentGlob({
             pathMain,

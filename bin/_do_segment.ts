@@ -7,6 +7,7 @@ import { doSegmentGlob, ERROR_MSG_001 } from '../script/segment';
 import ProjectConfig from '../project.config';
 import path = require('upath2');
 import * as Promise from 'bluebird';
+import envBool, { envVal } from 'env-bool';
 
 let { pathMain, novelID, novel_root, runAll } = yargs.argv;
 
@@ -22,9 +23,10 @@ if (pathMain && novelID)
 			return 0;
 		}
 
-		console.log(`runAll: ${runAll}`);
-
 		let ls = await fs.readJSON(jsonfile) as string[];
+
+		runAll = envBool(runAll);
+		console.log(`runAll: ${runAll}`, !runAll, typeof runAll, typeof ls);
 
 		if (!runAll && (!Array.isArray(ls) || !ls.length))
 		{
@@ -34,8 +36,7 @@ if (pathMain && novelID)
 		}
 		else
 		{
-			console.log(`list:`);
-			console.log(ls);
+			console.log(`list:`, ls);
 		}
 
 		return doSegmentGlob({

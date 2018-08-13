@@ -43,6 +43,7 @@
     "crlf-normalize": "^1.0.2",
     "cross-spawn": "^6.0.5",
     "dotenv": "^6.0.0",
+    "env-bool": "^1.0.3",
     "fast-glob": "^2.2.2",
     "fs-extra": "^7.0.0",
     "git-diff-from": "^1.1.3",
