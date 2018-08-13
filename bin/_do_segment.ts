@@ -26,7 +26,7 @@ if (pathMain && novelID)
 		let ls = await fs.readJSON(jsonfile) as string[];
 
 		runAll = envBool(runAll);
-		console.log(`runAll: ${runAll}`, !runAll, typeof runAll, typeof ls);
+		console.log(`[Segment]`, pathMain, novelID, `runAll: ${runAll}`, ls && ls.length);
 
 		if (!runAll && (!Array.isArray(ls) || !ls.length))
 		{
