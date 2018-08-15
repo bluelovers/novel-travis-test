@@ -74,6 +74,7 @@ import * as FastGlob from 'fast-glob';
 
 				let msg: string;
 				let _did = false;
+				let _file_changed: boolean;
 
 				if (fs.existsSync(path.join(basePath, 'README.md')))
 				{
@@ -97,7 +98,9 @@ import * as FastGlob from 'fast-glob';
 									})
 								;
 
-								if (!bool || old != ls)
+								_file_changed = old != ls;
+
+								if (!bool || _file_changed)
 								{
 									await crossSpawnSync('git', [
 										'add',
@@ -138,7 +141,13 @@ import * as FastGlob from 'fast-glob';
 					}
 					else
 					{
-						console.warn(`[SKIP]`, pathMain, novelID, "\n" , msg);
+						console.dir({
+							title: `[SKIP]`,
+							pathMain, novelID,
+							msg,
+							bool,
+							_file_changed,
+						});
 					}
 
 					return ret;

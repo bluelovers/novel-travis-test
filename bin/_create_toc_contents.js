@@ -51,6 +51,7 @@ const FastGlob = require("fast-glob");
             let basePath = path.join(project_config_1.default.novel_root, pathMain, novelID);
             let msg;
             let _did = false;
+            let _file_changed;
             if (fs.existsSync(path.join(basePath, 'README.md'))) {
                 let file = path.join(basePath, '導航目錄.md');
                 //console.log(`[toc:contents]`, pathMain, novelID);
@@ -64,7 +65,8 @@ const FastGlob = require("fast-glob");
                             .then(function (ls) {
                             return ls.toString();
                         });
-                        if (!bool || old != ls) {
+                        _file_changed = old != ls;
+                        if (!bool || _file_changed) {
                             await index_1.crossSpawnSync('git', [
                                 'add',
                                 file,
@@ -96,7 +98,13 @@ const FastGlob = require("fast-glob");
                     console.log(`[toc:contents]`, pathMain, novelID);
                 }
                 else {
-                    console.warn(`[SKIP]`, pathMain, novelID, "\n", msg);
+                    console.dir({
+                        title: `[SKIP]`,
+                        pathMain, novelID,
+                        msg,
+                        bool,
+                        _file_changed,
+                    });
                 }
                 return ret;
             }
