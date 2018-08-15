@@ -1,5 +1,7 @@
 /// <reference types="node" />
 import { SpawnSyncReturns } from '../index';
+import moment = require('moment');
+export declare const DATE_FORMAT = "YYYY-MM-DD-HH-mm-ss";
 /**
  * Created by user on 2018/5/17/017.
  */
@@ -10,11 +12,17 @@ export declare function pullGit(REPO_PATH: string): SpawnSyncReturns<Buffer>;
 export declare function fetchGit(REPO_PATH: string): SpawnSyncReturns<Buffer> & {
     errorCrossSpawn?: Error;
 };
+export declare function fetchGitAll(REPO_PATH: string): SpawnSyncReturns<Buffer> & {
+    errorCrossSpawn?: Error;
+};
 export declare function newBranch(REPO_PATH: string, BR_NAME: string): SpawnSyncReturns<Buffer> & {
     errorCrossSpawn?: Error;
 };
 export declare function currentBranchName(REPO_PATH: string): string;
 export declare function deleteBranch(REPO_PATH: string, name: string, force?: boolean): SpawnSyncReturns<Buffer> & {
+    errorCrossSpawn?: Error;
+};
+export declare function deleteBranchRemote(REPO_PATH: string, remote: string, name: string, force?: boolean): SpawnSyncReturns<Buffer> & {
     errorCrossSpawn?: Error;
 };
 export declare function oldBranch(REPO_PATH: string): string;
@@ -51,4 +59,21 @@ export declare function createGit(options: IOptionsCreateGit): {
             errorCrossSpawn?: Error;
         };
     };
+};
+export declare function gitGc(REPO_PATH: string, argv?: string[]): SpawnSyncReturns<Buffer> & {
+    errorCrossSpawn?: Error;
+};
+export declare function branchNameToDate(br_name: string): moment.Moment;
+export declare function gitRemoveBranchOutdate(REPO_PATH: string): void;
+export declare function gitBranchMergedList(REPO_PATH: string, noMerged?: boolean, BR_NAME?: string): string[];
+export declare function filterArgv(argv: string[]): string[];
+export declare function parseBranchGroup(r: string[]): {
+    heads: string[];
+    remotes: {
+        origin: string[];
+        [k: string]: string[];
+    };
+};
+export declare function gitCleanAll(REPO_PATH: string): SpawnSyncReturns<Buffer> & {
+    errorCrossSpawn?: Error;
 };

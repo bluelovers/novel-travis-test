@@ -9,5 +9,6 @@ export const project_root = path.join(__dirname);
 export const cache_root = path.join(project_root, '.cache');
 export const novel_root = path.join(project_root, 'dist_novel');
 
-import * as self from './project.config';
-export default self;
+import * as ProjectConfig from './project.config';
+export { ProjectConfig }
+export default ProjectConfig;

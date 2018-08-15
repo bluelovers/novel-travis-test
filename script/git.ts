@@ -1,4 +1,5 @@
 import path = require('upath2');
+import { LF } from 'crlf-normalize';
 import * as crossSpawn from 'cross-spawn';
 import { gitDiffFrom, IGitDiffFrom, IGitDiffFromRow } from 'git-diff-from';
 import gitRoot from 'git-root2';
@@ -13,6 +14,8 @@ import moment = require('moment');
 import * as FastGlob from 'fast-glob';
 
 import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, GITEE_TOKEN, DEBUG, NO_PUSH } from './init';
+
+export const DATE_FORMAT = 'YYYY-MM-DD-HH-mm-ss';
 
 /**
  * Created by user on 2018/5/17/017.
@@ -65,6 +68,18 @@ export function fetchGit(REPO_PATH: string)
 	});
 }
 
+export function fetchGitAll(REPO_PATH: string)
+{
+	return crossSpawnSync('git', [
+		'fetch',
+		'--all',
+		'--prune',
+	], {
+		stdio: 'inherit',
+		cwd: REPO_PATH,
+	});
+}
+
 export function newBranch(REPO_PATH: string, BR_NAME: string)
 {
 	return crossSpawnSync('git', [
@@ -103,6 +118,24 @@ export function deleteBranch(REPO_PATH: string, name: string, force?: boolean)
 	return crossSpawnSync('git', [
 		'branch',
 		force ? '-D' : '-d',
+		name,
+	], {
+		stdio: 'inherit',
+		cwd: REPO_PATH,
+	});
+}
+
+export function deleteBranchRemote(REPO_PATH: string, remote: string, name: string, force?: boolean)
+{
+	if (name == 'master' || !name || !remote)
+	{
+		throw new Error();
+	}
+
+	return crossSpawnSync('git', [
+		'push',
+		remote,
+		'--delete',
 		name,
 	], {
 		stdio: 'inherit',
@@ -226,6 +259,11 @@ export function createGit(options: IOptionsCreateGit)
 	{
 		console.warn(`${targetName} already exists`);
 
+		console.log(`取得所有遠端分支`);
+		fetchGitAll(data.targetPath);
+
+		gitRemoveBranchOutdate(data.targetPath);
+
 		temp.cp = fetchGit(data.targetPath);
 	}
 	else
@@ -259,5 +297,278 @@ export function createGit(options: IOptionsCreateGit)
 		console.timeEnd(label);
 	}
 
+	label = `--- BEFORE_DONE ---`;
+	console.log(label);
+	console.time(label);
+
+	gitGc(data.targetPath);
+
+	console.timeEnd(label);
+
 	return { data, temp }
+}
+
+export function gitGc(REPO_PATH: string, argv?: string[])
+{
+	console.log(`優化 GIT 資料`);
+
+	argv = filterArgv([
+		'gc',
+	].concat((argv && argv.length) ? argv : []));
+
+	if (argv.length == 1)
+	{
+		argv.push('--prune=now');
+	}
+
+	return crossSpawnSync('git', argv, {
+		cwd: REPO_PATH,
+		stdio: 'inherit',
+	});
+}
+
+export function branchNameToDate(br_name: string)
+{
+	return moment(br_name.replace(/^.*auto\//, ''), DATE_FORMAT)
+}
+
+export function gitRemoveBranchOutdate(REPO_PATH: string)
+{
+	console.log(`開始分析 GIT 分支`);
+
+	let br_name = currentBranchName(REPO_PATH).toString().toLowerCase();
+
+	let date_br = branchNameToDate(br_name);
+	let date_now = moment();
+
+	//console.log({br_name, date_br, date_now});
+
+	let brs: ReturnType<typeof parseBranchGroup>;
+
+	brs = parseBranchGroup(gitBranchMergedList(REPO_PATH));
+
+	if (brs)
+	{
+		console.log(`檢查並刪除已合併分支`);
+		console.dir(brs, { colors: true, });
+
+		let pre_name: string;
+
+		pre_name = 'refs/heads/';
+
+		brs.heads
+			.forEach(function (value: string, index, array)
+			{
+				fn(value, pre_name + value);
+			})
+		;
+
+		pre_name = 'refs/remotes/';
+
+		Object.keys(brs.remotes)
+			.forEach(function (remote_name)
+			{
+				let prefix = pre_name + remote_name + '/';
+
+				brs.remotes[remote_name]
+					.forEach(function (value: string, index, array)
+					{
+						let bool = !/^auto\//i.test(value);
+						let del_name = pre_name + value;
+
+						fn(value, del_name, bool, true);
+					})
+				;
+			})
+		;
+	}
+
+	brs = parseBranchGroup(gitBranchMergedList(REPO_PATH, true));
+
+	if (brs)
+	{
+		console.log(`檢查並刪除未合併過期分支`);
+		console.dir(brs, { colors: true, });
+
+		let pre_name: string;
+
+		pre_name = 'refs/heads/';
+
+		brs.heads
+			.forEach(function (value: string, index, array)
+			{
+				fn(value, pre_name + value);
+			})
+		;
+
+		pre_name = 'refs/remotes/';
+
+		Object.keys(brs.remotes)
+			.forEach(function (remote_name)
+			{
+				if (remote_name == 'origin')
+				{
+					return;
+				}
+
+				let prefix = pre_name + remote_name + '/';
+
+				let brs_list = brs.remotes[remote_name];
+
+				if (brs_list.length > 5)
+				{
+					let max_date_unix = 0;
+
+					brs_list = brs_list
+						.filter(function (value)
+						{
+							let bool = /auto\//i.test(value);
+
+							if (bool)
+							{
+								let d = branchNameToDate(value);
+
+								//console.log(d, d.unix());
+
+								max_date_unix = Math.max(max_date_unix, d.unix());
+							}
+
+							return bool;
+						})
+						.slice(0, -3)
+					;
+
+					let max_date = moment.unix(max_date_unix);
+
+					brs_list
+						.forEach(function (value: string, index, array)
+						{
+							let bool = !/^auto\//i.test(value);
+							let del_name = prefix + value;
+
+							fn(value, del_name, bool, true, remote_name);
+						})
+					;
+				}
+			})
+		;
+	}
+
+	function fn(value: string, del_name: string, skip?: boolean, is_remote?: boolean, remote_name?: string)
+	{
+		let value_lc = value.toLowerCase();
+
+		if (skip || !value || value_lc == br_name || value_lc == 'master' || value_lc == 'head')
+		{
+			console.log(`skip ${del_name}`);
+			return;
+		}
+		else if (is_remote)
+		{
+			if (!/auto\//i.test(value) || !remote_name)
+			{
+				console.log(`skip ${del_name}`);
+				return;
+			}
+
+			let d = moment(value.replace(/^.*auto\//, ''), DATE_FORMAT);
+
+			//console.log(d);
+		}
+
+		console.log(`try delete ${del_name}`);
+
+		if (is_remote)
+		{
+			deleteBranchRemote(REPO_PATH, remote_name, value);
+		}
+		else
+		{
+			deleteBranch(REPO_PATH, value);
+		}
+	}
+}
+
+export function gitBranchMergedList(REPO_PATH: string, noMerged?: boolean, BR_NAME?: string)
+{
+	let cp = crossSpawnSync('git', filterArgv([
+		'branch',
+		'--format',
+		'%(refname)',
+		'-a',
+		noMerged ? '--no-merged' : '--merged',
+		BR_NAME,
+	]), {
+		cwd: REPO_PATH,
+	});
+
+	if (cp.stderr && cp.stderr.length)
+	{
+		console.error(cp.stderr.toString());
+
+		return null
+	}
+
+	let name = crossSpawnOutput(cp.stdout);
+
+	return name
+		.split(LF)
+		;
+}
+
+export function filterArgv(argv: string[])
+{
+	return argv
+		.filter(v => typeof v !== 'undefined')
+		.map(v => v.trim())
+		;
+}
+
+export function parseBranchGroup(r: string[]): {
+	heads: string[];
+	remotes: {
+		origin: string[];
+		[k: string]: string[];
+	};
+}
+{
+	if (!r || !r.length)
+	{
+		return null;
+	}
+
+	return r.sort().reduce(function (a, b)
+	{
+		if (/^refs\/remotes\/([^\/]+)\/(.+)$/.exec(b))
+		{
+			let { $1, $2 } = RegExp;
+			a.remotes[$1] = a.remotes[$1] || [];
+			a.remotes[$1].push($2);
+		}
+		else if (/^refs\/heads\/(.+)$/.exec(b))
+		{
+			let { $1, $2 } = RegExp;
+			a.heads.push($1);
+		}
+
+		return a;
+	}, {
+		heads: [],
+		remotes: {
+			origin: [],
+		},
+	})
+}
+
+export function gitCleanAll(REPO_PATH: string)
+{
+	console.log(`[git:clean] Remove untracked files from the working tree`);
+	return crossSpawnSync('git', [
+		'clean',
+		'-d',
+		'-fx',
+	], {
+		stdio: 'inherit',
+		cwd: REPO_PATH,
+	});
 }

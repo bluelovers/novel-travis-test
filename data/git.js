@@ -69,15 +69,7 @@ exports.GIT_SETTING_DIST_NOVEL = {
             else {
                 // do something
             }
-            console.log(`[git:clean] Remove untracked files from the working tree`);
-            __1.crossSpawnSync('git', [
-                'clean',
-                '-d',
-                '-fx',
-            ], {
-                stdio: 'inherit',
-                cwd: data.targetPath,
-            });
+            git_1.gitCleanAll(data.targetPath);
             let log = gitlog2_1.default({
                 repo: data.targetPath,
                 number: 5,
@@ -130,6 +122,7 @@ exports.GIT_SETTING_EPUB = {
             });
         },
         create_after(data, temp) {
+            git_1.gitCleanAll(data.targetPath);
         },
     }
 };

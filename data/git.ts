@@ -21,7 +21,7 @@ import {
 	currentBranchName,
 	oldBranch,
 	deleteBranch,
-	getHashHEAD, createGit, IOptionsCreateGit, getPushUrl
+	getHashHEAD, createGit, IOptionsCreateGit, getPushUrl, gitCleanAll,
 } from '../script/git';
 
 export const GIT_SETTING_DIST_NOVEL: IOptionsCreateGit = {
@@ -105,15 +105,7 @@ export const GIT_SETTING_DIST_NOVEL: IOptionsCreateGit = {
 				// do something
 			}
 
-			console.log(`[git:clean] Remove untracked files from the working tree`);
-			crossSpawnSync('git', [
-				'clean',
-				'-d',
-				'-fx',
-			], {
-				stdio: 'inherit',
-				cwd: data.targetPath,
-			});
+			gitCleanAll(data.targetPath);
 
 			let log = gitlog({
 				repo: data.targetPath,
@@ -179,7 +171,7 @@ export const GIT_SETTING_EPUB: IOptionsCreateGit = {
 
 		create_after(data, temp)
 		{
-
+			gitCleanAll(data.targetPath);
 		},
 	}
 };
