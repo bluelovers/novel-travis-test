@@ -373,10 +373,10 @@ export function gitRemoveBranchOutdate(REPO_PATH: string)
 				brs.remotes[remote_name]
 					.forEach(function (value: string, index, array)
 					{
-						let bool = !/^auto\//i.test(value);
-						let del_name = pre_name + value;
+						let bool = !/auto\//i.test(value);
+						let del_name = prefix + value;
 
-						fn(value, del_name, bool, true);
+						fn(value, del_name, bool, true, remote_name);
 					})
 				;
 			})
@@ -458,16 +458,21 @@ export function gitRemoveBranchOutdate(REPO_PATH: string)
 	{
 		let value_lc = value.toLowerCase();
 
-		if (skip || !value || value_lc == br_name || value_lc == 'master' || value_lc == 'head')
+		if (skip)
 		{
-			console.log(`skip ${del_name}`);
+			console.log(`skip (1) ${del_name}`);
+			return;
+		}
+		else if (!value || value_lc == br_name || value_lc == 'master' || value_lc == 'head')
+		{
+			console.log(`skip (2) ${del_name}`);
 			return;
 		}
 		else if (is_remote)
 		{
 			if (!/auto\//i.test(value) || !remote_name)
 			{
-				console.log(`skip ${del_name}`);
+				console.log(`skip (3) ${del_name}`);
 				return;
 			}
 

@@ -259,9 +259,9 @@ function gitRemoveBranchOutdate(REPO_PATH) {
             let prefix = pre_name + remote_name + '/';
             brs.remotes[remote_name]
                 .forEach(function (value, index, array) {
-                let bool = !/^auto\//i.test(value);
-                let del_name = pre_name + value;
-                fn(value, del_name, bool, true);
+                let bool = !/auto\//i.test(value);
+                let del_name = prefix + value;
+                fn(value, del_name, bool, true, remote_name);
             });
         });
     }
@@ -308,13 +308,17 @@ function gitRemoveBranchOutdate(REPO_PATH) {
     }
     function fn(value, del_name, skip, is_remote, remote_name) {
         let value_lc = value.toLowerCase();
-        if (skip || !value || value_lc == br_name || value_lc == 'master' || value_lc == 'head') {
-            console.log(`skip ${del_name}`);
+        if (skip) {
+            console.log(`skip (1) ${del_name}`);
+            return;
+        }
+        else if (!value || value_lc == br_name || value_lc == 'master' || value_lc == 'head') {
+            console.log(`skip (2) ${del_name}`);
             return;
         }
         else if (is_remote) {
             if (!/auto\//i.test(value) || !remote_name) {
-                console.log(`skip ${del_name}`);
+                console.log(`skip (3) ${del_name}`);
                 return;
             }
             let d = moment(value.replace(/^.*auto\//, ''), exports.DATE_FORMAT);
