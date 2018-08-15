@@ -80,6 +80,17 @@ import * as FastGlob from 'fast-glob';
 				{
 					let file = path.join(basePath, '導航目錄.md');
 
+					let old = await fs.readFile(file)
+						.catch(function ()
+						{
+							return '';
+						})
+						.then(function (ls)
+						{
+							return ls.toString();
+						})
+					;
+
 					//console.log(`[toc:contents]`, pathMain, novelID);
 
 					let ret = await processTocContents(basePath, file)
@@ -87,17 +98,6 @@ import * as FastGlob from 'fast-glob';
 						{
 							if (ls)
 							{
-								let old = await fs.readFile(file)
-									.catch(function ()
-									{
-										return '';
-									})
-									.then(function (ls)
-									{
-										return ls.toString();
-									})
-								;
-
 								_file_changed = old != ls;
 
 								if (!bool || _file_changed)

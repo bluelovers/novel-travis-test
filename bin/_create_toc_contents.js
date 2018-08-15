@@ -54,17 +54,17 @@ const FastGlob = require("fast-glob");
             let _file_changed;
             if (fs.existsSync(path.join(basePath, 'README.md'))) {
                 let file = path.join(basePath, '導航目錄.md');
+                let old = await fs.readFile(file)
+                    .catch(function () {
+                    return '';
+                })
+                    .then(function (ls) {
+                    return ls.toString();
+                });
                 //console.log(`[toc:contents]`, pathMain, novelID);
                 let ret = await toc_contents_1.default(basePath, file)
                     .tap(async function (ls) {
                     if (ls) {
-                        let old = await fs.readFile(file)
-                            .catch(function () {
-                            return '';
-                        })
-                            .then(function (ls) {
-                            return ls.toString();
-                        });
                         _file_changed = old != ls;
                         if (!bool || _file_changed) {
                             await index_1.crossSpawnSync('git', [
