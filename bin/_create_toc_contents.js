@@ -49,10 +49,12 @@ const FastGlob = require("fast-glob");
             .mapSeries(ls, async function (data) {
             const { pathMain, novelID } = data;
             let basePath = path.join(project_config_1.default.novel_root, pathMain, novelID);
+            let msg;
+            let _did = false;
             if (fs.existsSync(path.join(basePath, 'README.md'))) {
                 let file = path.join(basePath, '導航目錄.md');
-                console.log(`[toc:contents]`, pathMain, novelID);
-                return toc_contents_1.default(basePath, file)
+                //console.log(`[toc:contents]`, pathMain, novelID);
+                let ret = await toc_contents_1.default(basePath, file)
                     .tap(async function (ls) {
                     if (ls) {
                         let old = await fs.readFile(file)
@@ -79,13 +81,24 @@ const FastGlob = require("fast-glob");
                                 stdio: 'inherit',
                                 cwd: basePath,
                             });
+                            _did = true;
                             _update = true;
                         }
                         else {
-                            console.log(`[toc:contents] 目錄檔案已存在並且沒有變化`);
+                            msg = `目錄檔案已存在並且沒有變化`;
                         }
                     }
+                    else {
+                        msg = `無法生成目錄，可能不存在任何章節檔案`;
+                    }
                 });
+                if (_did) {
+                    console.log(`[toc:contents]`, pathMain, novelID);
+                }
+                else {
+                    console.warn(`[SKIP]`, pathMain, novelID, "\n", msg);
+                }
+                return ret;
             }
         })
             .tap(async function () {

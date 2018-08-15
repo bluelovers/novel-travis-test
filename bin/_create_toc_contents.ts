@@ -72,13 +72,16 @@ import * as FastGlob from 'fast-glob';
 
 				let basePath = path.join(ProjectConfig.novel_root, pathMain, novelID);
 
+				let msg: string;
+				let _did = false;
+
 				if (fs.existsSync(path.join(basePath, 'README.md')))
 				{
 					let file = path.join(basePath, '導航目錄.md');
 
-					console.log(`[toc:contents]`, pathMain, novelID);
+					//console.log(`[toc:contents]`, pathMain, novelID);
 
-					return processTocContents(basePath, file)
+					let ret = await processTocContents(basePath, file)
 						.tap(async function (ls)
 						{
 							if (ls)
@@ -114,15 +117,31 @@ import * as FastGlob from 'fast-glob';
 										cwd: basePath,
 									});
 
+									_did = true;
 									_update = true;
 								}
 								else
 								{
-									console.log(`[toc:contents] 目錄檔案已存在並且沒有變化`);
+									msg = `目錄檔案已存在並且沒有變化`;
 								}
+							}
+							else
+							{
+								msg = `無法生成目錄，可能不存在任何章節檔案`;
 							}
 						})
 						;
+
+					if (_did)
+					{
+						console.log(`[toc:contents]`, pathMain, novelID);
+					}
+					else
+					{
+						console.warn(`[SKIP]`, pathMain, novelID, "\n" , msg);
+					}
+
+					return ret;
 				}
 			})
 			.tap(async function ()
