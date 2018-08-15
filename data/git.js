@@ -111,15 +111,6 @@ exports.GIT_SETTING_EPUB = {
                 stdio: 'inherit',
                 cwd: data.targetPath,
             });
-            console.log(`[git:clean] Remove untracked files from the working tree`);
-            __1.crossSpawnSync('git', [
-                'clean',
-                '-d',
-                '-fx',
-            ], {
-                stdio: 'inherit',
-                cwd: data.targetPath,
-            });
         },
         create_after(data, temp) {
             git_1.gitCleanAll(data.targetPath);
