@@ -370,15 +370,30 @@ export function gitRemoveBranchOutdate(REPO_PATH: string)
 			{
 				let prefix = pre_name + remote_name + '/';
 
-				brs.remotes[remote_name]
-					.forEach(function (value: string, index, array)
-					{
-						let bool = !/auto\//i.test(value);
-						let del_name = prefix + value;
+				let brs_list = brs.remotes[remote_name];
 
-						fn(value, del_name, bool, true, remote_name);
-					})
-				;
+				if (brs_list.length > 5)
+				{
+					brs_list = brs_list
+						.filter(function (value)
+						{
+							let bool = /auto\//i.test(value);
+
+							return bool;
+						})
+						.slice(0, -2)
+					;
+
+					brs_list
+						.forEach(function (value: string, index, array)
+						{
+							let bool = !/auto\//i.test(value);
+							let del_name = prefix + value;
+
+							fn(value, del_name, bool, true, remote_name);
+						})
+					;
+				}
 			})
 		;
 	}

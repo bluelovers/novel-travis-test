@@ -24,7 +24,9 @@ if (pathMain && novelID) {
             return 0;
         }
         console.log(`[Segment]`, pathMain, novelID, `runAll: ${runAll}`);
-        console.log(`list:`, ls);
+        if (!runAll) {
+            console.log(`list:`, ls);
+        }
         return segment_1.doSegmentGlob({
             pathMain,
             novelID,

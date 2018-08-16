@@ -257,12 +257,21 @@ function gitRemoveBranchOutdate(REPO_PATH) {
         Object.keys(brs.remotes)
             .forEach(function (remote_name) {
             let prefix = pre_name + remote_name + '/';
-            brs.remotes[remote_name]
-                .forEach(function (value, index, array) {
-                let bool = !/auto\//i.test(value);
-                let del_name = prefix + value;
-                fn(value, del_name, bool, true, remote_name);
-            });
+            let brs_list = brs.remotes[remote_name];
+            if (brs_list.length > 5) {
+                brs_list = brs_list
+                    .filter(function (value) {
+                    let bool = /auto\//i.test(value);
+                    return bool;
+                })
+                    .slice(0, -2);
+                brs_list
+                    .forEach(function (value, index, array) {
+                    let bool = !/auto\//i.test(value);
+                    let del_name = prefix + value;
+                    fn(value, del_name, bool, true, remote_name);
+                });
+            }
         });
     }
     brs = parseBranchGroup(gitBranchMergedList(REPO_PATH, true));
