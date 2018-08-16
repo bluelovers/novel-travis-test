@@ -187,9 +187,13 @@ function createGit(options) {
         temp.cp = fetchGit(data.targetPath);
     }
     else {
+        let CLONE_DEPTH = (options.CLONE_DEPTH || process && process.env && process.env.CLONE_DEPTH || 50);
+        if (isNaN(CLONE_DEPTH) || !CLONE_DEPTH || CLONE_DEPTH <= 0) {
+            CLONE_DEPTH = 50;
+        }
         temp.cp = __1.crossSpawnSync('git', [
             'clone',
-            //`--depth=${CLONE_DEPTH}`,
+            `--depth=${CLONE_DEPTH}`,
             //'--verbose',
             //'--progress ',
             data.urlClone,

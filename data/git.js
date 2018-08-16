@@ -85,6 +85,7 @@ exports.GIT_SETTING_EPUB = {
     targetPath: path.join(project_config_1.default.project_root, 'dist_epub'),
     NOT_DONE: init_1.NOT_DONE,
     newBranchName: init_1.BR_NAME,
+    CLONE_DEPTH: 10,
     on: {
         create_before(data, temp) {
             if (data.exists) {

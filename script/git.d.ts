@@ -34,6 +34,7 @@ export declare type IOptionsCreateGit = {
     newBranchName: string;
     urlClone: string;
     NOT_DONE: any;
+    CLONE_DEPTH?: number;
     on?: {
         create_before?(data: ReturnType<typeof createGit>["data"], temp?: ReturnType<typeof createGit>["temp"]): any;
         create?(data: ReturnType<typeof createGit>["data"], temp?: ReturnType<typeof createGit>["temp"]): any;

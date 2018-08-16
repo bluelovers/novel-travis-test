@@ -184,6 +184,8 @@ export type IOptionsCreateGit = {
 
 	NOT_DONE,
 
+	CLONE_DEPTH?: number,
+
 	on?: {
 		create_before?(data: ReturnType<typeof createGit>["data"], temp?: ReturnType<typeof createGit>["temp"]),
 		create?(data: ReturnType<typeof createGit>["data"], temp?: ReturnType<typeof createGit>["temp"]),
@@ -268,9 +270,16 @@ export function createGit(options: IOptionsCreateGit)
 	}
 	else
 	{
+		let CLONE_DEPTH: number = (options.CLONE_DEPTH || process && process.env && process.env.CLONE_DEPTH || 50) as number;
+
+		if (isNaN(CLONE_DEPTH) || !CLONE_DEPTH || CLONE_DEPTH <= 0)
+		{
+			CLONE_DEPTH = 50;
+		}
+
 		temp.cp = crossSpawnSync('git', [
 			'clone',
-			//`--depth=${CLONE_DEPTH}`,
+			`--depth=${CLONE_DEPTH}`,
 			//'--verbose',
 			//'--progress ',
 			data.urlClone,

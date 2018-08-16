@@ -126,6 +126,8 @@ export const GIT_SETTING_EPUB: IOptionsCreateGit = {
 
 	newBranchName: BR_NAME,
 
+	CLONE_DEPTH: 10,
+
 	on: {
 		create_before(data, temp)
 		{
