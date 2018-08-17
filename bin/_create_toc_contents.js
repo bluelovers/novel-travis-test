@@ -4,16 +4,21 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 const toc_1 = require("@node-novel/toc");
+const index_1 = require("@node-novel/toc/index");
 const toc_contents_1 = require("@node-novel/toc/toc_contents");
 const Promise = require("bluebird");
+const txt2epub3_1 = require("novel-epub/lib/txt2epub3");
 const git_1 = require("../data/git");
 const project_config_1 = require("../project.config");
 const git_2 = require("../script/git");
 const gitee_pr_1 = require("../script/gitee-pr");
-const index_1 = require("../index");
+const index_2 = require("../index");
 const path = require("path");
 const fs = require("fs-extra");
 const FastGlob = require("fast-glob");
+const node_novel_info_1 = require("node-novel-info");
+const epub_maker2_1 = require("epub-maker2");
+const novel_txt_merge_1 = require("novel-txt-merge");
 (async () => {
     let _cache_init = path.join(project_config_1.default.cache_root, '.toc_contents.cache');
     let jsonfile = path.join(project_config_1.default.cache_root, 'diff-novel.json');
@@ -62,19 +67,59 @@ const FastGlob = require("fast-glob");
                     return ls.toString();
                 });
                 //console.log(`[toc:contents]`, pathMain, novelID);
-                let ret = await toc_contents_1.default(basePath, file)
+                let ret = await toc_contents_1.default(basePath, file, async function (basePath, ...argv) {
+                    let ret = await toc_contents_1.makeHeader(basePath, ...argv);
+                    let meta = await (async () => {
+                        let data = await fs.readFile(path.join(basePath, 'README.md'));
+                        return node_novel_info_1.mdconf_parse(data, {
+                            throw: false,
+                        });
+                    })()
+                        .then(node_novel_info_1.chkInfo)
+                        .catch(function (e) {
+                        console.error(e.toString());
+                        return null;
+                    });
+                    let epub = new epub_maker2_1.default();
+                    let epub_data = await txt2epub3_1.makeFilename({
+                        inputPath: basePath,
+                        outputPath: '',
+                        padEndDate: false,
+                        useTitle: true,
+                        filenameLocal: novelID,
+                        noLog: true,
+                    }, epub, meta);
+                    let epub_file = epub_data.basename + epub_data.ext;
+                    let txt_file = await novel_txt_merge_1.makeFilename(meta, epub_data.basename);
+                    let _pathMain = pathMain;
+                    if (fs.existsSync(path.join(project_config_1.default.novel_root, pathMain + '_out', novelID, 'README.md'))) {
+                        _pathMain = pathMain + '_out';
+                    }
+                    let link_base = `https://gitee.com/demogitee/epub-txt/tree/master/${_pathMain}/`;
+                    let t;
+                    let link;
+                    t = 'EPUB';
+                    link = epub_file;
+                    let _add = [];
+                    _add.push(`[${toc_contents_1.md_link_escape(t)}](${link_base + index_1.md_href(link)})`);
+                    t = 'TXT';
+                    link = 'out/' + txt_file;
+                    _add.push(`[${toc_contents_1.md_link_escape(t)}](${link_base + index_1.md_href(link)})`);
+                    ret.push(_add.join(` ／ `));
+                    return ret;
+                })
                     .tap(async function (ls) {
                     if (ls) {
                         _file_changed = old != ls;
                         if (!bool || _file_changed) {
-                            await index_1.crossSpawnSync('git', [
+                            await index_2.crossSpawnSync('git', [
                                 'add',
                                 file,
                             ], {
                                 stdio: 'inherit',
                                 cwd: basePath,
                             });
-                            await index_1.crossSpawnSync('git', [
+                            await index_2.crossSpawnSync('git', [
                                 'commit',
                                 '-a',
                                 '-m',

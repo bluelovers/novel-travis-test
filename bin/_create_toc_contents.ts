@@ -3,19 +3,22 @@
  */
 
 import { get_ids } from '@node-novel/toc';
-import processTocContents from '@node-novel/toc/toc_contents';
+import { md_href } from '@node-novel/toc/index';
+import processTocContents, { makeHeader, md_link_escape } from '@node-novel/toc/toc_contents';
 import * as Promise from 'bluebird';
+import { makeFilename } from 'novel-epub/lib/txt2epub3';
 import { GIT_SETTING_DIST_NOVEL, GIT_SETTING_EPUB } from '../data/git';
 import ProjectConfig from '../project.config';
 import { getPushUrl, pushGit } from '../script/git';
 import { createPullRequests } from '../script/gitee-pr';
-import { DIST_NOVEL } from '../script/init';
-import { _path } from '../script/segment';
-import * as self from './_create_toc_contents';
 import { crossSpawnSync, crossSpawnAsync } from '../index';
 import path = require('path');
 import * as fs from 'fs-extra';
 import * as FastGlob from 'fast-glob';
+import { mdconf_parse, IMdconfMeta, chkInfo } from 'node-novel-info';
+import EpubMaker, { hashSum, slugify } from 'epub-maker2';
+import txtMerge, { makeFilename as makeFilenameTxt } from 'novel-txt-merge';
+import novelEpub from 'novel-epub';
 
 (async () =>
 {
@@ -93,7 +96,75 @@ import * as FastGlob from 'fast-glob';
 
 					//console.log(`[toc:contents]`, pathMain, novelID);
 
-					let ret = await processTocContents(basePath, file)
+					let ret = await processTocContents(basePath, file, async function (basePath: string, ...argv)
+						{
+							let ret = await makeHeader(basePath, ...argv);
+
+							let meta: IMdconfMeta = await (async () =>
+								{
+									let data = await fs.readFile(path.join(basePath, 'README.md'));
+
+									return mdconf_parse(data, {
+										throw: false,
+									});
+								})()
+								.then(chkInfo)
+								.catch(function (e)
+								{
+									console.error(e.toString());
+
+									return null;
+								})
+							;
+
+							let epub = new EpubMaker();
+
+							let epub_data = await makeFilename({
+								inputPath: basePath,
+								outputPath: '',
+								padEndDate: false,
+								useTitle: true,
+								filenameLocal: novelID,
+								noLog: true,
+							}, epub, meta);
+
+							let epub_file = epub_data.basename + epub_data.ext;
+
+							let txt_file = await makeFilenameTxt(meta, epub_data.basename);
+
+							let _pathMain = pathMain;
+
+							if (fs.existsSync(path.join(
+								ProjectConfig.novel_root,
+								pathMain + '_out',
+								novelID,
+								'README.md',
+								)))
+							{
+								_pathMain = pathMain + '_out';
+							}
+
+							let link_base = `https://gitee.com/demogitee/epub-txt/tree/master/${_pathMain}/`;
+
+							let t: string;
+							let link: string;
+
+							t = 'EPUB';
+							link = epub_file;
+
+							let _add = [];
+
+							_add.push(`[${md_link_escape(t)}](${link_base + md_href(link)})`);
+
+							t = 'TXT';
+							link = 'out/' + txt_file;
+
+							_add.push(`[${md_link_escape(t)}](${link_base + md_href(link)})`);
+
+							ret.push(_add.join(` ／ `));
+
+							return ret;
+						})
 						.tap(async function (ls)
 						{
 							if (ls)
