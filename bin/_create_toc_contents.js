@@ -77,35 +77,37 @@ const novel_txt_merge_1 = require("novel-txt-merge");
                     })()
                         .then(node_novel_info_1.chkInfo)
                         .catch(function (e) {
-                        console.error(e.toString());
+                        console.error(e);
                         return null;
                     });
-                    let epub = new epub_maker2_1.default();
-                    let epub_data = await txt2epub3_1.makeFilename({
-                        inputPath: basePath,
-                        outputPath: '',
-                        padEndDate: false,
-                        useTitle: true,
-                        filenameLocal: novelID,
-                        noLog: true,
-                    }, epub, meta);
-                    let epub_file = epub_data.basename + epub_data.ext;
-                    let txt_file = await novel_txt_merge_1.makeFilename(meta, epub_data.basename);
-                    let _pathMain = pathMain;
-                    if (fs.existsSync(path.join(project_config_1.default.novel_root, pathMain + '_out', novelID, 'README.md'))) {
-                        _pathMain = pathMain + '_out';
+                    if (meta) {
+                        let epub = new epub_maker2_1.default();
+                        let epub_data = await txt2epub3_1.makeFilename({
+                            inputPath: basePath,
+                            outputPath: '',
+                            padEndDate: false,
+                            useTitle: true,
+                            filenameLocal: novelID,
+                            noLog: true,
+                        }, epub, meta);
+                        let epub_file = epub_data.basename + epub_data.ext;
+                        let txt_file = await novel_txt_merge_1.makeFilename(meta, epub_data.basename);
+                        let _pathMain = pathMain;
+                        if (fs.existsSync(path.join(project_config_1.default.novel_root, pathMain + '_out', novelID, 'README.md'))) {
+                            _pathMain = pathMain + '_out';
+                        }
+                        let link_base = `https://gitee.com/demogitee/epub-txt/tree/master/${_pathMain}/`;
+                        let t;
+                        let link;
+                        t = 'EPUB';
+                        link = epub_file;
+                        let _add = [];
+                        _add.push(`[${toc_contents_1.md_link_escape(t)}](${link_base + index_1.md_href(link)})`);
+                        t = 'TXT';
+                        link = 'out/' + txt_file;
+                        _add.push(`[${toc_contents_1.md_link_escape(t)}](${link_base + index_1.md_href(link)})`);
+                        ret.push(_add.join(` ／ `));
                     }
-                    let link_base = `https://gitee.com/demogitee/epub-txt/tree/master/${_pathMain}/`;
-                    let t;
-                    let link;
-                    t = 'EPUB';
-                    link = epub_file;
-                    let _add = [];
-                    _add.push(`[${toc_contents_1.md_link_escape(t)}](${link_base + index_1.md_href(link)})`);
-                    t = 'TXT';
-                    link = 'out/' + txt_file;
-                    _add.push(`[${toc_contents_1.md_link_escape(t)}](${link_base + index_1.md_href(link)})`);
-                    ret.push(_add.join(` ／ `));
                     return ret;
                 })
                     .tap(async function (ls) {

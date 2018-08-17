@@ -111,57 +111,60 @@ import novelEpub from 'novel-epub';
 								.then(chkInfo)
 								.catch(function (e)
 								{
-									console.error(e.toString());
+									console.error(e);
 
 									return null;
 								})
 							;
 
-							let epub = new EpubMaker();
-
-							let epub_data = await makeFilename({
-								inputPath: basePath,
-								outputPath: '',
-								padEndDate: false,
-								useTitle: true,
-								filenameLocal: novelID,
-								noLog: true,
-							}, epub, meta);
-
-							let epub_file = epub_data.basename + epub_data.ext;
-
-							let txt_file = await makeFilenameTxt(meta, epub_data.basename);
-
-							let _pathMain = pathMain;
-
-							if (fs.existsSync(path.join(
-								ProjectConfig.novel_root,
-								pathMain + '_out',
-								novelID,
-								'README.md',
-								)))
+							if (meta)
 							{
-								_pathMain = pathMain + '_out';
+								let epub = new EpubMaker();
+
+								let epub_data = await makeFilename({
+									inputPath: basePath,
+									outputPath: '',
+									padEndDate: false,
+									useTitle: true,
+									filenameLocal: novelID,
+									noLog: true,
+								}, epub, meta);
+
+								let epub_file = epub_data.basename + epub_data.ext;
+
+								let txt_file = await makeFilenameTxt(meta, epub_data.basename);
+
+								let _pathMain = pathMain;
+
+								if (fs.existsSync(path.join(
+									ProjectConfig.novel_root,
+									pathMain + '_out',
+									novelID,
+									'README.md',
+								)))
+								{
+									_pathMain = pathMain + '_out';
+								}
+
+								let link_base = `https://gitee.com/demogitee/epub-txt/tree/master/${_pathMain}/`;
+
+								let t: string;
+								let link: string;
+
+								t = 'EPUB';
+								link = epub_file;
+
+								let _add = [];
+
+								_add.push(`[${md_link_escape(t)}](${link_base + md_href(link)})`);
+
+								t = 'TXT';
+								link = 'out/' + txt_file;
+
+								_add.push(`[${md_link_escape(t)}](${link_base + md_href(link)})`);
+
+								ret.push(_add.join(` ／ `));
 							}
-
-							let link_base = `https://gitee.com/demogitee/epub-txt/tree/master/${_pathMain}/`;
-
-							let t: string;
-							let link: string;
-
-							t = 'EPUB';
-							link = epub_file;
-
-							let _add = [];
-
-							_add.push(`[${md_link_escape(t)}](${link_base + md_href(link)})`);
-
-							t = 'TXT';
-							link = 'out/' + txt_file;
-
-							_add.push(`[${md_link_escape(t)}](${link_base + md_href(link)})`);
-
-							ret.push(_add.join(` ／ `));
 
 							return ret;
 						})
