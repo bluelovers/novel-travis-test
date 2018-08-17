@@ -107,7 +107,7 @@ const novel_txt_merge_1 = require("novel-txt-merge");
                         t = 'TXT';
                         link = 'out/' + txt_file;
                         _add.push(`[${toc_contents_1.md_link_escape(t)}](${link_base + index_1.md_href(link)})`);
-                        ret.push(_add.join(` ／ `));
+                        ret.push('- ' + _add.join(` ／ `));
                     }
                     return ret;
                 })
