@@ -119,7 +119,9 @@ import novelEpub from 'novel-epub';
 
 							if (meta)
 							{
-								let epub = new EpubMaker();
+								let epub = new EpubMaker()
+									.withTitle(meta.novel.title, meta.novel.title_short || meta.novel.title_zh)
+								;
 
 								let epub_data = await makeFilename({
 									inputPath: basePath,

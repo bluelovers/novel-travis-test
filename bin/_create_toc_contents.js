@@ -81,7 +81,8 @@ const novel_txt_merge_1 = require("novel-txt-merge");
                         return null;
                     });
                     if (meta) {
-                        let epub = new epub_maker2_1.default();
+                        let epub = new epub_maker2_1.default()
+                            .withTitle(meta.novel.title, meta.novel.title_short || meta.novel.title_zh);
                         let epub_data = await txt2epub3_1.makeFilename({
                             inputPath: basePath,
                             outputPath: '',
