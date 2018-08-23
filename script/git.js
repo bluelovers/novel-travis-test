@@ -175,6 +175,7 @@ function createGit(options) {
     console.log(label);
     console.time(label);
     temp.cp = null;
+    let _deleted;
     if (data.NOT_DONE && data.exists) {
         console.warn(`${targetName} already exists`);
         temp.cp = fetchGit(data.targetPath);
@@ -183,7 +184,7 @@ function createGit(options) {
         console.warn(`${targetName} already exists`);
         console.log(`取得所有遠端分支`);
         fetchGitAll(data.targetPath);
-        gitRemoveBranchOutdate(data.targetPath);
+        _deleted = gitRemoveBranchOutdate(data.targetPath);
         temp.cp = fetchGit(data.targetPath);
     }
     else {
@@ -217,31 +218,52 @@ function createGit(options) {
     label = `--- BEFORE_DONE ---`;
     console.log(label);
     console.time(label);
-    gitGc(data.targetPath);
+    if (_deleted) {
+        gitGcAggressive(data.targetPath);
+    }
+    else {
+        gitGc(data.targetPath);
+    }
     console.timeEnd(label);
     return { data, temp };
 }
 exports.createGit = createGit;
 function gitGc(REPO_PATH, argv) {
-    console.log(`優化 GIT 資料`);
     argv = filterArgv([
         'gc',
     ].concat((argv && argv.length) ? argv : []));
     if (argv.length == 1) {
         argv.push('--prune=now');
     }
+    console.log(`優化 GIT 資料`, argv);
     return __1.crossSpawnSync('git', argv, {
         cwd: REPO_PATH,
         stdio: 'inherit',
     });
 }
 exports.gitGc = gitGc;
+function gitGcAggressive(REPO_PATH, argv) {
+    argv = filterArgv([
+        'gc',
+        '--aggressive',
+    ].concat((argv && argv.length) ? argv : []));
+    if (argv.length == 1) {
+        argv.push('--prune=now');
+    }
+    console.log(`優化 GIT 資料`, argv);
+    return __1.crossSpawnSync('git', argv, {
+        cwd: REPO_PATH,
+        stdio: 'inherit',
+    });
+}
+exports.gitGcAggressive = gitGcAggressive;
 function branchNameToDate(br_name) {
     return moment(br_name.replace(/^.*auto\//, ''), exports.DATE_FORMAT);
 }
 exports.branchNameToDate = branchNameToDate;
 function gitRemoveBranchOutdate(REPO_PATH) {
     console.log(`開始分析 GIT 分支`);
+    let data_ret = false;
     let br_name = currentBranchName(REPO_PATH).toString().toLowerCase();
     let date_br = branchNameToDate(br_name);
     let date_now = moment();
@@ -344,7 +366,9 @@ function gitRemoveBranchOutdate(REPO_PATH) {
         else {
             deleteBranch(REPO_PATH, value);
         }
+        data_ret = true;
     }
+    return data_ret;
 }
 exports.gitRemoveBranchOutdate = gitRemoveBranchOutdate;
 function gitBranchMergedList(REPO_PATH, noMerged, BR_NAME) {

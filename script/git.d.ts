@@ -64,8 +64,11 @@ export declare function createGit(options: IOptionsCreateGit): {
 export declare function gitGc(REPO_PATH: string, argv?: string[]): SpawnSyncReturns<Buffer> & {
     errorCrossSpawn?: Error;
 };
+export declare function gitGcAggressive(REPO_PATH: string, argv?: string[]): SpawnSyncReturns<Buffer> & {
+    errorCrossSpawn?: Error;
+};
 export declare function branchNameToDate(br_name: string): moment.Moment;
-export declare function gitRemoveBranchOutdate(REPO_PATH: string): void;
+export declare function gitRemoveBranchOutdate(REPO_PATH: string): boolean;
 export declare function gitBranchMergedList(REPO_PATH: string, noMerged?: boolean, BR_NAME?: string): string[];
 export declare function filterArgv(argv: string[]): string[];
 export declare function parseBranchGroup(r: string[]): {

@@ -251,6 +251,8 @@ export function createGit(options: IOptionsCreateGit)
 
 	temp.cp = null;
 
+	let _deleted: boolean;
+
 	if (data.NOT_DONE && data.exists)
 	{
 		console.warn(`${targetName} already exists`);
@@ -264,7 +266,7 @@ export function createGit(options: IOptionsCreateGit)
 		console.log(`取得所有遠端分支`);
 		fetchGitAll(data.targetPath);
 
-		gitRemoveBranchOutdate(data.targetPath);
+		_deleted = gitRemoveBranchOutdate(data.targetPath);
 
 		temp.cp = fetchGit(data.targetPath);
 	}
@@ -310,7 +312,14 @@ export function createGit(options: IOptionsCreateGit)
 	console.log(label);
 	console.time(label);
 
-	gitGc(data.targetPath);
+	if (_deleted)
+	{
+		gitGcAggressive(data.targetPath);
+	}
+	else
+	{
+		gitGc(data.targetPath);
+	}
 
 	console.timeEnd(label);
 
@@ -319,8 +328,6 @@ export function createGit(options: IOptionsCreateGit)
 
 export function gitGc(REPO_PATH: string, argv?: string[])
 {
-	console.log(`優化 GIT 資料`);
-
 	argv = filterArgv([
 		'gc',
 	].concat((argv && argv.length) ? argv : []));
@@ -329,6 +336,28 @@ export function gitGc(REPO_PATH: string, argv?: string[])
 	{
 		argv.push('--prune=now');
 	}
+
+	console.log(`優化 GIT 資料`, argv);
+
+	return crossSpawnSync('git', argv, {
+		cwd: REPO_PATH,
+		stdio: 'inherit',
+	});
+}
+
+export function gitGcAggressive(REPO_PATH: string, argv?: string[])
+{
+	argv = filterArgv([
+		'gc',
+		'--aggressive',
+	].concat((argv && argv.length) ? argv : []));
+
+	if (argv.length == 1)
+	{
+		argv.push('--prune=now');
+	}
+
+	console.log(`優化 GIT 資料`, argv);
 
 	return crossSpawnSync('git', argv, {
 		cwd: REPO_PATH,
@@ -344,6 +373,8 @@ export function branchNameToDate(br_name: string)
 export function gitRemoveBranchOutdate(REPO_PATH: string)
 {
 	console.log(`開始分析 GIT 分支`);
+
+	let data_ret: boolean = false;
 
 	let br_name = currentBranchName(REPO_PATH).toString().toLowerCase();
 
@@ -515,7 +546,11 @@ export function gitRemoveBranchOutdate(REPO_PATH: string)
 		{
 			deleteBranch(REPO_PATH, value);
 		}
+
+		data_ret = true;
 	}
+
+	return data_ret;
 }
 
 export function gitBranchMergedList(REPO_PATH: string, noMerged?: boolean, BR_NAME?: string)
