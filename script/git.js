@@ -233,7 +233,7 @@ function gitGc(REPO_PATH, argv) {
         'gc',
     ].concat((argv && argv.length) ? argv : []));
     if (argv.length == 1) {
-        argv.push('--prune=now');
+        argv.push('--prune="3day"');
     }
     console.log(`優化 GIT 資料`, argv);
     return __1.crossSpawnSync('git', argv, {
@@ -248,7 +248,7 @@ function gitGcAggressive(REPO_PATH, argv) {
         '--aggressive',
     ].concat((argv && argv.length) ? argv : []));
     if (argv.length == 2) {
-        argv.push('--prune=now');
+        argv.push('--prune="3day"');
     }
     console.log(`優化 GIT 資料`, argv);
     return __1.crossSpawnSync('git', argv, {
