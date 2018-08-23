@@ -172,14 +172,14 @@ import novelEpub from 'novel-epub';
 								{
 									_add = [];
 
-									link_base = 'https://github.com/bluelovers/node-novel/tree/master/lib/locales/';
+									link_base = 'https://github.com/bluelovers/node-novel/blob/master/lib/locales/';
 
 									t = meta.options.pattern;
 									link = meta.options.pattern + '.ts';
 
 									_add.push(`[${md_link_escape(t)}](${link_base + md_href(link)})`);
 
-									ret.push('- ' + _add.join(` ／ `) + ` - 格式與譯名整合樣式，如果連結錯誤請點[這裡](${link_base})`);
+									ret.push('- ' + _add.join(` ／ `) + ` - 格式與譯名整合樣式，如果連結錯誤請點[這裡](https://github.com/bluelovers/node-novel/tree/master/lib/locales)`);
 								}
 							}
 
