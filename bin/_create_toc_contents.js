@@ -108,13 +108,19 @@ const novel_txt_merge_1 = require("novel-txt-merge");
                         link = 'out/' + txt_file;
                         _add.push(`[${toc_contents_1.md_link_escape(t)}](${link_base + index_1.md_href(link)})`);
                         ret.push('- ' + _add.join(` ／ `) + ` - 如果連結錯誤 請點[這裡](https://gitee.com/demogitee/epub-txt)`);
-                        if (meta.options && meta.options.novel && meta.options.pattern) {
-                            _add = [];
+                        {
                             link_base = 'https://github.com/bluelovers/node-novel/blob/master/lib/locales/';
-                            t = meta.options.pattern;
-                            link = meta.options.pattern + '.ts';
-                            _add.push(`[${toc_contents_1.md_link_escape(t)}](${link_base + index_1.md_href(link)})`);
-                            ret.push('- ' + _add.join(` ／ `) + ` - 格式與譯名整合樣式，如果連結錯誤請點[這裡](https://github.com/bluelovers/node-novel/tree/master/lib/locales)`);
+                            if (meta.options && meta.options.novel && meta.options.pattern) {
+                                t = meta.options.pattern;
+                                link = meta.options.pattern + '.ts';
+                                _add.push(`[${toc_contents_1.md_link_escape(t)}](${link_base + index_1.md_href(link)})`);
+                            }
+                            else {
+                                t = '格式與譯名整合樣式';
+                                link = novelID + '.ts';
+                            }
+                            let md = `[${toc_contents_1.md_link_escape(t)}](${link_base + index_1.md_href(link)})`;
+                            ret.push('- ' + md + ` - 如果連結錯誤 請點[這裡](https://github.com/bluelovers/node-novel/tree/master/lib/locales)`);
                         }
                     }
                     {
