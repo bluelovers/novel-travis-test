@@ -169,7 +169,7 @@ import novelEpub from 'novel-epub';
 							}
 
 							{
-								let t = 'Discord';
+								let t = 'https://discord.gg/MnXkpmX';
 								let link = 'https://discord.gg/MnXkpmX';
 
 								let md = `[${md_link_escape(t)}](${link})`;
