@@ -334,7 +334,7 @@ export function gitGc(REPO_PATH: string, argv?: string[])
 
 	if (argv.length == 1)
 	{
-		argv.push('--prune="3day"');
+		argv.push('--prune="3 days"');
 	}
 
 	console.log(`優化 GIT 資料`, argv);
@@ -354,7 +354,7 @@ export function gitGcAggressive(REPO_PATH: string, argv?: string[])
 
 	if (argv.length == 2)
 	{
-		argv.push('--prune="3day"');
+		argv.push('--prune="3 days"');
 	}
 
 	console.log(`優化 GIT 資料`, argv);
