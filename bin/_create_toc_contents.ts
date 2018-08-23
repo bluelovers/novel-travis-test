@@ -4,7 +4,7 @@
 
 import { get_ids } from '@node-novel/toc';
 import { md_href } from '@node-novel/toc/index';
-import processTocContents, { makeHeader, md_link_escape } from '@node-novel/toc/toc_contents';
+import processTocContents, { makeHeader, makeLink, md_link_escape } from '@node-novel/toc/toc_contents';
 import * as Promise from 'bluebird';
 import { makeFilename } from 'novel-epub/lib/txt2epub3';
 import { GIT_SETTING_DIST_NOVEL, GIT_SETTING_EPUB } from '../data/git';
@@ -166,6 +166,15 @@ import novelEpub from 'novel-epub';
 								_add.push(`[${md_link_escape(t)}](${link_base + md_href(link)})`);
 
 								ret.push('- ' + _add.join(` ／ `) + ` - 如果連結錯誤 請點[這裡](https://gitee.com/demogitee/epub-txt)`);
+							}
+
+							{
+								let t = 'Discord';
+								let link = 'https://discord.gg/MnXkpmX';
+
+								let md = `[${md_link_escape(t)}](${link})`;
+
+								ret.push(`- ${md} - 小說交流群，如果已經加入請點[這裡](https://discordapp.com/channels/467794087769014273/467794088285175809) 或 [這裡](https://discordapp.com/channels/@me)`);
 							}
 
 							return ret;
