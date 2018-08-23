@@ -174,7 +174,7 @@ import novelEpub from 'novel-epub';
 
 								let md = `[${md_link_escape(t)}](${link})`;
 
-								ret.push(`- ${md} - 小說交流群，如果已經加入請點[這裡](https://discordapp.com/channels/467794087769014273/467794088285175809) 或 [這裡](https://discordapp.com/channels/@me)`);
+								ret.push(`- ${md} - 小說交流群，如果已經加入請點[這裡](https://discordapp.com/channels/467794087769014273/467794088285175809) 或 [Discord](https://discordapp.com/channels/@me)`);
 							}
 
 							return ret;

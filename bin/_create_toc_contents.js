@@ -110,10 +110,10 @@ const novel_txt_merge_1 = require("novel-txt-merge");
                         ret.push('- ' + _add.join(` ／ `) + ` - 如果連結錯誤 請點[這裡](https://gitee.com/demogitee/epub-txt)`);
                     }
                     {
-                        let t = 'Discord';
+                        let t = 'https://discord.gg/MnXkpmX';
                         let link = 'https://discord.gg/MnXkpmX';
                         let md = `[${toc_contents_1.md_link_escape(t)}](${link})`;
-                        ret.push(`- ${md} - 小說交流群，如果已經加入請點[這裡](https://discordapp.com/channels/467794087769014273/467794088285175809) 或 [這裡](https://discordapp.com/channels/@me)`);
+                        ret.push(`- ${md} - 小說交流群，如果已經加入請點[這裡](https://discordapp.com/channels/467794087769014273/467794088285175809) 或 [Discord](https://discordapp.com/channels/@me)`);
                     }
                     return ret;
                 })
