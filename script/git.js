@@ -247,7 +247,7 @@ function gitGcAggressive(REPO_PATH, argv) {
         'gc',
         '--aggressive',
     ].concat((argv && argv.length) ? argv : []));
-    if (argv.length == 1) {
+    if (argv.length == 2) {
         argv.push('--prune=now');
     }
     console.log(`優化 GIT 資料`, argv);
