@@ -11,7 +11,6 @@ import path = require('upath2');
 import ProjectConfig from './project.config';
 import { filterNotDelete } from '@node-novel/task/lib/index';
 import * as fs from 'fs-extra';
-import * as arrayUniq from 'array-uniq';
 import * as FastGlob from 'fast-glob';
 import * as Promise from 'bluebird';
 

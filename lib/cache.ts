@@ -4,7 +4,7 @@ import { IListNovelRow } from '@node-novel/task';
 import ProjectConfig from '../project.config';
 import path = require('upath2');
 import { filterNotDelete } from '@node-novel/task/lib/index';
-import * as arrayUniq from 'arr-unique';
+import { array_unique as arrayUniq } from 'array-hyper-unique';
 import { _path } from '../script/segment';
 import * as PromiseBluebird from 'bluebird';
 import * as FastGlob from 'fast-glob';

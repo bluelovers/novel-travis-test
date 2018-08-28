@@ -13,7 +13,7 @@ const novel_epub_1 = require("novel-epub");
 const segment_1 = require("../script/segment");
 const FastGlob = require("fast-glob");
 const novel_txt_merge_1 = require("novel-txt-merge");
-const arrayUniq = require("arr-unique");
+const array_hyper_unique_1 = require("array-hyper-unique");
 if (!index_1.isGitRoot(git_1.GIT_SETTING_EPUB.targetPath)) {
     console.warn(`dist_novel not a git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
     throw new Error(`something wrong when create git`);
@@ -53,7 +53,7 @@ console.log(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
     ls = ls.filter(function (v) {
         return v;
     });
-    ls = arrayUniq(ls);
+    ls = array_hyper_unique_1.array_unique(ls);
     fs.outputJSONSync(epub_json, ls, {
         spaces: '\t',
     });

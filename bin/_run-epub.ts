@@ -16,7 +16,7 @@ import { getPushUrl, pushGit } from '../script/git';
 import { _path, DIST_NOVEL } from '../script/segment';
 import * as FastGlob from 'fast-glob';
 import txtMerge from 'novel-txt-merge';
-import * as arrayUniq from 'arr-unique';
+import { array_unique as arrayUniq } from 'array-hyper-unique';
 
 if (!isGitRoot(GIT_SETTING_EPUB.targetPath))
 {
