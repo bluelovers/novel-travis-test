@@ -12,6 +12,7 @@ before_install:
 - git config --global gc.reflogExpire "7 days"
 - git config --global gc.reflogExpireUnreachable "7 days"
 - npm i -g yarn
+- export FORCE_COLOR=1
 install:
 - yarn install
 - yarn list

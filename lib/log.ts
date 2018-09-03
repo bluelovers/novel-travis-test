@@ -4,7 +4,7 @@
 
 if (process && process.env)
 {
-	process.env.FORCE_COLOR = '1';
+	process.env.FORCE_COLOR = process.env.FORCE_COLOR || '1';
 }
 
 import { Console } from 'debug-color2';
