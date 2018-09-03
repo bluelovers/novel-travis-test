@@ -114,6 +114,7 @@ function _doSegmentGlob(ls, options) {
                 await options.callback(done_list, file, index, length);
             }
             ks = null;
+            text = undefined;
             return {
                 file,
                 changed,

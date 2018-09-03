@@ -199,6 +199,8 @@ export function _doSegmentGlob(ls: string[], options: IOptions)
 
 				ks = null;
 
+				text = undefined;
+
 				return {
 					file,
 					changed,
