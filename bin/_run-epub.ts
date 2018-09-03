@@ -26,7 +26,7 @@ if (!isGitRoot(GIT_SETTING_EPUB.targetPath))
 	throw new Error(`something wrong when create git`);
 }
 
-console.log(`git: ${GIT_SETTING_EPUB.targetPath}`);
+console.info(`git: ${GIT_SETTING_EPUB.targetPath}`);
 
 (async () =>
 {
@@ -178,7 +178,7 @@ console.log(`git: ${GIT_SETTING_EPUB.targetPath}`);
 				{
 					ls = filterCache(ls, pathMain, novelID);
 
-					console.log(ls.length, pathMain, novelID);
+					console.grey(ls.length, pathMain, novelID);
 				}
 			})
 			.tap(function (ls)

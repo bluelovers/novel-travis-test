@@ -19,7 +19,7 @@ if (!index_1.isGitRoot(git_1.GIT_SETTING_EPUB.targetPath)) {
     log_1.default.warn(`dist_novel not a git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
     throw new Error(`something wrong when create git`);
 }
-log_1.default.log(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
+log_1.default.info(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
 (async () => {
     let jsonfile = path.join(project_config_1.default.cache_root, 'diff-novel.json');
     let epub_json = path.join(project_config_1.default.cache_root, 'epub.json');
@@ -123,7 +123,7 @@ log_1.default.log(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
             }
             else {
                 ls = filterCache(ls, pathMain, novelID);
-                log_1.default.log(ls.length, pathMain, novelID);
+                log_1.default.grey(ls.length, pathMain, novelID);
             }
         })
             .tap(function (ls) {

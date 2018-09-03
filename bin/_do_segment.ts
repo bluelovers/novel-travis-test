@@ -40,7 +40,7 @@ if (pathMain && novelID)
 
 		if (!runAll)
 		{
-			console.log(`list:`, ls);
+			console.grey(`list:`, ls);
 		}
 
 		return doSegmentGlob({
@@ -54,7 +54,7 @@ if (pathMain && novelID)
 			{
 				if ((index % 10) == 0 || ((index + 1) >= length))
 				{
-					console.log(`[${index}/${length}]`, file);
+					console.grey(`[${index}/${length}]`, file);
 
 					ls = ls.filter(function (v)
 					{

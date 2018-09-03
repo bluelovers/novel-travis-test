@@ -26,7 +26,7 @@ if (pathMain && novelID) {
         }
         log_1.default.debug(`[Segment]`, pathMain, novelID, `runAll: ${runAll}`);
         if (!runAll) {
-            log_1.default.log(`list:`, ls);
+            log_1.default.grey(`list:`, ls);
         }
         return segment_1.doSegmentGlob({
             pathMain,
@@ -35,7 +35,7 @@ if (pathMain && novelID) {
             files: (!runAll && Array.isArray(ls)) ? ls : null,
             callback(done_list, file, index, length) {
                 if ((index % 10) == 0 || ((index + 1) >= length)) {
-                    log_1.default.log(`[${index}/${length}]`, file);
+                    log_1.default.grey(`[${index}/${length}]`, file);
                     ls = ls.filter(function (v) {
                         return done_list.indexOf(v) == -1;
                     });
