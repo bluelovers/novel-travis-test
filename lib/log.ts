@@ -14,7 +14,10 @@ console.setOptions({
 	enabled: true,
 	inspectOptions: {
 		colors: true,
-	}
+	},
+	chalkOptions: {
+		enabled: true,
+	},
 });
 
 console.enabledColor = true;
