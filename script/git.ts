@@ -83,6 +83,8 @@ export function fetchGitAll(REPO_PATH: string)
 
 export function newBranch(REPO_PATH: string, BR_NAME: string)
 {
+	console.debug(`嘗試新分支 ${BR_NAME}`);
+
 	return crossSpawnSync('git', [
 		'checkout',
 		'-B',
@@ -116,6 +118,8 @@ export function deleteBranch(REPO_PATH: string, name: string, force?: boolean)
 		throw new Error();
 	}
 
+	console.debug(`嘗試刪除本地分支 ${name}`);
+
 	return crossSpawnSync('git', [
 		'branch',
 		force ? '-D' : '-d',
@@ -132,6 +136,8 @@ export function deleteBranchRemote(REPO_PATH: string, remote: string, name: stri
 	{
 		throw new Error();
 	}
+
+	console.debug(`嘗試刪除遠端分支 ${name}`);
 
 	return crossSpawnSync('git', [
 		'push',

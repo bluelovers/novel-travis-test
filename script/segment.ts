@@ -404,7 +404,7 @@ export function runSegment()
 
 	{
 		let { last_s_ver, last_d_ver, s_ver, d_ver } = _cache_segment;
-		console.log({
+		console.debug({
 			_s_ver,
 			_d_ver,
 
@@ -445,7 +445,7 @@ export function runSegment()
 
 			if (_current_data.d_ver != _d_ver || _current_data.s_ver != _s_ver)
 			{
-				console.log({
+				console.debug({
 					pathMain,
 					novelID,
 					s_ver: _current_data.s_ver,

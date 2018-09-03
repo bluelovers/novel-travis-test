@@ -65,6 +65,7 @@ function fetchGitAll(REPO_PATH) {
 }
 exports.fetchGitAll = fetchGitAll;
 function newBranch(REPO_PATH, BR_NAME) {
+    log_1.default.debug(`嘗試新分支 ${BR_NAME}`);
     return __1.crossSpawnSync('git', [
         'checkout',
         '-B',
@@ -92,6 +93,7 @@ function deleteBranch(REPO_PATH, name, force) {
     if (name == 'master' || !name) {
         throw new Error();
     }
+    log_1.default.debug(`嘗試刪除本地分支 ${name}`);
     return __1.crossSpawnSync('git', [
         'branch',
         force ? '-D' : '-d',
@@ -106,6 +108,7 @@ function deleteBranchRemote(REPO_PATH, remote, name, force) {
     if (name == 'master' || !name || !remote) {
         throw new Error();
     }
+    log_1.default.debug(`嘗試刪除遠端分支 ${name}`);
     return __1.crossSpawnSync('git', [
         'push',
         remote,
