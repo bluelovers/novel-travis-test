@@ -19,6 +19,7 @@ import { mdconf_parse, IMdconfMeta, chkInfo } from 'node-novel-info';
 import EpubMaker, { hashSum, slugify } from 'epub-maker2';
 import txtMerge, { makeFilename as makeFilenameTxt } from 'novel-txt-merge';
 import novelEpub from 'novel-epub';
+import console from '../lib/log';
 
 (async () =>
 {
@@ -29,7 +30,7 @@ import novelEpub from 'novel-epub';
 
 	let bool = fs.existsSync(_cache_init);
 
-	console.log(`[toc:contents] 是否已曾經初始化導航目錄`, bool, _cache_init);
+	console.debug(`[toc:contents] 是否已曾經初始化導航目錄`, bool, _cache_init);
 
 	if (!bool)
 	{
@@ -246,7 +247,7 @@ import novelEpub from 'novel-epub';
 
 					if (_did)
 					{
-						console.log(`[toc:contents]`, pathMain, novelID);
+						console.success(`[toc:contents]`, pathMain, novelID);
 					}
 					else
 					{
@@ -266,7 +267,7 @@ import novelEpub from 'novel-epub';
 			{
 				if (_update)
 				{
-					console.log(`[toc:contents] 完成 並且試圖 push 與 建立 PR`);
+					console.info(`[toc:contents] 完成 並且試圖 push 與 建立 PR`);
 
 					let cp = await pushGit(ProjectConfig.novel_root, getPushUrl(GIT_SETTING_DIST_NOVEL.url), true);
 
@@ -276,7 +277,7 @@ import novelEpub from 'novel-epub';
 				}
 				else
 				{
-					console.log(`[toc:contents] 完成 本次無更新任何檔案`);
+					console.warn(`[toc:contents] 完成 本次無更新任何檔案`);
 				}
 			})
 			.tap(function ()
@@ -287,6 +288,6 @@ import novelEpub from 'novel-epub';
 	}
 	else
 	{
-		console.log(`[toc:contents] 本次沒有任何待更新列表 (2)`);
+		console.warn(`[toc:contents] 本次沒有任何待更新列表 (2)`);
 	}
 })();

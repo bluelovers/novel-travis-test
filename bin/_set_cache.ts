@@ -7,6 +7,7 @@ import * as yargs from 'yargs';
 
 import ProjectConfig from '../project.config';
 import path = require('upath2');
+import console from '../lib/log';
 
 if (yargs.argv.last)
 {
@@ -22,6 +23,6 @@ if (yargs.argv.last)
 			spaces: '\t',
 		});
 
-		console.log(`update .cache.json { last: ${yargs.argv.last} }`);
+		console.debug(`update .cache.json { last: ${yargs.argv.last} }`);
 	}
 }

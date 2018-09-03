@@ -14,11 +14,12 @@ const segment_1 = require("../script/segment");
 const FastGlob = require("fast-glob");
 const novel_txt_merge_1 = require("novel-txt-merge");
 const array_hyper_unique_1 = require("array-hyper-unique");
+const log_1 = require("../lib/log");
 if (!index_1.isGitRoot(git_1.GIT_SETTING_EPUB.targetPath)) {
-    console.warn(`dist_novel not a git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
+    log_1.default.warn(`dist_novel not a git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
     throw new Error(`something wrong when create git`);
 }
-console.log(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
+log_1.default.log(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
 (async () => {
     let jsonfile = path.join(project_config_1.default.cache_root, 'diff-novel.json');
     let epub_json = path.join(project_config_1.default.cache_root, 'epub.json');
@@ -39,7 +40,7 @@ console.log(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
             let [pathMain, novelID] = id.split(/[\\\/]/);
             let np = segment_1._path(pathMain, novelID);
             if (!fs.existsSync(np)) {
-                console.error(pathMain, novelID);
+                log_1.default.error(pathMain, novelID);
                 return null;
             }
             return { pathMain, novelID };
@@ -48,7 +49,7 @@ console.log(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
     else {
         ls2 = fs.readJSONSync(epub_json);
     }
-    console.log(`本次新增 ${ls.length} , 上次未完成 ${ls2.length}`);
+    log_1.default.debug(`本次新增 ${ls.length} , 上次未完成 ${ls2.length}`);
     ls = (ls || []).concat(ls2 || []);
     ls = ls.filter(function (v) {
         return v;
@@ -112,27 +113,27 @@ console.log(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
                     let msg = e.toString();
                     if (msg.match(/not a valid novelInfo data/)) {
                         ls = filterCache(ls, pathMain, novelID);
-                        console.error('[SKIP]', pathMain, novelID, msg);
+                        log_1.default.error('[SKIP]', pathMain, novelID, msg);
                     }
                     else {
-                        console.error('[ERROR]', pathMain, novelID, msg);
+                        log_1.default.error('[ERROR]', pathMain, novelID, msg);
                     }
                 });
                 return true;
             }
             else {
                 ls = filterCache(ls, pathMain, novelID);
-                console.log(ls.length, pathMain, novelID);
+                log_1.default.log(ls.length, pathMain, novelID);
             }
         })
             .tap(function (ls) {
             let count = ls.filter(v => v).length;
-            console.log(`本次共更新 ${count} 小說`);
+            log_1.default.info(`本次共更新 ${count} 小說`);
         })
             .tap(async function () {
             let waitpush = path.join(project_config_1.default.cache_root, 'epub.waitpush');
             await fs.ensureFile(waitpush);
-            console.log(`ls: ${ls.length}`);
+            log_1.default.log(`ls: ${ls.length}`);
             fs.outputJSONSync(epub_json, [], {
                 spaces: '\t',
             });

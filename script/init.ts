@@ -10,6 +10,7 @@ import { IConfig } from '@node-novel/task';
 import ProjectConfig from '../project.config';
 import moment = require('moment');
 import * as FastGlob from 'fast-glob';
+import console from '../lib/log';
 
 /**
  * Created by user on 2018/5/17/017.
@@ -48,7 +49,7 @@ if (CacheConfig && CacheConfig.config && CacheConfig.config.done == -1)
 {
 	NOT_DONE = true;
 
-	console.log(`上次的任務未完成 本次繼續執行 (1)`);
+	console.warn(`上次的任務未完成 本次繼續執行 (1)`);
 }
 else
 {
@@ -61,7 +62,7 @@ else
 	if (ls.length)
 	{
 		NOT_DONE = true;
-		console.log(`上次的任務未完成 本次繼續執行 (2)`);
+		console.warn(`上次的任務未完成 本次繼續執行 (2)`);
 
 		console.log(ls);
 	}

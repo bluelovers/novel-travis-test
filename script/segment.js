@@ -12,6 +12,7 @@ const Segment_1 = require("novel-segment/lib/Segment");
 const FastGlob = require("fast-glob");
 const Promise = require("bluebird");
 const crlf_normalize_1 = require("crlf-normalize");
+const log_1 = require("../lib/log");
 exports.DIST_NOVEL = project_config_1.default.novel_root;
 exports.CACHE_TIMEOUT = 3600;
 exports.ERROR_MSG_001 = `沒有搜尋到任何檔案 請檢查搜尋條件`;
@@ -24,7 +25,7 @@ function doSegmentGlob(options) {
     let globPattern = options.globPattern || [
         '**/*.txt',
     ];
-    console.log('[do]', options.pathMain, options.novelID);
+    log_1.default.info('[do]', options.pathMain, options.novelID);
     return Promise.resolve(options.files || FastGlob(globPattern, {
         cwd: CWD_IN,
     }))
@@ -49,8 +50,8 @@ function _doSegmentGlob(ls, options) {
     })
         .then(async function (ls) {
         let label = `all file ${ls.length}`;
-        console.time(label);
-        console.log(`all file ${ls.length}`);
+        log_1.default.time(label);
+        log_1.default.log(`all file ${ls.length}`);
         let count_changed = 0;
         let done_list = [];
         let rs = await Promise.mapSeries(ls, async function (file, index, length) {
@@ -121,8 +122,8 @@ function _doSegmentGlob(ls, options) {
                 exists: true,
             };
         });
-        console.timeEnd(label);
-        console.log(`file changed: ${count_changed}`);
+        log_1.default.timeEnd(label);
+        log_1.default.debug(`file changed: ${count_changed}`);
         return {
             ls,
             done_list,
@@ -141,7 +142,7 @@ function _path(pathMain, novelID, novel_root = project_config_1.default.novel_ro
         p = path.resolve(novel_root, pathMain, novelID);
     }
     catch (e) {
-        console.dir({
+        log_1.default.dir({
             novel_root,
             pathMain,
             novelID,
@@ -176,7 +177,7 @@ function createSegment(useCache = true) {
          */
         all_mod: true,
     };
-    console.time(`讀取模組與字典`);
+    log_1.default.time(`讀取模組與字典`);
     /**
      * 使用緩存的字典檔範例
      */
@@ -209,7 +210,7 @@ function createSegment(useCache = true) {
     db_dict.TABLE2 = segment.DICT['TABLE2'];
     db_dict.options.autoCjk = true;
     //console.log('主字典總數', db_dict.size());
-    console.timeEnd(`讀取模組與字典`);
+    log_1.default.timeEnd(`讀取模組與字典`);
     if (useCache && cache_file) {
         //console.log(`緩存字典於 cache.db`);
         fs.outputFileSync(cache_file, JSON.stringify({
@@ -240,7 +241,7 @@ function runSegment() {
     _cache_segment.list = _cache_segment.list || {};
     {
         let { last_s_ver, last_d_ver, s_ver, d_ver } = _cache_segment;
-        console.log({
+        log_1.default.log({
             _s_ver,
             _d_ver,
             s_ver,
@@ -257,7 +258,7 @@ function runSegment() {
         novelID = path.basename(novelID, '.json');
         let np = _path(pathMain, novelID);
         if (!fs.existsSync(np)) {
-            console.error(pathMain, novelID);
+            log_1.default.error(pathMain, novelID);
             fs.removeSync(path.join(project_config_1.default.cache_root, 'files', id));
             return -1;
         }
@@ -266,7 +267,7 @@ function runSegment() {
         _cache_segment.list[novelID] = _cache_segment.list[novelID] || {};
         let _current_data = _cache_segment.list[novelID][novelID] = _cache_segment.list[novelID][novelID] || {};
         if (_current_data.d_ver != _d_ver || _current_data.s_ver != _s_ver) {
-            console.log({
+            log_1.default.log({
                 pathMain,
                 novelID,
                 s_ver: _current_data.s_ver,

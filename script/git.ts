@@ -12,6 +12,7 @@ import { loadCacheConfig, loadMainConfig } from '@node-novel/task/lib/config';
 import ProjectConfig, { novel_root } from '../project.config';
 import moment = require('moment');
 import * as FastGlob from 'fast-glob';
+import console from '../lib/log';
 
 import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, GITEE_TOKEN, DEBUG, NO_PUSH } from './init';
 
@@ -234,19 +235,19 @@ export function createGit(options: IOptionsCreateGit)
 
 	let label: string;
 
-	console.log(`create git: ${targetName}`);
+	console.info(`create git: ${targetName}`);
 
 	if (options.on && options.on.create_before)
 	{
 		label = `--- CREATE_BEFORE ---`;
-		console.log(label);
+		console.info(label);
 		console.time(label);
 		options.on.create_before(data, temp);
 		console.timeEnd(label);
 	}
 
 	label = `--- CREATE ---`;
-	console.log(label);
+	console.info(label);
 	console.time(label);
 
 	temp.cp = null;
@@ -302,14 +303,14 @@ export function createGit(options: IOptionsCreateGit)
 	if (options.on && options.on.create_after)
 	{
 		label = `--- CREATE_AFTER ---`;
-		console.log(label);
+		console.info(label);
 		console.time(label);
 		options.on.create_after(data, temp);
 		console.timeEnd(label);
 	}
 
 	label = `--- BEFORE_DONE ---`;
-	console.log(label);
+	console.info(label);
 	console.time(label);
 
 	if (_deleted)
@@ -337,7 +338,7 @@ export function gitGc(REPO_PATH: string, argv?: string[])
 		argv.push('--prune="3 days"');
 	}
 
-	console.log(`優化 GIT 資料`, argv);
+	console.info(`優化 GIT 資料`, argv);
 
 	return crossSpawnSync('git', argv, {
 		cwd: REPO_PATH,
@@ -357,7 +358,7 @@ export function gitGcAggressive(REPO_PATH: string, argv?: string[])
 		argv.push('--prune="3 days"');
 	}
 
-	console.log(`優化 GIT 資料`, argv);
+	console.info(`優化 GIT 資料`, argv);
 
 	return crossSpawnSync('git', argv, {
 		cwd: REPO_PATH,
@@ -372,7 +373,7 @@ export function branchNameToDate(br_name: string)
 
 export function gitRemoveBranchOutdate(REPO_PATH: string)
 {
-	console.log(`開始分析 GIT 分支`);
+	console.info(`開始分析 GIT 分支`);
 
 	let data_ret: boolean = false;
 
@@ -536,7 +537,7 @@ export function gitRemoveBranchOutdate(REPO_PATH: string)
 			//console.log(d);
 		}
 
-		console.log(`try delete ${del_name}`);
+		console.info(`try delete ${del_name}`);
 
 		if (is_remote)
 		{
@@ -626,7 +627,7 @@ export function parseBranchGroup(r: string[]): {
 
 export function gitCleanAll(REPO_PATH: string)
 {
-	console.log(`[git:clean] Remove untracked files from the working tree`);
+	console.info(`[git:clean] Remove untracked files from the working tree`);
 	return crossSpawnSync('git', [
 		'clean',
 		'-d',

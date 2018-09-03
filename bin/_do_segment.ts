@@ -8,6 +8,7 @@ import ProjectConfig from '../project.config';
 import path = require('upath2');
 import * as Promise from 'bluebird';
 import envBool, { envVal } from 'env-bool';
+import console from '../lib/log';
 
 let { pathMain, novelID, novel_root, runAll } = yargs.argv;
 
@@ -35,7 +36,7 @@ if (pathMain && novelID)
 
 			return 0;
 		}
-		console.log(`[Segment]`, pathMain, novelID, `runAll: ${runAll}`);
+		console.debug(`[Segment]`, pathMain, novelID, `runAll: ${runAll}`);
 
 		if (!runAll)
 		{

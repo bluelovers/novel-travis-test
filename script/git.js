@@ -8,6 +8,7 @@ const gitlog2_1 = require("gitlog2");
 const __1 = require("..");
 const index_1 = require("../index");
 const moment = require("moment");
+const log_1 = require("../lib/log");
 const init_1 = require("./init");
 exports.DATE_FORMAT = 'YYYY-MM-DD-HH-mm-ss';
 /**
@@ -131,7 +132,7 @@ function diffOrigin(REPO_PATH) {
         number: 3,
         nameStatus: false,
     });
-    console.log(log, log.length);
+    log_1.default.log(log, log.length);
     return log.length;
 }
 exports.diffOrigin = diffOrigin;
@@ -163,26 +164,26 @@ function createGit(options) {
         cp: null,
     };
     let label;
-    console.log(`create git: ${targetName}`);
+    log_1.default.info(`create git: ${targetName}`);
     if (options.on && options.on.create_before) {
         label = `--- CREATE_BEFORE ---`;
-        console.log(label);
-        console.time(label);
+        log_1.default.info(label);
+        log_1.default.time(label);
         options.on.create_before(data, temp);
-        console.timeEnd(label);
+        log_1.default.timeEnd(label);
     }
     label = `--- CREATE ---`;
-    console.log(label);
-    console.time(label);
+    log_1.default.info(label);
+    log_1.default.time(label);
     temp.cp = null;
     let _deleted;
     if (data.NOT_DONE && data.exists) {
-        console.warn(`${targetName} already exists`);
+        log_1.default.warn(`${targetName} already exists`);
         temp.cp = fetchGit(data.targetPath);
     }
     else if (data.exists) {
-        console.warn(`${targetName} already exists`);
-        console.log(`取得所有遠端分支`);
+        log_1.default.warn(`${targetName} already exists`);
+        log_1.default.log(`取得所有遠端分支`);
         fetchGitAll(data.targetPath);
         _deleted = gitRemoveBranchOutdate(data.targetPath);
         temp.cp = fetchGit(data.targetPath);
@@ -207,24 +208,24 @@ function createGit(options) {
     if (options.on && options.on.create) {
         options.on.create(data, temp);
     }
-    console.timeEnd(label);
+    log_1.default.timeEnd(label);
     if (options.on && options.on.create_after) {
         label = `--- CREATE_AFTER ---`;
-        console.log(label);
-        console.time(label);
+        log_1.default.info(label);
+        log_1.default.time(label);
         options.on.create_after(data, temp);
-        console.timeEnd(label);
+        log_1.default.timeEnd(label);
     }
     label = `--- BEFORE_DONE ---`;
-    console.log(label);
-    console.time(label);
+    log_1.default.info(label);
+    log_1.default.time(label);
     if (_deleted) {
         gitGcAggressive(data.targetPath);
     }
     else {
         gitGc(data.targetPath);
     }
-    console.timeEnd(label);
+    log_1.default.timeEnd(label);
     return { data, temp };
 }
 exports.createGit = createGit;
@@ -235,7 +236,7 @@ function gitGc(REPO_PATH, argv) {
     if (argv.length == 1) {
         argv.push('--prune="3 days"');
     }
-    console.log(`優化 GIT 資料`, argv);
+    log_1.default.info(`優化 GIT 資料`, argv);
     return __1.crossSpawnSync('git', argv, {
         cwd: REPO_PATH,
         stdio: 'inherit',
@@ -250,7 +251,7 @@ function gitGcAggressive(REPO_PATH, argv) {
     if (argv.length == 2) {
         argv.push('--prune="3 days"');
     }
-    console.log(`優化 GIT 資料`, argv);
+    log_1.default.info(`優化 GIT 資料`, argv);
     return __1.crossSpawnSync('git', argv, {
         cwd: REPO_PATH,
         stdio: 'inherit',
@@ -262,7 +263,7 @@ function branchNameToDate(br_name) {
 }
 exports.branchNameToDate = branchNameToDate;
 function gitRemoveBranchOutdate(REPO_PATH) {
-    console.log(`開始分析 GIT 分支`);
+    log_1.default.info(`開始分析 GIT 分支`);
     let data_ret = false;
     let br_name = currentBranchName(REPO_PATH).toString().toLowerCase();
     let date_br = branchNameToDate(br_name);
@@ -271,8 +272,8 @@ function gitRemoveBranchOutdate(REPO_PATH) {
     let brs;
     brs = parseBranchGroup(gitBranchMergedList(REPO_PATH));
     if (brs) {
-        console.log(`檢查並刪除已合併分支`);
-        console.dir(brs, { colors: true, });
+        log_1.default.log(`檢查並刪除已合併分支`);
+        log_1.default.dir(brs, { colors: true, });
         let pre_name;
         pre_name = 'refs/heads/';
         brs.heads
@@ -302,8 +303,8 @@ function gitRemoveBranchOutdate(REPO_PATH) {
     }
     brs = parseBranchGroup(gitBranchMergedList(REPO_PATH, true));
     if (brs) {
-        console.log(`檢查並刪除未合併過期分支`);
-        console.dir(brs, { colors: true, });
+        log_1.default.log(`檢查並刪除未合併過期分支`);
+        log_1.default.dir(brs, { colors: true, });
         let pre_name;
         pre_name = 'refs/heads/';
         brs.heads
@@ -344,22 +345,22 @@ function gitRemoveBranchOutdate(REPO_PATH) {
     function fn(value, del_name, skip, is_remote, remote_name) {
         let value_lc = value.toLowerCase();
         if (skip) {
-            console.log(`skip (1) ${del_name}`);
+            log_1.default.log(`skip (1) ${del_name}`);
             return;
         }
         else if (!value || value_lc == br_name || value_lc == 'master' || value_lc == 'head') {
-            console.log(`skip (2) ${del_name}`);
+            log_1.default.log(`skip (2) ${del_name}`);
             return;
         }
         else if (is_remote) {
             if (!/auto\//i.test(value) || !remote_name) {
-                console.log(`skip (3) ${del_name}`);
+                log_1.default.log(`skip (3) ${del_name}`);
                 return;
             }
             let d = moment(value.replace(/^.*auto\//, ''), exports.DATE_FORMAT);
             //console.log(d);
         }
-        console.log(`try delete ${del_name}`);
+        log_1.default.info(`try delete ${del_name}`);
         if (is_remote) {
             deleteBranchRemote(REPO_PATH, remote_name, value);
         }
@@ -383,7 +384,7 @@ function gitBranchMergedList(REPO_PATH, noMerged, BR_NAME) {
         cwd: REPO_PATH,
     });
     if (cp.stderr && cp.stderr.length) {
-        console.error(cp.stderr.toString());
+        log_1.default.error(cp.stderr.toString());
         return null;
     }
     let name = index_1.crossSpawnOutput(cp.stdout);
@@ -421,7 +422,7 @@ function parseBranchGroup(r) {
 }
 exports.parseBranchGroup = parseBranchGroup;
 function gitCleanAll(REPO_PATH) {
-    console.log(`[git:clean] Remove untracked files from the working tree`);
+    log_1.default.info(`[git:clean] Remove untracked files from the working tree`);
     return __1.crossSpawnSync('git', [
         'clean',
         '-d',

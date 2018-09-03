@@ -8,10 +8,11 @@ import { currentBranchName } from './git';
 import ProjectConfig, { novel_root } from '../project.config';
 import { config as dotenvConfig } from 'dotenv';
 import path = require('upath2');
+import console from '../lib/log';
 
 export async function createPullRequests()
 {
-	console.log(`嘗試建立 PR`);
+	console.info(`嘗試建立 PR`);
 
 	let GITEE_ACCESS_TOKEN = process.env.GITEE_ACCESS_TOKEN || '';
 	let GITEE_CLIENT_ID = process.env.GITEE_CLIENT_ID || '';
@@ -86,7 +87,7 @@ export async function createPullRequests()
 			title: string,
 		})
 		{
-			console.log(`成功建立 PR #${ret.number} ${ret.title}`);
+			console.success(`成功建立 PR #${ret.number} ${ret.title}`);
 			//console.dir(ret);
 		})
 		.catch(function (err)

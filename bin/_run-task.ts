@@ -14,6 +14,7 @@ import ProjectConfig, { novel_root } from '../project.config';
 import moment = require('moment');
 import * as FastGlob from 'fast-glob';
 import gitlog from 'gitlog2';
+import console from '../lib/log';
 
 import {
 	GIT_SETTING_DIST_NOVEL,
@@ -33,7 +34,7 @@ let label: string;
 		throw new Error(`something wrong when create git`);
 	}
 
-	console.log(`dist_novel: ${DIST_NOVEL}`);
+	console.info(`dist_novel: ${DIST_NOVEL}`);
 }
 
 let currentHEAD =  getHashHEAD(DIST_NOVEL);
@@ -42,7 +43,7 @@ if (NOT_DONE)
 {
 	label = `--- NOT_DONE ---`;
 
-	console.log(label);
+	console.warn(label);
 	console.time(label);
 
 	let bin = path.join(PROJECT_ROOT, 'bin/_do_segment_all.js');
@@ -58,7 +59,7 @@ else
 {
 	label = `--- TASK ---`;
 
-	console.log(label);
+	console.info(label);
 	console.time(label);
 
 	runTask();
@@ -68,7 +69,7 @@ console.timeEnd(label);
 
 label = `--- PUSH ---`;
 
-console.log(label);
+console.info(label);
 console.time(label);
 
 if (MyConfig.config.debug && MyConfig.config.debug.no_push)
@@ -113,7 +114,7 @@ else
 
 			config.last_task_datatime = Date.now();
 
-			console.log(`將 cache 檔案內的 執行狀態 改為已完成`);
+			console.ok(`將 cache 檔案內的 執行狀態 改為已完成`);
 
 			fs.writeJSONSync(CacheConfig.filepath, config, {
 				spaces: 2,

@@ -12,6 +12,7 @@ import TableDict from 'novel-segment/lib/table/dict';
 import * as FastGlob from 'fast-glob';
 import * as Promise from 'bluebird';
 import { crlf } from 'crlf-normalize';
+import console from '../lib/log';
 
 export let DIST_NOVEL = ProjectConfig.novel_root;
 
@@ -54,7 +55,7 @@ export function doSegmentGlob(options: IOptions)
 		'**/*.txt',
 	];
 
-	console.log('[do]', options.pathMain, options.novelID);
+	console.info('[do]', options.pathMain, options.novelID);
 
 	return Promise.resolve(options.files || FastGlob(globPattern, {
 			cwd: CWD_IN,
@@ -210,7 +211,7 @@ export function _doSegmentGlob(ls: string[], options: IOptions)
 
 			console.timeEnd(label);
 
-			console.log(`file changed: ${count_changed}`);
+			console.debug(`file changed: ${count_changed}`);
 
 			return {
 				ls,

@@ -6,6 +6,7 @@ const config_1 = require("@node-novel/task/lib/config");
 const project_config_1 = require("../project.config");
 const moment = require("moment");
 const FastGlob = require("fast-glob");
+const log_1 = require("../lib/log");
 /**
  * Created by user on 2018/5/17/017.
  */
@@ -27,7 +28,7 @@ if (!/@$/.test(exports.GITEE_TOKEN)) {
 }
 if (exports.CacheConfig && exports.CacheConfig.config && exports.CacheConfig.config.done == -1) {
     exports.NOT_DONE = true;
-    console.log(`上次的任務未完成 本次繼續執行 (1)`);
+    log_1.default.warn(`上次的任務未完成 本次繼續執行 (1)`);
 }
 else {
     let ls = FastGlob.sync([
@@ -37,8 +38,8 @@ else {
     });
     if (ls.length) {
         exports.NOT_DONE = true;
-        console.log(`上次的任務未完成 本次繼續執行 (2)`);
-        console.log(ls);
+        log_1.default.warn(`上次的任務未完成 本次繼續執行 (2)`);
+        log_1.default.log(ls);
     }
 }
 exports.BR_NAME = 'auto/' + moment().format('YYYY-MM-DD-HH-mm-ss');

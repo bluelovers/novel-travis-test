@@ -17,6 +17,7 @@ import { _path, DIST_NOVEL } from '../script/segment';
 import * as FastGlob from 'fast-glob';
 import txtMerge from 'novel-txt-merge';
 import { array_unique as arrayUniq } from 'array-hyper-unique';
+import console from '../lib/log';
 
 if (!isGitRoot(GIT_SETTING_EPUB.targetPath))
 {
@@ -72,7 +73,7 @@ console.log(`git: ${GIT_SETTING_EPUB.targetPath}`);
 		ls2 = fs.readJSONSync(epub_json);
 	}
 
-	console.log(`本次新增 ${ls.length} , 上次未完成 ${ls2.length}`);
+	console.debug(`本次新增 ${ls.length} , 上次未完成 ${ls2.length}`);
 
 	ls = (ls || []).concat(ls2 || []);
 
@@ -184,7 +185,7 @@ console.log(`git: ${GIT_SETTING_EPUB.targetPath}`);
 			{
 				let count = ls.filter(v => v).length;
 
-				console.log(`本次共更新 ${count} 小說`);
+				console.info(`本次共更新 ${count} 小說`);
 			})
 			.tap(async function ()
 			{

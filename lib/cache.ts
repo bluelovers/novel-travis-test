@@ -8,6 +8,7 @@ import { array_unique as arrayUniq } from 'array-hyper-unique';
 import { _path } from '../script/segment';
 import * as PromiseBluebird from 'bluebird';
 import * as FastGlob from 'fast-glob';
+import console from '../lib/log';
 
 export async function cacheDiffNovelList(data: ReturnType<typeof novelDiffFromLog>)
 {
@@ -48,7 +49,7 @@ export async function cacheDiffNovelList(data: ReturnType<typeof novelDiffFromLo
 
 				if (arr.length)
 				{
-					console.log('[CACHE (cacheDiffNovelList)]', pathMain, novelID, data.list[pathMain][novelID].length, arr.length);
+					console.ok('[CACHE (cacheDiffNovelList)]', pathMain, novelID, data.list[pathMain][novelID].length, arr.length);
 					ls.push({ pathMain, novelID })
 				}
 				else
@@ -112,7 +113,7 @@ export async function cacheFileList(data: IListNovelRow)
 
 	ls = arrayUniq(ls);
 
-	console.log('[CACHE (cacheFileList)]', path.join(data.pathMain, data.novelID + '.json'), ls.length);
+	console.ok('[CACHE (cacheFileList)]', path.join(data.pathMain, data.novelID + '.json'), ls.length);
 
 	await fs.outputJSON(file, ls, {
 		spaces: '\t',

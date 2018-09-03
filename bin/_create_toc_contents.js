@@ -19,14 +19,15 @@ const FastGlob = require("fast-glob");
 const node_novel_info_1 = require("node-novel-info");
 const epub_maker2_1 = require("epub-maker2");
 const novel_txt_merge_1 = require("novel-txt-merge");
+const log_1 = require("../lib/log");
 (async () => {
     let _cache_init = path.join(project_config_1.default.cache_root, '.toc_contents.cache');
     let jsonfile = path.join(project_config_1.default.cache_root, 'diff-novel.json');
     let ls;
     let bool = fs.existsSync(_cache_init);
-    console.log(`[toc:contents] 是否已曾經初始化導航目錄`, bool, _cache_init);
+    log_1.default.debug(`[toc:contents] 是否已曾經初始化導航目錄`, bool, _cache_init);
     if (!bool) {
-        console.log(`[toc:contents] 初始化所有 小說 的 導航目錄`);
+        log_1.default.log(`[toc:contents] 初始化所有 小說 的 導航目錄`);
         ls = await toc_1.get_ids(project_config_1.default.novel_root)
             .reduce(async function (memo, pathMain) {
             await Promise
@@ -42,7 +43,7 @@ const novel_txt_merge_1 = require("novel-txt-merge");
         }, []);
     }
     else if (!fs.existsSync(jsonfile)) {
-        console.log(`[toc:contents] 本次沒有任何待更新列表 (1)`);
+        log_1.default.log(`[toc:contents] 本次沒有任何待更新列表 (1)`);
         return;
     }
     else {
@@ -77,7 +78,7 @@ const novel_txt_merge_1 = require("novel-txt-merge");
                     })()
                         .then(node_novel_info_1.chkInfo)
                         .catch(function (e) {
-                        console.error(e);
+                        log_1.default.error(e);
                         return null;
                     });
                     if (meta) {
@@ -163,10 +164,10 @@ const novel_txt_merge_1 = require("novel-txt-merge");
                     }
                 });
                 if (_did) {
-                    console.log(`[toc:contents]`, pathMain, novelID);
+                    log_1.default.success(`[toc:contents]`, pathMain, novelID);
                 }
                 else {
-                    console.dir({
+                    log_1.default.dir({
                         title: `[SKIP]`,
                         pathMain, novelID,
                         msg,
@@ -179,20 +180,20 @@ const novel_txt_merge_1 = require("novel-txt-merge");
         })
             .tap(async function () {
             if (_update) {
-                console.log(`[toc:contents] 完成 並且試圖 push 與 建立 PR`);
+                log_1.default.info(`[toc:contents] 完成 並且試圖 push 與 建立 PR`);
                 let cp = await git_2.pushGit(project_config_1.default.novel_root, git_2.getPushUrl(git_1.GIT_SETTING_DIST_NOVEL.url), true);
                 await gitee_pr_1.createPullRequests();
                 await fs.ensureFile(_cache_init);
             }
             else {
-                console.log(`[toc:contents] 完成 本次無更新任何檔案`);
+                log_1.default.warn(`[toc:contents] 完成 本次無更新任何檔案`);
             }
         })
             .tap(function () {
-            console.log(`[toc:contents] done.`);
+            log_1.default.log(`[toc:contents] done.`);
         });
     }
     else {
-        console.log(`[toc:contents] 本次沒有任何待更新列表 (2)`);
+        log_1.default.warn(`[toc:contents] 本次沒有任何待更新列表 (2)`);
     }
 })();

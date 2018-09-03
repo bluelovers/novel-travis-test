@@ -9,8 +9,9 @@ const git_1 = require("./git");
 const project_config_1 = require("../project.config");
 const dotenv_1 = require("dotenv");
 const path = require("upath2");
+const log_1 = require("../lib/log");
 async function createPullRequests() {
-    console.log(`嘗試建立 PR`);
+    log_1.default.info(`嘗試建立 PR`);
     let GITEE_ACCESS_TOKEN = process.env.GITEE_ACCESS_TOKEN || '';
     let GITEE_CLIENT_ID = process.env.GITEE_CLIENT_ID || '';
     let GITEE_CLIENT_SECRET = process.env.GITEE_CLIENT_SECRET || '';
@@ -34,10 +35,10 @@ async function createPullRequests() {
         clientSecret: GITEE_CLIENT_SECRET,
         scopes: 'pull_requests',
     }).catch(function (err) {
-        console.error(err);
+        log_1.default.error(err);
     });
     if (!token) {
-        console.error(`無法取得 token`);
+        log_1.default.error(`無法取得 token`);
         return;
     }
     let rq = new client_oauth2_request_1.default(token, {
@@ -45,7 +46,7 @@ async function createPullRequests() {
     });
     let br_name = git_1.currentBranchName(project_config_1.novel_root);
     if (!br_name.match(/^auto\//)) {
-        console.error(`目前分支為 ${br_name} 忽略建立 PR`);
+        log_1.default.error(`目前分支為 ${br_name} 忽略建立 PR`);
         return;
     }
     await rq
@@ -59,12 +60,12 @@ async function createPullRequests() {
         },
     })
         .tap(function (ret) {
-        console.log(`成功建立 PR #${ret.number} ${ret.title}`);
+        log_1.default.success(`成功建立 PR #${ret.number} ${ret.title}`);
         //console.dir(ret);
     })
         .catch(function (err) {
-        console.error(err.toString());
-        console.error(err.code, err.status, err.body);
+        log_1.default.error(err.toString());
+        log_1.default.error(err.code, err.status, err.body);
     });
 }
 exports.createPullRequests = createPullRequests;

@@ -7,6 +7,7 @@ import ProjectConfig from '../project.config';
 // @ts-ignore
 import { processToc, Promise } from '@node-novel/toc';
 import path = require('path');
+import console from '../lib/log';
 
 processToc(ProjectConfig.novel_root)
 	.then(async function (ls)
