@@ -4,4 +4,7 @@
 
 import { Console } from 'debug-color2';
 export const console = new Console();
+
+console.enabledColor = true;
+
 export default console
