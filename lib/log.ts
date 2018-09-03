@@ -8,9 +8,7 @@ if (process && process.env)
 }
 
 import { Console } from 'debug-color2';
-export const console = new Console();
-
-console.setOptions({
+export const console = new Console(null, {
 	enabled: true,
 	inspectOptions: {
 		colors: true,
