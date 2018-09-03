@@ -7,4 +7,10 @@ export const console = new Console();
 
 console.enabledColor = true;
 
+console.setOptions({
+	inspectOptions: {
+		colors: true,
+	}
+});
+
 export default console
