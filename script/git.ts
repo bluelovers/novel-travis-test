@@ -83,7 +83,7 @@ export function fetchGitAll(REPO_PATH: string)
 
 export function newBranch(REPO_PATH: string, BR_NAME: string)
 {
-	console.debug(`嘗試新分支 ${BR_NAME}`);
+	console.debug(`嘗試建立新分支 ${BR_NAME}`);
 
 	return crossSpawnSync('git', [
 		'checkout',

@@ -65,7 +65,7 @@ function fetchGitAll(REPO_PATH) {
 }
 exports.fetchGitAll = fetchGitAll;
 function newBranch(REPO_PATH, BR_NAME) {
-    log_1.default.debug(`嘗試新分支 ${BR_NAME}`);
+    log_1.default.debug(`嘗試建立新分支 ${BR_NAME}`);
     return __1.crossSpawnSync('git', [
         'checkout',
         '-B',
