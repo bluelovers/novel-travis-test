@@ -15,6 +15,7 @@ import moment = require('moment');
 import * as FastGlob from 'fast-glob';
 import gitlog from 'gitlog2';
 import console from '../lib/log';
+import Promise = require('bluebird');
 
 import {
 	GIT_SETTING_DIST_NOVEL,
@@ -67,65 +68,72 @@ else
 
 console.timeEnd(label);
 
-label = `--- PUSH ---`;
 
-console.info(label);
-console.time(label);
+(async () => {
+	label = `--- PUSH ---`;
 
-if (MyConfig.config.debug && MyConfig.config.debug.no_push)
-{
-	console.log(`[DEBUG] skip push`);
-}
-else
-{
-	let ok = true;
+	console.debug(label);
+	console.time(label);
 
-	let currentHEADNew = getHashHEAD(DIST_NOVEL);
-
-	if (currentHEAD != currentHEADNew || diffOrigin(DIST_NOVEL))
+	if (MyConfig.config.debug && MyConfig.config.debug.no_push)
 	{
-		fs.ensureFileSync(path.join(ProjectConfig.cache_root, '.waitpush'));
-
-		let cp = pushGit(DIST_NOVEL, getPushUrl(GIT_SETTING_DIST_NOVEL.url), true);
-
-		if (cp.error || cp.stderr && cp.stderr.toString())
-		{
-			ok = false;
-		}
-
-		createPullRequests();
+		console.warn(`[DEBUG] skip push`);
 	}
 	else
 	{
-		console.error(`沒有任何變更 忽略 PUSH`);
-	}
+		let ok = true;
 
-	if (ok)
-	{
-		fs.removeSync(path.join(ProjectConfig.cache_root, '.waitpush'));
+		let currentHEADNew = getHashHEAD(DIST_NOVEL);
 
-		if (CacheConfig)
+		if (currentHEAD != currentHEADNew || diffOrigin(DIST_NOVEL))
 		{
-			let config = fs.readJSONSync(CacheConfig.filepath);
+			fs.ensureFileSync(path.join(ProjectConfig.cache_root, '.waitpush'));
 
-			config.done = 1;
+			let cp = pushGit(DIST_NOVEL, getPushUrl(GIT_SETTING_DIST_NOVEL.url), true);
 
-			config.last_push_head = currentHEADNew;
+			if (cp.error || cp.stderr && cp.stderr.toString())
+			{
+				ok = false;
 
-			config.last_task_datatime = Date.now();
+				console.error(`發生錯誤`);
+			}
 
-			console.ok(`將 cache 檔案內的 執行狀態 改為已完成`);
+			await Promise.delay(1000);
 
-			fs.writeJSONSync(CacheConfig.filepath, config, {
-				spaces: 2,
-			});
+			createPullRequests();
+		}
+		else
+		{
+			console.error(`沒有任何變更 忽略 PUSH`);
+		}
 
-			console.dir(config);
+		if (ok)
+		{
+			fs.removeSync(path.join(ProjectConfig.cache_root, '.waitpush'));
+
+			if (CacheConfig)
+			{
+				let config = fs.readJSONSync(CacheConfig.filepath);
+
+				config.done = 1;
+
+				config.last_push_head = currentHEADNew;
+
+				config.last_task_datatime = Date.now();
+
+				console.ok(`將 cache 檔案內的 執行狀態 改為已完成`);
+
+				fs.writeJSONSync(CacheConfig.filepath, config, {
+					spaces: 2,
+				});
+
+				console.dir(config);
+			}
 		}
 	}
-}
 
-console.timeEnd(label);
+	console.timeEnd(label);
+})();
 
 // ----------------
 

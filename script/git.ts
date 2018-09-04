@@ -38,6 +38,8 @@ export function pushGit(REPO_PATH: string, repo: string, force?: boolean)
 		return null;
 	}
 
+	console.debug(`嘗試推送 ${repo}`);
+
 	let cp = crossSpawnSync('git', argv, {
 		stdio: 'inherit',
 		cwd: REPO_PATH,

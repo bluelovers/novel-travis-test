@@ -25,6 +25,7 @@ function pushGit(REPO_PATH, repo, force) {
     if (init_1.NO_PUSH) {
         return null;
     }
+    log_1.default.debug(`嘗試推送 ${repo}`);
     let cp = __1.crossSpawnSync('git', argv, {
         stdio: 'inherit',
         cwd: REPO_PATH,
