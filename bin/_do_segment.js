@@ -9,6 +9,7 @@ const path = require("upath2");
 const Promise = require("bluebird");
 const env_bool_1 = require("env-bool");
 const log_1 = require("../lib/log");
+const util_1 = require("../lib/util");
 let { pathMain, novelID, novel_root, runAll } = yargs.argv;
 if (pathMain && novelID) {
     Promise.resolve((async () => {
@@ -48,6 +49,8 @@ if (pathMain && novelID) {
                             spaces: '\t',
                         });
                     }
+                    util_1.showMemoryUsage();
+                    util_1.freeGC();
                 }
             },
         })

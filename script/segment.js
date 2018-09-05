@@ -279,6 +279,7 @@ function runSegment() {
         }
         let cp = index_1.crossSpawnSync('node', [
             '--max-old-space-size=2048',
+            '--expose-gc',
             bin,
             '--pathMain',
             pathMain,

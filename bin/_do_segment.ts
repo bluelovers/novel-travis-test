@@ -9,6 +9,7 @@ import path = require('upath2');
 import * as Promise from 'bluebird';
 import envBool, { envVal } from 'env-bool';
 import console from '../lib/log';
+import { showMemoryUsage, freeGC } from '../lib/util';
 
 let { pathMain, novelID, novel_root, runAll } = yargs.argv;
 
@@ -73,6 +74,9 @@ if (pathMain && novelID)
 							spaces: '\t',
 						});
 					}
+
+					showMemoryUsage();
+					freeGC();
 				}
 			},
 		})
