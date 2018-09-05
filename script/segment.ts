@@ -141,9 +141,9 @@ export function _doSegmentGlob(ls: string[], options: IOptions)
 					};
 				}
 
-				let text = await fs.readFile(fillpath) as any as string;
-
-				text = crlf(text.toString());
+				let text = await fs.readFile(fillpath)
+					.then(v => crlf(v.toString()))
+				;
 
 				if (!text.replace(/\s+/g, ''))
 				{
@@ -169,7 +169,7 @@ export function _doSegmentGlob(ls: string[], options: IOptions)
 
 				let timeuse = Date.now() - _now;
 
-				let text_new = segment.stringify(ks);
+				let text_new = await segment.stringify(ks);
 
 				let changed = text_new != text;
 
@@ -201,6 +201,7 @@ export function _doSegmentGlob(ls: string[], options: IOptions)
 				ks = null;
 
 				text = undefined;
+				text_new = undefined;
 
 				return {
 					file,
@@ -319,6 +320,7 @@ export function createSegment(useCache: boolean = true)
 			segment.inited = true;
 
 			cache_file = null;
+			data = undefined;
 		}
 	}
 
@@ -418,7 +420,7 @@ export function runSegment()
 			'*/*.json',
 		], {
 			cwd: path.join(ProjectConfig.cache_root, 'files'),
-		}), function (id: string)
+		}), async function (id: string)
 		{
 			let [pathMain, novelID] = id.split(/[\\\/]/);
 
@@ -430,7 +432,7 @@ export function runSegment()
 			{
 				console.error(pathMain, novelID);
 
-				fs.removeSync(path.join(ProjectConfig.cache_root, 'files', id));
+				await fs.remove(path.join(ProjectConfig.cache_root, 'files', id));
 
 				return -1;
 			}
@@ -480,7 +482,7 @@ export function runSegment()
 					cwd: DIST_NOVEL,
 				});
 
-				fs.outputJSONSync(_cache_file_segment, _cache_segment, {
+				await fs.outputJSON(_cache_file_segment, _cache_segment, {
 					spaces: "\t",
 				});
 			}
@@ -493,7 +495,7 @@ export function runSegment()
 
 			return cp.status;
 		})
-		.tap(function ()
+		.tap(async function ()
 		{
 			_cache_segment.last_s_ver = _cache_segment.s_ver;
 			_cache_segment.last_d_ver = _cache_segment.d_ver;
@@ -501,7 +503,7 @@ export function runSegment()
 			_cache_segment.s_ver = _s_ver;
 			_cache_segment.d_ver = _d_ver;
 
-			fs.outputJSONSync(_cache_file_segment, _cache_segment, {
+			await fs.outputJSON(_cache_file_segment, _cache_segment, {
 				spaces: "\t",
 			});
 		})

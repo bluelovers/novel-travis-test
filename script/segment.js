@@ -81,8 +81,8 @@ function _doSegmentGlob(ls, options) {
                     exists: true,
                 };
             }
-            let text = await fs.readFile(fillpath);
-            text = crlf_normalize_1.crlf(text.toString());
+            let text = await fs.readFile(fillpath)
+                .then(v => crlf_normalize_1.crlf(v.toString()));
             if (!text.replace(/\s+/g, '')) {
                 //console.warn('[skip]', label);
                 done_list.push(file);
@@ -98,7 +98,7 @@ function _doSegmentGlob(ls, options) {
             let _now = Date.now();
             let ks = await segment.doSegment(text);
             let timeuse = Date.now() - _now;
-            let text_new = segment.stringify(ks);
+            let text_new = await segment.stringify(ks);
             let changed = text_new != text;
             if (changed) {
                 //					console.warn('[changed]', label);
@@ -116,6 +116,7 @@ function _doSegmentGlob(ls, options) {
             }
             ks = null;
             text = undefined;
+            text_new = undefined;
             return {
                 file,
                 changed,
@@ -197,6 +198,7 @@ function createSegment(useCache = true) {
             segment.DICT = data.DICT;
             segment.inited = true;
             cache_file = null;
+            data = undefined;
         }
     }
     if (!segment.inited) {
@@ -253,13 +255,13 @@ function runSegment() {
         '*/*.json',
     ], {
         cwd: path.join(project_config_1.default.cache_root, 'files'),
-    }), function (id) {
+    }), async function (id) {
         let [pathMain, novelID] = id.split(/[\\\/]/);
         novelID = path.basename(novelID, '.json');
         let np = _path(pathMain, novelID);
         if (!fs.existsSync(np)) {
             log_1.default.error(pathMain, novelID);
-            fs.removeSync(path.join(project_config_1.default.cache_root, 'files', id));
+            await fs.remove(path.join(project_config_1.default.cache_root, 'files', id));
             return -1;
         }
         let bin = path.join(project_config_1.default.project_root, 'bin/_do_segment.js');
@@ -297,7 +299,7 @@ function runSegment() {
                 stdio: 'inherit',
                 cwd: exports.DIST_NOVEL,
             });
-            fs.outputJSONSync(_cache_file_segment, _cache_segment, {
+            await fs.outputJSON(_cache_file_segment, _cache_segment, {
                 spaces: "\t",
             });
         }
@@ -307,12 +309,12 @@ function runSegment() {
         _current_data.d_ver = _d_ver;
         return cp.status;
     })
-        .tap(function () {
+        .tap(async function () {
         _cache_segment.last_s_ver = _cache_segment.s_ver;
         _cache_segment.last_d_ver = _cache_segment.d_ver;
         _cache_segment.s_ver = _s_ver;
         _cache_segment.d_ver = _d_ver;
-        fs.outputJSONSync(_cache_file_segment, _cache_segment, {
+        await fs.outputJSON(_cache_file_segment, _cache_segment, {
             spaces: "\t",
         });
     });

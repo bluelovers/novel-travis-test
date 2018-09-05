@@ -32,7 +32,7 @@ if (pathMain && novelID)
 		{
 			console.log(`[Segment:skip]`, pathMain, novelID, ls);
 
-			fs.removeSync(jsonfile);
+			await fs.remove(jsonfile);
 
 			return 0;
 		}
@@ -87,18 +87,18 @@ if (pathMain && novelID)
 
 				if (ls.length == 0 || 1)
 				{
-					fs.removeSync(jsonfile);
+					await fs.remove(jsonfile);
 				}
 
 				return ret.count.changed;
 			})
-			.catch(function (e)
+			.catch(async function (e)
 			{
 				if (e == ERROR_MSG_001)
 				{
 					console.warn(ERROR_MSG_001);
 
-					fs.removeSync(jsonfile);
+					await fs.remove(jsonfile);
 
 					return 0;
 				}

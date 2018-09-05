@@ -21,7 +21,7 @@ if (pathMain && novelID) {
         runAll = env_bool_1.default(runAll);
         if (!runAll && (!Array.isArray(ls) || !ls.length)) {
             log_1.default.log(`[Segment:skip]`, pathMain, novelID, ls);
-            fs.removeSync(jsonfile);
+            await fs.remove(jsonfile);
             return 0;
         }
         log_1.default.debug(`[Segment]`, pathMain, novelID, `runAll: ${runAll}`);
@@ -57,14 +57,14 @@ if (pathMain && novelID) {
             });
             log_1.default.error(`ls: ${ls.length}`);
             if (ls.length == 0 || 1) {
-                fs.removeSync(jsonfile);
+                await fs.remove(jsonfile);
             }
             return ret.count.changed;
         })
-            .catch(function (e) {
+            .catch(async function (e) {
             if (e == segment_1.ERROR_MSG_001) {
                 log_1.default.warn(segment_1.ERROR_MSG_001);
-                fs.removeSync(jsonfile);
+                await fs.remove(jsonfile);
                 return 0;
             }
             return Promise.reject(e);
