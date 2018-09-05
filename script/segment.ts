@@ -458,6 +458,7 @@ export function runSegment()
 			}
 
 			let cp = crossSpawnSync('node', [
+				'--max-old-space-size=2048',
 				bin,
 				'--pathMain',
 				pathMain,
