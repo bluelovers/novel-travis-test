@@ -76,8 +76,9 @@ if (pathMain && novelID)
 					}
 
 					showMemoryUsage();
-					freeGC();
 				}
+
+				freeGC();
 			},
 		})
 			.then(async function (ret)

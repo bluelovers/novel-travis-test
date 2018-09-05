@@ -4,6 +4,7 @@
 
 import * as path from "upath2";
 import { crossSpawnSync } from '../index';
+import { freeGC } from '../lib/util';
 import ProjectConfig from '../project.config';
 import * as fs from 'fs-extra';
 import { useDefault, getDefaultModList } from 'novel-segment/lib';
@@ -351,6 +352,8 @@ export function createSegment(useCache: boolean = true)
 			DICT: segment.DICT,
 		}));
 	}
+
+	freeGC(true);
 
 	return segment;
 }

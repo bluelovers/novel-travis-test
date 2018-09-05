@@ -50,8 +50,8 @@ if (pathMain && novelID) {
                         });
                     }
                     util_1.showMemoryUsage();
-                    util_1.freeGC();
                 }
+                util_1.freeGC();
             },
         })
             .then(async function (ret) {

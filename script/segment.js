@@ -5,6 +5,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("upath2");
 const index_1 = require("../index");
+const util_1 = require("../lib/util");
 const project_config_1 = require("../project.config");
 const fs = require("fs-extra");
 const lib_1 = require("novel-segment/lib");
@@ -219,6 +220,7 @@ function createSegment(useCache = true) {
             DICT: segment.DICT,
         }));
     }
+    util_1.freeGC(true);
     return segment;
 }
 exports.createSegment = createSegment;
