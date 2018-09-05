@@ -353,7 +353,7 @@ export function createSegment(useCache: boolean = true)
 		}));
 	}
 
-	freeGC(true);
+	freeGC();
 
 	return segment;
 }

@@ -220,7 +220,7 @@ function createSegment(useCache = true) {
             DICT: segment.DICT,
         }));
     }
-    util_1.freeGC(true);
+    util_1.freeGC();
     return segment;
 }
 exports.createSegment = createSegment;
