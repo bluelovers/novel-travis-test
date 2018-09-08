@@ -44,6 +44,8 @@ console.info(`git: ${GIT_SETTING_EPUB.targetPath}`);
 
 	if (!fs.existsSync(epub_json))
 	{
+		console.red(`[EPUB] 快取檔案不存在 本次將執行初始化所有 epub 檔案`);
+
 		ls2 = await Promise
 			.mapSeries(FastGlob([
 				'*/*/*',

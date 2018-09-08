@@ -29,6 +29,7 @@ log_1.default.info(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
         ls = fs.readJSONSync(jsonfile);
     }
     if (!fs.existsSync(epub_json)) {
+        log_1.default.red(`[EPUB] 快取檔案不存在 本次將執行初始化所有 epub 檔案`);
         ls2 = await Promise
             .mapSeries(FastGlob([
             '*/*/*',
