@@ -15,11 +15,15 @@ exports.PROJECT_ROOT = project_config_1.default.project_root;
 exports.MyConfig = config_1.loadMainConfig(exports.PROJECT_ROOT);
 exports.CacheConfig = config_1.loadCacheConfig(exports.PROJECT_ROOT);
 exports.GITEE_TOKEN = process.env.GITEE_TOKEN || '';
+exports.GITLAB_TOKEN = process.env.GITLAB_TOKEN || '';
 exports.DIST_NOVEL = project_config_1.default.novel_root;
-if (!exports.GITEE_TOKEN) {
+if (!exports.GITEE_TOKEN || !exports.GITLAB_TOKEN) {
     let env = dotenv_1.config({ path: path.join(exports.PROJECT_ROOT, '.env') });
-    if (env.parsed && env.parsed.GITEE_TOKEN) {
+    if (!exports.GITEE_TOKEN && env.parsed && env.parsed.GITEE_TOKEN) {
         exports.GITEE_TOKEN = env.parsed.GITEE_TOKEN;
+    }
+    if (!exports.GITLAB_TOKEN && env.parsed && env.parsed.GITLAB_TOKEN) {
+        exports.GITLAB_TOKEN = env.parsed.GITLAB_TOKEN;
     }
 }
 exports.CLONE_DEPTH = process.env.CLONE_DEPTH || 50;

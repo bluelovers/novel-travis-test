@@ -23,16 +23,23 @@ export const PROJECT_ROOT = ProjectConfig.project_root;
 export let MyConfig = loadMainConfig(PROJECT_ROOT);
 export let CacheConfig = loadCacheConfig(PROJECT_ROOT);
 
-export let GITEE_TOKEN = process.env.GITEE_TOKEN || '';
+export let GITEE_TOKEN: string = process.env.GITEE_TOKEN || '';
+export let GITLAB_TOKEN: string = process.env.GITLAB_TOKEN || '';
+
 export const DIST_NOVEL = ProjectConfig.novel_root;
 
-if (!GITEE_TOKEN)
+if (!GITEE_TOKEN || !GITLAB_TOKEN)
 {
 	let env = dotenvConfig({ path: path.join(PROJECT_ROOT, '.env') });
 
-	if (env.parsed && env.parsed.GITEE_TOKEN)
+	if (!GITEE_TOKEN && env.parsed && env.parsed.GITEE_TOKEN)
 	{
 		GITEE_TOKEN = env.parsed.GITEE_TOKEN;
+	}
+
+	if (!GITLAB_TOKEN && env.parsed && env.parsed.GITLAB_TOKEN)
+	{
+		GITLAB_TOKEN = env.parsed.GITLAB_TOKEN;
 	}
 }
 

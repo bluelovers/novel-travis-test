@@ -18,6 +18,7 @@ export declare let CacheConfig: {
     filepath: string;
 };
 export declare let GITEE_TOKEN: string;
+export declare let GITLAB_TOKEN: string;
 export declare const DIST_NOVEL: string;
 export declare let CLONE_DEPTH: string | number;
 export declare let NOT_DONE: boolean;
