@@ -5,3 +5,4 @@ export declare function cacheDiffNovelList(data: ReturnType<typeof novelDiffFrom
     novelID: string;
 }[]>;
 export declare function cacheFileList(data: IListNovelRow): Promise<string[]>;
+export declare function _filterFile(file: string): boolean;

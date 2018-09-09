@@ -35,16 +35,7 @@ export async function cacheDiffNovelList(data: ReturnType<typeof novelDiffFromLo
 
 				let arr = data.list[pathMain][novelID].filter(function (v)
 				{
-					let basename = v.basename || path.basename(v.fullpath);
-
-					let ext = path.extname(v.basename);
-
-					if (ext == '.md' && /readme/i.test(v.fullpath))
-					{
-						return true;
-					}
-
-					return ext == '.txt';
+					return _filterFile(v.basename || path.basename(v.fullpath));
 				});
 
 				if (arr.length)
@@ -98,16 +89,7 @@ export async function cacheFileList(data: IListNovelRow)
 	}))
 		.filter(function (v)
 		{
-			let basename = path.basename(v);
-
-			let ext = path.extname(basename);
-
-			if (ext == '.md' && /readme/i.test(basename))
-			{
-				return true;
-			}
-
-			return ext == '.txt';
+			return _filterFile(v);
 		})
 	;
 
@@ -122,3 +104,15 @@ export async function cacheFileList(data: IListNovelRow)
 	return ls;
 }
 
+export function _filterFile(file: string)
+{
+	let basename = path.basename(file);
+	let ext = path.extname(basename);
+
+	if (ext == '.md' && /readme/i.test(basename))
+	{
+		return true;
+	}
+
+	return ext == '.txt';
+}
