@@ -149,7 +149,7 @@ import console from '../lib/log';
 									_pathMain = pathMain + '_out';
 								}
 
-								let link_base = `https://gitee.com/demogitee/epub-txt/tree/master/${_pathMain}/`;
+								let link_base = `https://gitlab.com/demonovel/epub-txt/blob/master/${_pathMain}/`;
 
 								let t: string;
 								let link: string;

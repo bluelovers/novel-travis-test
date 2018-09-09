@@ -98,7 +98,7 @@ const log_1 = require("../lib/log");
                         if (fs.existsSync(path.join(project_config_1.default.novel_root, pathMain + '_out', novelID, 'README.md'))) {
                             _pathMain = pathMain + '_out';
                         }
-                        let link_base = `https://gitee.com/demogitee/epub-txt/tree/master/${_pathMain}/`;
+                        let link_base = `https://gitlab.com/demonovel/epub-txt/blob/master/${_pathMain}/`;
                         let t;
                         let link;
                         t = 'EPUB';
