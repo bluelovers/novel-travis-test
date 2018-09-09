@@ -37,7 +37,15 @@ if (pathMain && novelID)
 
 			return 0;
 		}
-		console.debug(`[Segment]`, pathMain, novelID, `runAll: ${runAll}`);
+
+		if (runAll)
+		{
+			console.debug(`[Segment]`, pathMain, novelID, `runAll: ${runAll}`);
+		}
+		else
+		{
+			console.log(`[Segment]`, pathMain, novelID, `runAll: ${runAll}`);
+		}
 
 		if (!runAll)
 		{

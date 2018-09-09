@@ -26,7 +26,7 @@ export async function cacheDiffNovelList(data: ReturnType<typeof novelDiffFromLo
 		{
 			if (pathMain.match(/^\./) || ['docs'].includes(pathMain))
 			{
-				console.log('[SKIP (cacheDiffNovelList)]', pathMain, Object.keys(data.list[pathMain]));
+				console.grey('[SKIP (cacheDiffNovelList)]', pathMain, Object.keys(data.list[pathMain]));
 				return;
 			}
 
@@ -75,7 +75,7 @@ export async function cacheFileList(data: IListNovelRow)
 {
 	if (data.pathMain.match(/_out$|^\./) || ['docs'].includes(data.pathMain))
 	{
-		console.log('[CACHE (cacheFileList)]', 'SKIP: ', data.pathMain, data.novelID);
+		console.grey('[CACHE (cacheFileList)]', 'SKIP: ', data.pathMain, data.novelID);
 		return;
 	}
 

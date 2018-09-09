@@ -25,7 +25,12 @@ if (pathMain && novelID) {
             await fs.remove(jsonfile);
             return 0;
         }
-        log_1.default.debug(`[Segment]`, pathMain, novelID, `runAll: ${runAll}`);
+        if (runAll) {
+            log_1.default.debug(`[Segment]`, pathMain, novelID, `runAll: ${runAll}`);
+        }
+        else {
+            log_1.default.log(`[Segment]`, pathMain, novelID, `runAll: ${runAll}`);
+        }
         if (!runAll) {
             log_1.default.grey(`list:`, ls);
         }
