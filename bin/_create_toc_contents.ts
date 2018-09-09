@@ -166,7 +166,7 @@ import console from '../lib/log';
 
 								_add.push(`[${md_link_escape(t)}](${link_base + md_href(link)})`);
 
-								ret.push('- ' + _add.join(` ／ `) + ` - 如果連結錯誤 請點[這裡](https://gitee.com/demogitee/epub-txt)`);
+								ret.push('- ' + _add.join(` ／ `) + ` - 如果連結錯誤 請點[這裡](https://gitlab.com/demonovel/epub-txt/tree/master)`);
 
 
 								{

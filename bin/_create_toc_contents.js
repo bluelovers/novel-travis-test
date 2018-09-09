@@ -108,7 +108,7 @@ const log_1 = require("../lib/log");
                         t = 'TXT';
                         link = 'out/' + txt_file;
                         _add.push(`[${toc_contents_1.md_link_escape(t)}](${link_base + index_1.md_href(link)})`);
-                        ret.push('- ' + _add.join(` ／ `) + ` - 如果連結錯誤 請點[這裡](https://gitee.com/demogitee/epub-txt)`);
+                        ret.push('- ' + _add.join(` ／ `) + ` - 如果連結錯誤 請點[這裡](https://gitlab.com/demonovel/epub-txt/tree/master)`);
                         {
                             link_base = 'https://github.com/bluelovers/node-novel/blob/master/lib/locales/';
                             if (meta.options && meta.options.novel && meta.options.pattern) {
