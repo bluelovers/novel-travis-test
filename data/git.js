@@ -13,6 +13,7 @@ exports.GIT_SETTING_DIST_NOVEL = {
     targetPath: init_1.DIST_NOVEL,
     NOT_DONE: init_1.NOT_DONE,
     newBranchName: init_1.BR_NAME,
+    LOGIN_TOKEN: init_1.GITEE_TOKEN,
     on: {
         create_before(data, temp) {
             /*
@@ -80,12 +81,15 @@ exports.GIT_SETTING_DIST_NOVEL = {
     }
 };
 exports.GIT_SETTING_EPUB = {
-    url: 'gitee.com/demogitee/epub-txt.git',
-    urlClone: 'https://gitee.com/demogitee/epub-txt.git',
+    //url: 'gitee.com/demogitee/epub-txt.git',
+    //urlClone: 'https://gitee.com/demogitee/epub-txt.git',
+    url: 'gitlab.com/demonovel/epub-txt.git',
+    //	urlClone: 'https://gitlab.com/demonovel/epub-txt.git',
     targetPath: path.join(project_config_1.default.project_root, 'dist_epub'),
     NOT_DONE: init_1.NOT_DONE,
     newBranchName: init_1.BR_NAME,
     CLONE_DEPTH: 10,
+    LOGIN_TOKEN: init_1.GITLAB_TOKEN,
     on: {
         create_before(data, temp) {
             if (data.exists) {

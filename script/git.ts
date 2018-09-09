@@ -189,11 +189,14 @@ export type IOptionsCreateGit = {
 
 	newBranchName: string,
 
-	urlClone: string,
+	urlClone?: string,
+	urlPush?: string,
 
 	NOT_DONE,
 
 	CLONE_DEPTH?: number,
+
+	LOGIN_TOKEN?: string,
 
 	on?: {
 		create_before?(data: ReturnType<typeof createGit>["data"], temp?: ReturnType<typeof createGit>["temp"]),
@@ -202,9 +205,19 @@ export type IOptionsCreateGit = {
 	},
 };
 
-export function getPushUrl(url: string)
+export function getPushUrl(url: string, login_token?: string)
 {
-	return `https://${GITEE_TOKEN ? GITEE_TOKEN : ''}${url}`;
+	if (login_token && !/@$/.test(login_token))
+	{
+		login_token += '@';
+	}
+
+	return `https://${login_token ? login_token : ''}${url}`;
+}
+
+export function getPushUrlGitee(url: string, login_token: string = GITEE_TOKEN)
+{
+	return getPushUrl(url, login_token);
 }
 
 export function createGit(options: IOptionsCreateGit)
@@ -230,7 +243,9 @@ export function createGit(options: IOptionsCreateGit)
 		url: options.url,
 		urlClone: options.urlClone,
 
-		pushUrl: getPushUrl(options.url),
+		LOGIN_TOKEN: options.LOGIN_TOKEN,
+
+		pushUrl: options.urlPush || getPushUrl(options.url, options.LOGIN_TOKEN),
 	};
 
 	let temp: {
@@ -288,12 +303,30 @@ export function createGit(options: IOptionsCreateGit)
 			CLONE_DEPTH = 50;
 		}
 
+		let urlClone = data.urlClone;
+
+		if (!urlClone)
+		{
+			console.red(`urlClone 不存在 嘗試自動生成`);
+
+			if (data.LOGIN_TOKEN)
+			{
+				console.debug(`使用 LOGIN_TOKEN 自動生成 urlClone`);
+				urlClone = getPushUrl(data.url, data.LOGIN_TOKEN);
+			}
+			else
+			{
+				console.debug(`使用 url 自動生成 urlClone`);
+				urlClone = getPushUrl(data.url);
+			}
+		}
+
 		temp.cp = crossSpawnSync('git', [
 			'clone',
 			`--depth=${CLONE_DEPTH}`,
 			//'--verbose',
 			//'--progress ',
-			data.urlClone,
+			urlClone,
 			data.targetPath,
 		], {
 			stdio: 'inherit',

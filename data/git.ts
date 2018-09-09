@@ -11,7 +11,7 @@ import moment = require('moment');
 import * as FastGlob from 'fast-glob';
 import gitlog from 'gitlog2';
 
-import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, CLONE_DEPTH, GITEE_TOKEN } from '../script/init';
+import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, CLONE_DEPTH, GITEE_TOKEN, GITLAB_TOKEN } from '../script/init';
 
 import {
 	pushGit,
@@ -31,6 +31,8 @@ export const GIT_SETTING_DIST_NOVEL: IOptionsCreateGit = {
 	NOT_DONE,
 
 	newBranchName: BR_NAME,
+
+	LOGIN_TOKEN: GITEE_TOKEN,
 
 	on: {
 		create_before(data, temp)
@@ -119,14 +121,21 @@ export const GIT_SETTING_DIST_NOVEL: IOptionsCreateGit = {
 };
 
 export const GIT_SETTING_EPUB: IOptionsCreateGit = {
-	url: 'gitee.com/demogitee/epub-txt.git',
-	urlClone: 'https://gitee.com/demogitee/epub-txt.git',
+
+	//url: 'gitee.com/demogitee/epub-txt.git',
+	//urlClone: 'https://gitee.com/demogitee/epub-txt.git',
+
+	url: 'gitlab.com/demonovel/epub-txt.git',
+//	urlClone: 'https://gitlab.com/demonovel/epub-txt.git',
+
 	targetPath: path.join(ProjectConfig.project_root, 'dist_epub'),
 	NOT_DONE,
 
 	newBranchName: BR_NAME,
 
 	CLONE_DEPTH: 10,
+
+	LOGIN_TOKEN: GITLAB_TOKEN,
 
 	on: {
 		create_before(data, temp)

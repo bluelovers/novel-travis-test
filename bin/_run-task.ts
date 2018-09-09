@@ -23,7 +23,7 @@ import {
 import { createPullRequests } from '../script/gitee-pr';
 
 import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, MyConfig, CacheConfig } from '../script/init';
-import { diffOrigin, getHashHEAD, getPushUrl, pushGit } from '../script/git';
+import { diffOrigin, getHashHEAD, getPushUrl, getPushUrlGitee, pushGit } from '../script/git';
 
 let label: string;
 
@@ -89,7 +89,7 @@ console.timeEnd(label);
 		{
 			fs.ensureFileSync(path.join(ProjectConfig.cache_root, '.waitpush'));
 
-			let cp = pushGit(DIST_NOVEL, getPushUrl(GIT_SETTING_DIST_NOVEL.url), true);
+			let cp = pushGit(DIST_NOVEL, getPushUrlGitee(GIT_SETTING_DIST_NOVEL.url), true);
 
 			if (cp.error || cp.stderr && cp.stderr.toString())
 			{

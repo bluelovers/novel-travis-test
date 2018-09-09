@@ -32,16 +32,19 @@ export declare type IOptionsCreateGit = {
     url: string;
     targetPath: string;
     newBranchName: string;
-    urlClone: string;
+    urlClone?: string;
+    urlPush?: string;
     NOT_DONE: any;
     CLONE_DEPTH?: number;
+    LOGIN_TOKEN?: string;
     on?: {
         create_before?(data: ReturnType<typeof createGit>["data"], temp?: ReturnType<typeof createGit>["temp"]): any;
         create?(data: ReturnType<typeof createGit>["data"], temp?: ReturnType<typeof createGit>["temp"]): any;
         create_after?(data: ReturnType<typeof createGit>["data"], temp?: ReturnType<typeof createGit>["temp"]): any;
     };
 };
-export declare function getPushUrl(url: string): string;
+export declare function getPushUrl(url: string, login_token?: string): string;
+export declare function getPushUrlGitee(url: string, login_token?: string): string;
 export declare function createGit(options: IOptionsCreateGit): {
     data: {
         targetName: string;
@@ -52,6 +55,7 @@ export declare function createGit(options: IOptionsCreateGit): {
         NOT_DONE: boolean;
         url: string;
         urlClone: string;
+        LOGIN_TOKEN: string;
         pushUrl: string;
     };
     temp: {

@@ -144,10 +144,17 @@ function getHashHEAD(REPO_PATH, branch = 'HEAD') {
     return gitlog2_1.default({ repo: REPO_PATH, number: 1, branch })[0].abbrevHash;
 }
 exports.getHashHEAD = getHashHEAD;
-function getPushUrl(url) {
-    return `https://${init_1.GITEE_TOKEN ? init_1.GITEE_TOKEN : ''}${url}`;
+function getPushUrl(url, login_token) {
+    if (login_token && !/@$/.test(login_token)) {
+        login_token += '@';
+    }
+    return `https://${login_token ? login_token : ''}${url}`;
 }
 exports.getPushUrl = getPushUrl;
+function getPushUrlGitee(url, login_token = init_1.GITEE_TOKEN) {
+    return getPushUrl(url, login_token);
+}
+exports.getPushUrlGitee = getPushUrlGitee;
 function createGit(options) {
     let targetName = path.basename(options.targetPath);
     let targetPath = path.normalize(options.targetPath);
@@ -162,7 +169,8 @@ function createGit(options) {
         NOT_DONE: init_1.NOT_DONE,
         url: options.url,
         urlClone: options.urlClone,
-        pushUrl: getPushUrl(options.url),
+        LOGIN_TOKEN: options.LOGIN_TOKEN,
+        pushUrl: options.urlPush || getPushUrl(options.url, options.LOGIN_TOKEN),
     };
     let temp = {
         cp: null,
@@ -197,12 +205,24 @@ function createGit(options) {
         if (isNaN(CLONE_DEPTH) || !CLONE_DEPTH || CLONE_DEPTH <= 0) {
             CLONE_DEPTH = 50;
         }
+        let urlClone = data.urlClone;
+        if (!urlClone) {
+            log_1.default.red(`urlClone 不存在 嘗試自動生成`);
+            if (data.LOGIN_TOKEN) {
+                log_1.default.debug(`使用 LOGIN_TOKEN 自動生成 urlClone`);
+                urlClone = getPushUrl(data.url, data.LOGIN_TOKEN);
+            }
+            else {
+                log_1.default.debug(`使用 url 自動生成 urlClone`);
+                urlClone = getPushUrl(data.url);
+            }
+        }
         temp.cp = __1.crossSpawnSync('git', [
             'clone',
             `--depth=${CLONE_DEPTH}`,
             //'--verbose',
             //'--progress ',
-            data.urlClone,
+            urlClone,
             data.targetPath,
         ], {
             stdio: 'inherit',

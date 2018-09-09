@@ -17,6 +17,7 @@ let waitpush = path.join(project_config_1.default.cache_root, 'epub.waitpush');
     if (!fs.existsSync(waitpush)) {
         return;
     }
-    await git_2.pushGit(git_1.GIT_SETTING_EPUB.targetPath, git_2.getPushUrl(git_1.GIT_SETTING_EPUB.url), true);
+    //await pushGit(GIT_SETTING_EPUB.targetPath, getPushUrl(GIT_SETTING_EPUB.url), true);
+    await git_2.pushGit(git_1.GIT_SETTING_EPUB.targetPath, 'origin', true);
     await fs.remove(waitpush);
 })();
