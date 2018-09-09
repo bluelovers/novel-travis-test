@@ -54,7 +54,7 @@ export async function cacheDiffNovelList(data: ReturnType<typeof novelDiffFromLo
 				}
 				else
 				{
-					console.log('[SKIP (cacheDiffNovelList)]', pathMain, novelID, data.list[pathMain][novelID].length);
+					console.gray('[SKIP (cacheDiffNovelList)]', pathMain, novelID, data.list[pathMain][novelID].length);
 				}
 
 				//console.log(data.list[pathMain][novelID]);
