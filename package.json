@@ -55,6 +55,7 @@
     "novel-segment": "^2.0.42",
     "novel-txt-merge": "^1.0.11",
     "prettyuse": "^0.0.0",
+    "travis-ci-encrypt": "^1.0.2",
     "upath2": "^2.1.2",
     "yargs": "^12.0.2"
   },
