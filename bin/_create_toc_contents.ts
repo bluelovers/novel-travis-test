@@ -9,7 +9,7 @@ import * as Promise from 'bluebird';
 import { makeFilename } from 'novel-epub/lib/txt2epub3';
 import { GIT_SETTING_DIST_NOVEL, GIT_SETTING_EPUB } from '../data/git';
 import ProjectConfig from '../project.config';
-import { getPushUrl, pushGit } from '../script/git';
+import { getPushUrl, getPushUrlGitee, pushGit } from '../script/git';
 import { createPullRequests } from '../script/gitee-pr';
 import { crossSpawnSync, crossSpawnAsync } from '../index';
 import path = require('path');
@@ -269,7 +269,7 @@ import console from '../lib/log';
 				{
 					console.info(`[toc:contents] 完成 並且試圖 push 與 建立 PR`);
 
-					let cp = await pushGit(ProjectConfig.novel_root, getPushUrl(GIT_SETTING_DIST_NOVEL.url), true);
+					let cp = await pushGit(ProjectConfig.novel_root, getPushUrlGitee(GIT_SETTING_DIST_NOVEL.url), true);
 
 					await createPullRequests();
 

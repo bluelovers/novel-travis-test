@@ -181,7 +181,7 @@ const log_1 = require("../lib/log");
             .tap(async function () {
             if (_update) {
                 log_1.default.info(`[toc:contents] 完成 並且試圖 push 與 建立 PR`);
-                let cp = await git_2.pushGit(project_config_1.default.novel_root, git_2.getPushUrl(git_1.GIT_SETTING_DIST_NOVEL.url), true);
+                let cp = await git_2.pushGit(project_config_1.default.novel_root, git_2.getPushUrlGitee(git_1.GIT_SETTING_DIST_NOVEL.url), true);
                 await gitee_pr_1.createPullRequests();
                 await fs.ensureFile(_cache_init);
             }
