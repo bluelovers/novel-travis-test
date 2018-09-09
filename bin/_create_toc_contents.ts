@@ -34,7 +34,7 @@ import console from '../lib/log';
 
 	if (!bool)
 	{
-		console.log(`[toc:contents] 初始化所有 小說 的 導航目錄`);
+		console.warn(`[toc:contents] 初始化所有 小說 的 導航目錄`);
 		ls = await get_ids(ProjectConfig.novel_root)
 			.reduce(async function (memo, pathMain: string)
 			{
@@ -57,7 +57,7 @@ import console from '../lib/log';
 	}
 	else if (!fs.existsSync(jsonfile))
 	{
-		console.log(`[toc:contents] 本次沒有任何待更新列表 (1)`);
+		console.grey(`[toc:contents] 本次沒有任何待更新列表 (1)`);
 		return;
 	}
 	else

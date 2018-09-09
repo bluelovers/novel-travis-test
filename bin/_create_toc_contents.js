@@ -27,7 +27,7 @@ const log_1 = require("../lib/log");
     let bool = fs.existsSync(_cache_init);
     log_1.default.debug(`[toc:contents] 是否已曾經初始化導航目錄`, bool, _cache_init);
     if (!bool) {
-        log_1.default.log(`[toc:contents] 初始化所有 小說 的 導航目錄`);
+        log_1.default.warn(`[toc:contents] 初始化所有 小說 的 導航目錄`);
         ls = await toc_1.get_ids(project_config_1.default.novel_root)
             .reduce(async function (memo, pathMain) {
             await Promise
@@ -43,7 +43,7 @@ const log_1 = require("../lib/log");
         }, []);
     }
     else if (!fs.existsSync(jsonfile)) {
-        log_1.default.log(`[toc:contents] 本次沒有任何待更新列表 (1)`);
+        log_1.default.grey(`[toc:contents] 本次沒有任何待更新列表 (1)`);
         return;
     }
     else {
