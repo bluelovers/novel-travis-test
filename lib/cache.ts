@@ -95,11 +95,18 @@ export async function cacheFileList(data: IListNovelRow)
 
 	ls = arrayUniq(ls);
 
-	console.ok('[CACHE (cacheFileList)]', path.join(data.pathMain, data.novelID + '.json'), ls.length);
+	if (ls.length > 0)
+	{
+		console.ok('[CACHE (cacheFileList)]', path.join(data.pathMain, data.novelID + '.json'), ls.length);
 
-	await fs.outputJSON(file, ls, {
-		spaces: '\t',
-	});
+		await fs.outputJSON(file, ls, {
+			spaces: '\t',
+		});
+	}
+	else
+	{
+		console.red('[CACHE (cacheFileList)]', 'SKIP2: ', data.pathMain, data.novelID);
+	}
 
 	return ls;
 }
