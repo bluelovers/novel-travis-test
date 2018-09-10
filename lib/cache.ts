@@ -95,6 +95,7 @@ export async function cacheFileList(data: IListNovelRow)
 
 	ls = arrayUniq(ls);
 
+	// 防止除了 txt 與 readme 以外的檔案觸發更新
 	if (ls.length > 0)
 	{
 		console.ok('[CACHE (cacheFileList)]', path.join(data.pathMain, data.novelID + '.json'), ls.length);
