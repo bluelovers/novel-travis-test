@@ -33,3 +33,10 @@ export function freeGC(showmem?: boolean)
 		}
 	}
 }
+
+export function qrcode_link(url: string, size?: number)
+{
+	size = size || 150;
+
+	return `https://chart.apis.google.com/chart?cht=qr&chs=${size}x${size}&chl=${url}`
+}

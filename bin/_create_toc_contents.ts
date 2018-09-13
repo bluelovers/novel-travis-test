@@ -8,6 +8,7 @@ import processTocContents, { makeHeader, makeLink, md_link_escape } from '@node-
 import * as Promise from 'bluebird';
 import { makeFilename } from 'novel-epub/lib/txt2epub3';
 import { GIT_SETTING_DIST_NOVEL, GIT_SETTING_EPUB } from '../data/git';
+import { qrcode_link } from '../lib/util';
 import ProjectConfig from '../project.config';
 import { getPushUrl, getPushUrlGitee, pushGit } from '../script/git';
 import { createPullRequests } from '../script/gitee-pr';
@@ -193,13 +194,32 @@ import console from '../lib/log';
 
 							}
 
+							const DISCORD_LINK = 'https://discord.gg/MnXkpmX';
+
 							{
-								let t = 'https://discord.gg/MnXkpmX';
-								let link = 'https://discord.gg/MnXkpmX';
+								let t = DISCORD_LINK;
+								let link = DISCORD_LINK;
 
 								let md = `[${md_link_escape(t)}](${link})`;
 
 								ret.push(`- ${md} - 小說交流群，如果已經加入請點[這裡](https://discordapp.com/channels/467794087769014273/467794088285175809) 或 [Discord](https://discordapp.com/channels/@me)`);
+							}
+
+							{
+								let qt = qrcode_link(DISCORD_LINK);
+								let qu = qrcode_link([
+									`https://gitee.com/bluelovers/novel/blob/master`,
+									pathMain,
+									novelID,
+									'導航目錄.md',
+								].join('/'));
+
+								let c = `\n\n`;
+
+								ret.push(c + [
+									`![導航目錄](${md_link_escape(qu)})`,
+									`![Discord](${md_link_escape(qt)})`,
+								].join('  ') + c);
 							}
 
 							return ret;

@@ -9,6 +9,7 @@ const toc_contents_1 = require("@node-novel/toc/toc_contents");
 const Promise = require("bluebird");
 const txt2epub3_1 = require("novel-epub/lib/txt2epub3");
 const git_1 = require("../data/git");
+const util_1 = require("../lib/util");
 const project_config_1 = require("../project.config");
 const git_2 = require("../script/git");
 const gitee_pr_1 = require("../script/gitee-pr");
@@ -124,11 +125,26 @@ const log_1 = require("../lib/log");
                             ret.push('- ' + md + ` - 如果連結錯誤 請點[這裡](https://github.com/bluelovers/node-novel/tree/master/lib/locales)`);
                         }
                     }
+                    const DISCORD_LINK = 'https://discord.gg/MnXkpmX';
                     {
-                        let t = 'https://discord.gg/MnXkpmX';
-                        let link = 'https://discord.gg/MnXkpmX';
+                        let t = DISCORD_LINK;
+                        let link = DISCORD_LINK;
                         let md = `[${toc_contents_1.md_link_escape(t)}](${link})`;
                         ret.push(`- ${md} - 小說交流群，如果已經加入請點[這裡](https://discordapp.com/channels/467794087769014273/467794088285175809) 或 [Discord](https://discordapp.com/channels/@me)`);
+                    }
+                    {
+                        let qt = util_1.qrcode_link(DISCORD_LINK);
+                        let qu = util_1.qrcode_link([
+                            `https://gitee.com/bluelovers/novel/blob/master`,
+                            pathMain,
+                            novelID,
+                            '導航目錄.md',
+                        ].join('/'));
+                        let c = `\n\n`;
+                        ret.push(c + [
+                            `![導航目錄](${toc_contents_1.md_link_escape(qu)})`,
+                            `![Discord](${toc_contents_1.md_link_escape(qt)})`,
+                        ].join('  ') + c);
                     }
                     return ret;
                 })
