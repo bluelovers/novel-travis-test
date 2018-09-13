@@ -99,7 +99,7 @@ console.info(`git: ${GIT_SETTING_EPUB.targetPath}`);
 
 				let _do = false;
 
-				if (pathMain == 'cm' || pathMain.match(/_out$/))
+				if (pathMain.match(/_out$/))
 				{
 					_do = true;
 				}
