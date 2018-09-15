@@ -23,6 +23,8 @@ export let _segmentObject: Segment;
 
 export const ERROR_MSG_001 = `沒有搜尋到任何檔案 請檢查搜尋條件`;
 
+export const CACHE_FILE = path.join(ProjectConfig.cache_root, 'cache.db');
+
 export type IOptions = {
 	pathMain: string,
 	pathMain_out?: string,
@@ -269,7 +271,7 @@ export function getSegment(segment?: Segment)
 
 export function resetSegmentCache()
 {
-	let cache_file = path.join(ProjectConfig.cache_root, 'cache.db');
+	let cache_file = CACHE_FILE;
 
 	if (fs.existsSync(cache_file))
 	{
@@ -290,7 +292,7 @@ export function createSegment(useCache: boolean = true)
 		},
 	});
 
-	let cache_file = path.join(ProjectConfig.cache_root, 'cache.db');
+	let cache_file = CACHE_FILE;
 
 	let options = {
 		/**

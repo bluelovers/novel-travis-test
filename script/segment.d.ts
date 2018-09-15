@@ -8,6 +8,7 @@ export declare let DIST_NOVEL: string;
 export declare let CACHE_TIMEOUT: number;
 export declare let _segmentObject: Segment;
 export declare const ERROR_MSG_001 = "\u6C92\u6709\u641C\u5C0B\u5230\u4EFB\u4F55\u6A94\u6848 \u8ACB\u6AA2\u67E5\u641C\u5C0B\u689D\u4EF6";
+export declare const CACHE_FILE: string;
 export declare type IOptions = {
     pathMain: string;
     pathMain_out?: string;

@@ -17,6 +17,7 @@ const log_1 = require("../lib/log");
 exports.DIST_NOVEL = project_config_1.default.novel_root;
 exports.CACHE_TIMEOUT = 3600;
 exports.ERROR_MSG_001 = `沒有搜尋到任何檔案 請檢查搜尋條件`;
+exports.CACHE_FILE = path.join(project_config_1.default.cache_root, 'cache.db');
 function doSegmentGlob(options) {
     const novel_root = options.novel_root || project_config_1.default.novel_root;
     const segment = options.segment = getSegment(options.segment);
@@ -166,7 +167,7 @@ function getSegment(segment) {
 }
 exports.getSegment = getSegment;
 function resetSegmentCache() {
-    let cache_file = path.join(project_config_1.default.cache_root, 'cache.db');
+    let cache_file = exports.CACHE_FILE;
     if (fs.existsSync(cache_file)) {
         log_1.default.red(`[Segment] reset cache`);
         fs.removeSync(cache_file);
@@ -180,7 +181,7 @@ function createSegment(useCache = true) {
             convertSynonym: true,
         },
     });
-    let cache_file = path.join(project_config_1.default.cache_root, 'cache.db');
+    let cache_file = exports.CACHE_FILE;
     let options = {
         /**
          * 開啟 all_mod 才會在自動載入時包含 ZhtSynonymOptimizer
