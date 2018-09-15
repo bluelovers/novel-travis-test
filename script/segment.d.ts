@@ -39,6 +39,7 @@ export declare function _doSegmentGlob(ls: string[], options: IOptions): Promise
 }>;
 export declare function _path(pathMain: any, novelID: any, novel_root?: string): string;
 export declare function getSegment(segment?: Segment): Segment;
+export declare function resetSegmentCache(): void;
 export declare function createSegment(useCache?: boolean): Segment;
 export declare function getDictMain(segment: Segment): TableDict;
 export declare function runSegment(): Promise<number[]>;

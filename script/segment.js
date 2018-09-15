@@ -125,7 +125,7 @@ function _doSegmentGlob(ls, options) {
             };
         });
         log_1.default.timeEnd(label);
-        log_1.default.debug(`file changed: ${count_changed}`);
+        log_1.default[count_changed ? 'ok' : 'debug'](`file changed: ${count_changed}`);
         return {
             ls,
             done_list,
@@ -165,6 +165,14 @@ function getSegment(segment) {
     return segment;
 }
 exports.getSegment = getSegment;
+function resetSegmentCache() {
+    let cache_file = path.join(project_config_1.default.cache_root, 'cache.db');
+    if (fs.existsSync(cache_file)) {
+        log_1.default.red(`[Segment] reset cache`);
+        fs.removeSync(cache_file);
+    }
+}
+exports.resetSegmentCache = resetSegmentCache;
 function createSegment(useCache = true) {
     const segment = new Segment_1.default({
         autoCjk: true,
@@ -251,6 +259,9 @@ function runSegment() {
             s_ver,
             d_ver,
         });
+        if (s_ver != _s_ver || d_ver != _d_ver) {
+            resetSegmentCache();
+        }
     }
     return Promise
         .mapSeries(FastGlob([

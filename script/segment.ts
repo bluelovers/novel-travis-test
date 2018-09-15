@@ -213,7 +213,7 @@ export function _doSegmentGlob(ls: string[], options: IOptions)
 
 			console.timeEnd(label);
 
-			console.debug(`file changed: ${count_changed}`);
+			console[count_changed ? 'ok' : 'debug'](`file changed: ${count_changed}`);
 
 			return {
 				ls,
@@ -265,6 +265,17 @@ export function getSegment(segment?: Segment)
 	}
 
 	return segment;
+}
+
+export function resetSegmentCache()
+{
+	let cache_file = path.join(ProjectConfig.cache_root, 'cache.db');
+
+	if (fs.existsSync(cache_file))
+	{
+		console.red(`[Segment] reset cache`);
+		fs.removeSync(cache_file);
+	}
 }
 
 export function createSegment(useCache: boolean = true)
@@ -416,6 +427,11 @@ export function runSegment()
 			s_ver,
 			d_ver,
 		});
+
+		if (s_ver != _s_ver || d_ver != _d_ver)
+		{
+			resetSegmentCache();
+		}
 	}
 
 	return Promise
