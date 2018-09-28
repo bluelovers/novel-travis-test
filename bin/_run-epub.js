@@ -85,8 +85,9 @@ log_1.default.info(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
                     let txt = await novel_txt_merge_1.default(inputPath, outputPath, ret.basename);
                     if (pathMain.match(/_out$/)) {
                         let pathMain_src = pathMain.replace(/_out$/, '');
-                        let outputPath = path.join(git_1.GIT_SETTING_EPUB.targetPath, pathMain_src);
-                        let file = path.join(outputPath, ret.filename);
+                        let outputPath_src = path.join(git_1.GIT_SETTING_EPUB.targetPath, pathMain_src);
+                        let outputPath = outputPath_src;
+                        let file = path.join(outputPath_src, ret.filename);
                         if (fs.existsSync(file)) {
                             try {
                                 await index_1.crossSpawnSync('git', [
@@ -101,7 +102,7 @@ log_1.default.info(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
                             }
                             await fs.remove(file).catch(v => null);
                         }
-                        file = path.join(outputPath, 'out', txt.filename);
+                        file = path.join(outputPath_src, 'out', txt.filename);
                         if (fs.existsSync(file)) {
                             try {
                                 await index_1.crossSpawnSync('git', [

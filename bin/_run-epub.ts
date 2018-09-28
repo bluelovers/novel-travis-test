@@ -129,9 +129,10 @@ console.info(`git: ${GIT_SETTING_EPUB.targetPath}`);
 							{
 								let pathMain_src = pathMain.replace(/_out$/, '');
 
-								let outputPath = path.join(GIT_SETTING_EPUB.targetPath, pathMain_src);
+								let outputPath_src = path.join(GIT_SETTING_EPUB.targetPath, pathMain_src);
+								let outputPath = outputPath_src;
 
-								let file = path.join(outputPath, ret.filename);
+								let file = path.join(outputPath_src, ret.filename);
 
 								if (fs.existsSync(file))
 								{
@@ -153,7 +154,7 @@ console.info(`git: ${GIT_SETTING_EPUB.targetPath}`);
 									await fs.remove(file).catch(v => null);
 								}
 
-								file = path.join(outputPath, 'out', txt.filename);
+								file = path.join(outputPath_src, 'out', txt.filename);
 
 								if (fs.existsSync(file))
 								{
