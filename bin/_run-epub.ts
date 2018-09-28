@@ -123,7 +123,58 @@ console.info(`git: ${GIT_SETTING_EPUB.targetPath}`);
 						}))
 						.then(async function (ret)
 						{
-							await txtMerge(inputPath, outputPath, ret.basename);
+							let txt = await txtMerge(inputPath, outputPath, ret.basename);
+
+							if (pathMain.match(/_out$/))
+							{
+								let pathMain_src = pathMain.replace(/_out$/, '');
+
+								let outputPath = path.join(GIT_SETTING_EPUB.targetPath, pathMain_src);
+
+								let file = path.join(outputPath, ret.filename);
+
+								if (fs.existsSync(file))
+								{
+									try
+									{
+										await crossSpawnSync('git', [
+											'rm',
+											file,
+										], {
+											stdio: 'inherit',
+											cwd: outputPath,
+										});
+									}
+									catch (e)
+									{
+
+									}
+
+									await fs.remove(file).catch(v => null);
+								}
+
+								file = path.join(outputPath, 'out', txt.filename);
+
+								if (fs.existsSync(file))
+								{
+									try
+									{
+										await crossSpawnSync('git', [
+											'rm',
+											file,
+										], {
+											stdio: 'inherit',
+											cwd: outputPath,
+										});
+									}
+									catch (e)
+									{
+
+									}
+
+									await fs.remove(file).catch(v => null);
+								}
+							}
 
 							return ret;
 						})
@@ -134,7 +185,7 @@ console.info(`git: ${GIT_SETTING_EPUB.targetPath}`);
 								'.',
 							], {
 								stdio: 'inherit',
-								cwd: path.join(GIT_SETTING_EPUB.targetPath, pathMain),
+								cwd: outputPath,
 							});
 
 							await crossSpawnSync('git', [

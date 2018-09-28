@@ -82,7 +82,41 @@ log_1.default.info(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
                     noLog: true,
                 }))
                     .then(async function (ret) {
-                    await novel_txt_merge_1.default(inputPath, outputPath, ret.basename);
+                    let txt = await novel_txt_merge_1.default(inputPath, outputPath, ret.basename);
+                    if (pathMain.match(/_out$/)) {
+                        let pathMain_src = pathMain.replace(/_out$/, '');
+                        let outputPath = path.join(git_1.GIT_SETTING_EPUB.targetPath, pathMain_src);
+                        let file = path.join(outputPath, ret.filename);
+                        if (fs.existsSync(file)) {
+                            try {
+                                await index_1.crossSpawnSync('git', [
+                                    'rm',
+                                    file,
+                                ], {
+                                    stdio: 'inherit',
+                                    cwd: outputPath,
+                                });
+                            }
+                            catch (e) {
+                            }
+                            await fs.remove(file).catch(v => null);
+                        }
+                        file = path.join(outputPath, 'out', txt.filename);
+                        if (fs.existsSync(file)) {
+                            try {
+                                await index_1.crossSpawnSync('git', [
+                                    'rm',
+                                    file,
+                                ], {
+                                    stdio: 'inherit',
+                                    cwd: outputPath,
+                                });
+                            }
+                            catch (e) {
+                            }
+                            await fs.remove(file).catch(v => null);
+                        }
+                    }
                     return ret;
                 })
                     .then(async function (ret) {
@@ -91,7 +125,7 @@ log_1.default.info(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
                         '.',
                     ], {
                         stdio: 'inherit',
-                        cwd: path.join(git_1.GIT_SETTING_EPUB.targetPath, pathMain),
+                        cwd: outputPath,
                     });
                     await index_1.crossSpawnSync('git', [
                         'commit',
