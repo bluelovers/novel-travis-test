@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs-extra");
 const index_1 = require("../index");
 const git_1 = require("../data/git");
+const util_1 = require("../lib/util");
 const project_config_1 = require("../project.config");
 const path = require("upath2");
 const Promise = require("bluebird");
@@ -15,6 +16,7 @@ const FastGlob = require("fast-glob");
 const novel_txt_merge_1 = require("novel-txt-merge");
 const array_hyper_unique_1 = require("array-hyper-unique");
 const log_1 = require("../lib/log");
+const node_novel_info_1 = require("node-novel-info");
 if (!index_1.isGitRoot(git_1.GIT_SETTING_EPUB.targetPath)) {
     log_1.default.warn(`dist_novel not a git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
     throw new Error(`something wrong when create git`);
@@ -121,6 +123,22 @@ log_1.default.info(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
                     return ret;
                 })
                     .then(async function (ret) {
+                    let meta = await fs.readFile(path.join(inputPath, 'README.md'))
+                        .then(function (data) {
+                        return node_novel_info_1.mdconf_parse(data, {
+                            // 當沒有包含必要的內容時不產生錯誤
+                            throw: false,
+                            // 允許不標準的 info 內容
+                            lowCheckLevel: true,
+                        });
+                    })
+                        .catch(function () {
+                        return null;
+                    });
+                    let author_name;
+                    if (meta && meta.novel && meta.novel.author) {
+                        author_name = util_1.git_fake_author(author_name);
+                    }
                     await index_1.crossSpawnSync('git', [
                         'add',
                         '.',
@@ -128,15 +146,33 @@ log_1.default.info(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
                         stdio: 'inherit',
                         cwd: outputPath,
                     });
-                    await index_1.crossSpawnSync('git', [
-                        'commit',
-                        '-a',
-                        '-m',
-                        `[epub] ${pathMain} ${novelID}`,
-                    ], {
-                        stdio: 'inherit',
-                        cwd: git_1.GIT_SETTING_EPUB.targetPath,
-                    });
+                    /**
+                     * 實驗性功能 可利用 git user 來過濾作者
+                     */
+                    if (author_name) {
+                        await index_1.crossSpawnSync('git', [
+                            'commit',
+                            '-a',
+                            '-m',
+                            `[epub] ${pathMain} ${novelID}`,
+                            '--author',
+                            author_name,
+                        ], {
+                            stdio: 'inherit',
+                            cwd: git_1.GIT_SETTING_EPUB.targetPath,
+                        });
+                    }
+                    else {
+                        await index_1.crossSpawnSync('git', [
+                            'commit',
+                            '-a',
+                            '-m',
+                            `[epub] ${pathMain} ${novelID}`,
+                        ], {
+                            stdio: 'inherit',
+                            cwd: git_1.GIT_SETTING_EPUB.targetPath,
+                        });
+                    }
                     return ret;
                 })
                     .tap(function () {

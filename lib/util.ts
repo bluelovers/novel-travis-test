@@ -3,6 +3,8 @@
  */
 import console from './log';
 import pretty = require('prettyuse');
+import emailNormalize = require('email-normalize');
+import UString = require('uni-string');
 
 export function memoryUsage(): string
 {
@@ -39,4 +41,52 @@ export function qrcode_link(url: string, size?: number)
 	size = size || 150;
 
 	return `https://chart.apis.google.com/chart?cht=qr&chs=${size}x${size}&chl=${url}`
+}
+
+export function git_fake_author(name?: string, email?: string)
+{
+	email = emailNormalize(email || 'testbot@test.test')
+		.replace(/^[\s　@]+|[\s　@]+$/g, '')
+	;
+
+	if (email.split('@').length !== 2)
+	{
+		email = null;
+	}
+
+	name = (name || '')
+		.replace(/[\-\+\<\>\[\]\?\*@\s"\'`~\{\}]+/ig, ' ')
+		;
+
+	try
+	{
+		name = name
+			.replace(/[\p{Punctuation}]/ig, function (s)
+			{
+				if (/^[\.]$/.test(s))
+				{
+					return s;
+				}
+
+				return ' ';
+			})
+			.replace(/^[\s　\p{Punctuation}]+|[\s　\p{Punctuation}]+$/g, '')
+		;
+	}
+	catch (e)
+	{
+
+	}
+
+	name = name
+		.replace(/^[\s　]+|[\s　\.]+$/g, '')
+		.replace(/\s+/g, ' ')
+	;
+
+	if (/[^\w \.]/.test(name) && UString.size(name) > 15)
+	{
+		name = UString.slice(name, 0, 20);
+	}
+
+	return `${name || 'testbot'} <${email || 'testbot@test.test'}>`;
 }

@@ -8,6 +8,7 @@ import {
 	GIT_SETTING_DIST_NOVEL,
 	GIT_SETTING_EPUB,
 } from '../data/git';
+import { git_fake_author } from '../lib/util';
 import ProjectConfig from '../project.config';
 import path = require('upath2');
 import * as Promise from 'bluebird';
@@ -18,6 +19,7 @@ import * as FastGlob from 'fast-glob';
 import txtMerge from 'novel-txt-merge';
 import { array_unique as arrayUniq } from 'array-hyper-unique';
 import console from '../lib/log';
+import { mdconf_parse, IMdconfMeta, chkInfo } from 'node-novel-info';
 
 if (!isGitRoot(GIT_SETTING_EPUB.targetPath))
 {
@@ -181,6 +183,29 @@ console.info(`git: ${GIT_SETTING_EPUB.targetPath}`);
 						})
 						.then(async function (ret)
 						{
+							let meta = await fs.readFile(path.join(inputPath, 'README.md'))
+								.then(function (data)
+								{
+									return mdconf_parse(data, {
+										// 當沒有包含必要的內容時不產生錯誤
+										throw: false,
+										// 允許不標準的 info 內容
+										lowCheckLevel: true,
+									});
+								})
+								.catch(function ()
+								{
+									return null;
+								})
+							;
+
+							let author_name: string;
+
+							if (meta && meta.novel && meta.novel.author)
+							{
+								author_name = git_fake_author(author_name);
+							}
+
 							await crossSpawnSync('git', [
 								'add',
 								'.',
@@ -189,15 +214,35 @@ console.info(`git: ${GIT_SETTING_EPUB.targetPath}`);
 								cwd: outputPath,
 							});
 
-							await crossSpawnSync('git', [
-								'commit',
-								'-a',
-								'-m',
-								`[epub] ${pathMain} ${novelID}`,
-							], {
-								stdio: 'inherit',
-								cwd: GIT_SETTING_EPUB.targetPath,
-							});
+							/**
+							 * 實驗性功能 可利用 git user 來過濾作者
+							 */
+							if (author_name)
+							{
+								await crossSpawnSync('git', [
+									'commit',
+									'-a',
+									'-m',
+									`[epub] ${pathMain} ${novelID}`,
+									'--author',
+									author_name,
+								], {
+									stdio: 'inherit',
+									cwd: GIT_SETTING_EPUB.targetPath,
+								});
+							}
+							else
+							{
+								await crossSpawnSync('git', [
+									'commit',
+									'-a',
+									'-m',
+									`[epub] ${pathMain} ${novelID}`,
+								], {
+									stdio: 'inherit',
+									cwd: GIT_SETTING_EPUB.targetPath,
+								});
+							}
 
 							return ret;
 						})
