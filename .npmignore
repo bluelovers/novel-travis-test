@@ -26,3 +26,9 @@ test
 /dist_novel/
 /dist_epub/
 /dist_epub*
+### jsonly_bin template
+bin/*.ts
+bin/*.d.ts
+### jsonly template
+*.ts
+!*.d.ts

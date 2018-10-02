@@ -2,6 +2,7 @@
  * Created by user on 2018/5/18/018.
  */
 
+import { loadMainConfig } from '@node-novel/task/lib/config';
 import * as fs from 'fs-extra';
 import { crossSpawnOutput, crossSpawnSync, isGitRoot } from '../index';
 import {
@@ -46,31 +47,41 @@ console.info(`git: ${GIT_SETTING_EPUB.targetPath}`);
 
 	if (!fs.existsSync(epub_json))
 	{
-		console.red(`[EPUB] 快取檔案不存在 本次將執行初始化所有 epub 檔案`);
+		let CWD = process.cwd();
+		const result = loadMainConfig(CWD);
 
-		ls2 = await Promise
-			.mapSeries(FastGlob([
-				'*/*/*',
-			], {
-				cwd: path.join(ProjectConfig.novel_root),
-				onlyDirectories: true,
-				onlyFiles: false,
-			}), function (id: string)
-			{
-				let [pathMain, novelID] = id.split(/[\\\/]/);
+		if (result.config.disableInit)
+		{
+			console.red(`[EPUB] 快取檔案不存在 但不執行初始化任務`);
+		}
+		else
+		{
+			console.red(`[EPUB] 快取檔案不存在 本次將執行初始化所有 epub 檔案`);
 
-				let np = _path(pathMain, novelID);
-
-				if (!fs.existsSync(np))
+			ls2 = await Promise
+				.mapSeries(FastGlob([
+					'*/*/*',
+				], {
+					cwd: path.join(ProjectConfig.novel_root),
+					onlyDirectories: true,
+					onlyFiles: false,
+				}), function (id: string)
 				{
-					console.error(pathMain, novelID);
+					let [pathMain, novelID] = id.split(/[\\\/]/);
 
-					return null;
-				}
+					let np = _path(pathMain, novelID);
 
-				return { pathMain, novelID }
-			})
-		;
+					if (!fs.existsSync(np))
+					{
+						console.error(pathMain, novelID);
+
+						return null;
+					}
+
+					return { pathMain, novelID }
+				})
+			;
+		}
 	}
 	else
 	{

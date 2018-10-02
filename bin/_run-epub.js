@@ -3,6 +3,7 @@
  * Created by user on 2018/5/18/018.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
+const config_1 = require("@node-novel/task/lib/config");
 const fs = require("fs-extra");
 const index_1 = require("../index");
 const git_1 = require("../data/git");
@@ -31,23 +32,30 @@ log_1.default.info(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
         ls = fs.readJSONSync(jsonfile);
     }
     if (!fs.existsSync(epub_json)) {
-        log_1.default.red(`[EPUB] 快取檔案不存在 本次將執行初始化所有 epub 檔案`);
-        ls2 = await Promise
-            .mapSeries(FastGlob([
-            '*/*/*',
-        ], {
-            cwd: path.join(project_config_1.default.novel_root),
-            onlyDirectories: true,
-            onlyFiles: false,
-        }), function (id) {
-            let [pathMain, novelID] = id.split(/[\\\/]/);
-            let np = segment_1._path(pathMain, novelID);
-            if (!fs.existsSync(np)) {
-                log_1.default.error(pathMain, novelID);
-                return null;
-            }
-            return { pathMain, novelID };
-        });
+        let CWD = process.cwd();
+        const result = config_1.loadMainConfig(CWD);
+        if (result.config.disableInit) {
+            log_1.default.red(`[EPUB] 快取檔案不存在 但不執行初始化任務`);
+        }
+        else {
+            log_1.default.red(`[EPUB] 快取檔案不存在 本次將執行初始化所有 epub 檔案`);
+            ls2 = await Promise
+                .mapSeries(FastGlob([
+                '*/*/*',
+            ], {
+                cwd: path.join(project_config_1.default.novel_root),
+                onlyDirectories: true,
+                onlyFiles: false,
+            }), function (id) {
+                let [pathMain, novelID] = id.split(/[\\\/]/);
+                let np = segment_1._path(pathMain, novelID);
+                if (!fs.existsSync(np)) {
+                    log_1.default.error(pathMain, novelID);
+                    return null;
+                }
+                return { pathMain, novelID };
+            });
+        }
     }
     else {
         ls2 = fs.readJSONSync(epub_json);
