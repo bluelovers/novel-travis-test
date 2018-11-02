@@ -163,8 +163,7 @@ log_1.default.info(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
                             '-a',
                             '-m',
                             `[epub] ${pathMain} ${novelID}`,
-                            '--author',
-                            author_name,
+                            `--author=${author_name}`,
                         ], {
                             stdio: 'inherit',
                             cwd: git_1.GIT_SETTING_EPUB.targetPath,

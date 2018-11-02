@@ -235,8 +235,7 @@ console.info(`git: ${GIT_SETTING_EPUB.targetPath}`);
 									'-a',
 									'-m',
 									`[epub] ${pathMain} ${novelID}`,
-									'--author',
-									author_name,
+									`--author=${author_name}`,
 								], {
 									stdio: 'inherit',
 									cwd: GIT_SETTING_EPUB.targetPath,
