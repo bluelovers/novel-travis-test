@@ -4,6 +4,7 @@
 
 import { get_ids } from '@node-novel/toc';
 import { md_href } from '@node-novel/toc/index';
+import { createTocRoot } from '@node-novel/toc/toc-root';
 import processTocContents, { makeHeader, makeLink, md_link_escape } from '@node-novel/toc/toc_contents';
 import * as Promise from 'bluebird';
 import { makeFilename } from 'novel-epub/lib/txt2epub3';
@@ -22,7 +23,9 @@ import txtMerge, { makeFilename as makeFilenameTxt } from 'novel-txt-merge';
 import novelEpub from 'novel-epub';
 import console from '../lib/log';
 
-(async () =>
+let _update: boolean;
+
+Promise.resolve((async () =>
 {
 	let _cache_init = path.join(ProjectConfig.cache_root, '.toc_contents.cache');
 	let jsonfile = path.join(ProjectConfig.cache_root, 'diff-novel.json');
@@ -68,8 +71,6 @@ import console from '../lib/log';
 
 	if (ls && ls.length)
 	{
-		let _update: boolean;
-
 		await Promise
 			.mapSeries(ls, async function (data)
 			{
@@ -287,11 +288,7 @@ import console from '../lib/log';
 			{
 				if (_update)
 				{
-					console.info(`[toc:contents] 完成 並且試圖 push 與 建立 PR`);
-
-					let cp = await pushGit(ProjectConfig.novel_root, getPushUrlGitee(GIT_SETTING_DIST_NOVEL.url), true);
-
-					await createPullRequests();
+					console.info(`[toc:contents] 完成`);
 
 					await fs.ensureFile(_cache_init);
 				}
@@ -310,4 +307,68 @@ import console from '../lib/log';
 	{
 		console.warn(`[toc:contents] 本次沒有任何待更新列表 (2)`);
 	}
-})();
+})())
+	.tap(async function ()
+	{
+		const file = path.join(ProjectConfig.novel_root, 'README.md');
+
+		const old = await fs.readFile(file)
+			.catch(function ()
+			{
+				return '';
+			})
+			.then(function (ls)
+			{
+				return ls.toString();
+			})
+		;
+
+		await createTocRoot(ProjectConfig.novel_root)
+			.tap(async function (md)
+			{
+				if (md && md !== old)
+				{
+					await fs.writeFile(file, md);
+
+					await crossSpawnAsync('git', [
+						'add',
+						'--verbose',
+						file,
+					], {
+						stdio: 'inherit',
+						cwd: ProjectConfig.novel_root,
+					});
+
+					await crossSpawnAsync('git', [
+						'commit',
+						'-a',
+						'-m',
+						`[TOC] toc root`,
+					], {
+						stdio: 'inherit',
+						cwd: ProjectConfig.novel_root,
+					});
+
+					console.success(`[toc:root] 完成 已更新`);
+
+					_update = true;
+				}
+				else
+				{
+					console.warn(`[toc:contents] 完成 但本次無更動內容`);
+				}
+			})
+		;
+	})
+	.tap(async function ()
+	{
+		if (_update)
+		{
+			console.info(`[toc] 完成 並且試圖 push 與 建立 PR`);
+
+			let cp = await pushGit(ProjectConfig.novel_root, getPushUrlGitee(GIT_SETTING_DIST_NOVEL.url), true);
+
+			await createPullRequests();
+		}
+	})
+;

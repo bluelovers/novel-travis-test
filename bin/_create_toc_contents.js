@@ -5,6 +5,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const toc_1 = require("@node-novel/toc");
 const index_1 = require("@node-novel/toc/index");
+const toc_root_1 = require("@node-novel/toc/toc-root");
 const toc_contents_1 = require("@node-novel/toc/toc_contents");
 const Promise = require("bluebird");
 const txt2epub3_1 = require("novel-epub/lib/txt2epub3");
@@ -21,7 +22,8 @@ const node_novel_info_1 = require("node-novel-info");
 const epub_maker2_1 = require("epub-maker2");
 const novel_txt_merge_1 = require("novel-txt-merge");
 const log_1 = require("../lib/log");
-(async () => {
+let _update;
+Promise.resolve((async () => {
     let _cache_init = path.join(project_config_1.default.cache_root, '.toc_contents.cache');
     let jsonfile = path.join(project_config_1.default.cache_root, 'diff-novel.json');
     let ls;
@@ -51,7 +53,6 @@ const log_1 = require("../lib/log");
         ls = await fs.readJSON(jsonfile);
     }
     if (ls && ls.length) {
-        let _update;
         await Promise
             .mapSeries(ls, async function (data) {
             const { pathMain, novelID } = data;
@@ -196,9 +197,7 @@ const log_1 = require("../lib/log");
         })
             .tap(async function () {
             if (_update) {
-                log_1.default.info(`[toc:contents] 完成 並且試圖 push 與 建立 PR`);
-                let cp = await git_2.pushGit(project_config_1.default.novel_root, git_2.getPushUrlGitee(git_1.GIT_SETTING_DIST_NOVEL.url), true);
-                await gitee_pr_1.createPullRequests();
+                log_1.default.info(`[toc:contents] 完成`);
                 await fs.ensureFile(_cache_init);
             }
             else {
@@ -212,4 +211,49 @@ const log_1 = require("../lib/log");
     else {
         log_1.default.warn(`[toc:contents] 本次沒有任何待更新列表 (2)`);
     }
-})();
+})())
+    .tap(async function () {
+    const file = path.join(project_config_1.default.novel_root, 'README.md');
+    const old = await fs.readFile(file)
+        .catch(function () {
+        return '';
+    })
+        .then(function (ls) {
+        return ls.toString();
+    });
+    await toc_root_1.createTocRoot(project_config_1.default.novel_root)
+        .tap(async function (md) {
+        if (md && md !== old) {
+            await fs.writeFile(file, md);
+            await index_2.crossSpawnAsync('git', [
+                'add',
+                '--verbose',
+                file,
+            ], {
+                stdio: 'inherit',
+                cwd: project_config_1.default.novel_root,
+            });
+            await index_2.crossSpawnAsync('git', [
+                'commit',
+                '-a',
+                '-m',
+                `[TOC] toc root`,
+            ], {
+                stdio: 'inherit',
+                cwd: project_config_1.default.novel_root,
+            });
+            log_1.default.success(`[toc:root] 完成 已更新`);
+            _update = true;
+        }
+        else {
+            log_1.default.warn(`[toc:contents] 完成 但本次無更動內容`);
+        }
+    });
+})
+    .tap(async function () {
+    if (_update) {
+        log_1.default.info(`[toc] 完成 並且試圖 push 與 建立 PR`);
+        let cp = await git_2.pushGit(project_config_1.default.novel_root, git_2.getPushUrlGitee(git_1.GIT_SETTING_DIST_NOVEL.url), true);
+        await gitee_pr_1.createPullRequests();
+    }
+});
