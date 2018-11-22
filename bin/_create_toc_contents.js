@@ -246,7 +246,7 @@ Promise.resolve((async () => {
             _update = true;
         }
         else {
-            log_1.default.warn(`[toc:contents] 完成 但本次無更動內容`);
+            log_1.default.warn(`[toc:root] 完成 但本次無更動內容`);
         }
     });
 })

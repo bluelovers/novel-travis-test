@@ -355,7 +355,7 @@ Promise.resolve((async () =>
 				}
 				else
 				{
-					console.warn(`[toc:contents] 完成 但本次無更動內容`);
+					console.warn(`[toc:root] 完成 但本次無更動內容`);
 				}
 			})
 		;
