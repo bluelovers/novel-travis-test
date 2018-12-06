@@ -41,6 +41,9 @@ async function createPullRequests() {
         log_1.default.error(`無法取得 token`);
         return;
     }
+    else {
+        log_1.default.info(`已取得 token`);
+    }
     let rq = new client_oauth2_request_1.default(token, {
         apiRoot: 'https://gitee.com/api/'
     });
@@ -48,6 +51,9 @@ async function createPullRequests() {
     if (!br_name.match(/^auto\//)) {
         log_1.default.error(`目前分支為 ${br_name} 忽略建立 PR`);
         return;
+    }
+    else {
+        log_1.default.info(`目前分支為 ${br_name}`);
     }
     await rq
         .fetchSign('/v5/repos/bluelovers/novel/pulls', {

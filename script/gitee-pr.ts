@@ -58,6 +58,10 @@ export async function createPullRequests()
 
 		return;
 	}
+	else
+	{
+		console.info(`已取得 token`);
+	}
 
 	let rq = new ClientRequest(token, {
 		apiRoot: 'https://gitee.com/api/'
@@ -70,6 +74,10 @@ export async function createPullRequests()
 		console.error(`目前分支為 ${br_name} 忽略建立 PR`);
 
 		return;
+	}
+	else
+	{
+		console.info(`目前分支為 ${br_name}`);
 	}
 
 	await rq
