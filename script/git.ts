@@ -368,6 +368,12 @@ export function createGit(options: IOptionsCreateGit)
 		gitGc(data.targetPath);
 	}
 
+	console.timeEnd(label);
+
+	label = `--- REMOVE_WAIT ---`;
+	console.info(label);
+	console.time(label);
+
 	wait_create_git.remove();
 
 	console.timeEnd(label);

@@ -255,6 +255,10 @@ function createGit(options) {
     else {
         gitGc(data.targetPath);
     }
+    log_1.default.timeEnd(label);
+    label = `--- REMOVE_WAIT ---`;
+    log_1.default.info(label);
+    log_1.default.time(label);
     wait_create_git.remove();
     log_1.default.timeEnd(label);
     return { data, temp };
