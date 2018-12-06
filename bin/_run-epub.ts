@@ -3,12 +3,14 @@
  */
 
 import { loadMainConfig } from '@node-novel/task/lib/config';
+import { processToc } from '@node-novel/toc';
 import * as fs from 'fs-extra';
 import { crossSpawnOutput, crossSpawnSync, isGitRoot } from '../index';
 import {
 	GIT_SETTING_DIST_NOVEL,
 	GIT_SETTING_EPUB,
 } from '../data/git';
+import { checkShareStatesNotExists, EnumShareStates } from '../lib/share';
 import { git_fake_author } from '../lib/util';
 import ProjectConfig from '../project.config';
 import path = require('upath2');
@@ -31,7 +33,9 @@ if (!isGitRoot(GIT_SETTING_EPUB.targetPath))
 
 console.info(`git: ${GIT_SETTING_EPUB.targetPath}`);
 
-(async () =>
+checkShareStatesNotExists([
+	EnumShareStates.WAIT_CREATE_GIT
+]) && (async () =>
 {
 
 	let jsonfile = path.join(ProjectConfig.cache_root, 'diff-novel.json');

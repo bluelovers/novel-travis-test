@@ -10,6 +10,7 @@ const toc_contents_1 = require("@node-novel/toc/toc_contents");
 const Promise = require("bluebird");
 const txt2epub3_1 = require("novel-epub/lib/txt2epub3");
 const git_1 = require("../data/git");
+const share_1 = require("../lib/share");
 const util_1 = require("../lib/util");
 const project_config_1 = require("../project.config");
 const git_2 = require("../script/git");
@@ -23,7 +24,9 @@ const epub_maker2_1 = require("epub-maker2");
 const novel_txt_merge_1 = require("novel-txt-merge");
 const log_1 = require("../lib/log");
 let _update;
-Promise.resolve((async () => {
+share_1.checkShareStatesNotExists([
+    share_1.EnumShareStates.WAIT_CREATE_GIT
+]) && Promise.resolve((async () => {
     let _cache_init = path.join(project_config_1.default.cache_root, '.toc_contents.cache');
     let jsonfile = path.join(project_config_1.default.cache_root, 'diff-novel.json');
     let ls;

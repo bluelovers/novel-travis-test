@@ -1,28 +1,27 @@
 /// <reference types="node" />
-import { SpawnSyncReturns } from '../index';
 import moment = require('moment');
 export declare const DATE_FORMAT = "YYYY-MM-DD-HH-mm-ss";
 /**
  * Created by user on 2018/5/17/017.
  */
-export declare function pushGit(REPO_PATH: string, repo: string, force?: boolean): SpawnSyncReturns<Buffer> & {
+export declare function pushGit(REPO_PATH: string, repo: string, force?: boolean): import("child_process").SpawnSyncReturns<Buffer> & {
     errorCrossSpawn?: Error;
 };
-export declare function pullGit(REPO_PATH: string): SpawnSyncReturns<Buffer>;
-export declare function fetchGit(REPO_PATH: string): SpawnSyncReturns<Buffer> & {
+export declare function pullGit(REPO_PATH: string): import("child_process").SpawnSyncReturns<Buffer>;
+export declare function fetchGit(REPO_PATH: string): import("child_process").SpawnSyncReturns<Buffer> & {
     errorCrossSpawn?: Error;
 };
-export declare function fetchGitAll(REPO_PATH: string): SpawnSyncReturns<Buffer> & {
+export declare function fetchGitAll(REPO_PATH: string): import("child_process").SpawnSyncReturns<Buffer> & {
     errorCrossSpawn?: Error;
 };
-export declare function newBranch(REPO_PATH: string, BR_NAME: string): SpawnSyncReturns<Buffer> & {
+export declare function newBranch(REPO_PATH: string, BR_NAME: string): import("child_process").SpawnSyncReturns<Buffer> & {
     errorCrossSpawn?: Error;
 };
 export declare function currentBranchName(REPO_PATH: string): string;
-export declare function deleteBranch(REPO_PATH: string, name: string, force?: boolean): SpawnSyncReturns<Buffer> & {
+export declare function deleteBranch(REPO_PATH: string, name: string, force?: boolean): import("child_process").SpawnSyncReturns<Buffer> & {
     errorCrossSpawn?: Error;
 };
-export declare function deleteBranchRemote(REPO_PATH: string, remote: string, name: string, force?: boolean): SpawnSyncReturns<Buffer> & {
+export declare function deleteBranchRemote(REPO_PATH: string, remote: string, name: string, force?: boolean): import("child_process").SpawnSyncReturns<Buffer> & {
     errorCrossSpawn?: Error;
 };
 export declare function oldBranch(REPO_PATH: string): string;
@@ -60,15 +59,15 @@ export declare function createGit(options: IOptionsCreateGit): {
     };
     temp: {
         [k: string]: any;
-        cp: SpawnSyncReturns<Buffer> & {
+        cp: import("child_process").SpawnSyncReturns<Buffer> & {
             errorCrossSpawn?: Error;
         };
     };
 };
-export declare function gitGc(REPO_PATH: string, argv?: string[]): SpawnSyncReturns<Buffer> & {
+export declare function gitGc(REPO_PATH: string, argv?: string[]): import("child_process").SpawnSyncReturns<Buffer> & {
     errorCrossSpawn?: Error;
 };
-export declare function gitGcAggressive(REPO_PATH: string, argv?: string[]): SpawnSyncReturns<Buffer> & {
+export declare function gitGcAggressive(REPO_PATH: string, argv?: string[]): import("child_process").SpawnSyncReturns<Buffer> & {
     errorCrossSpawn?: Error;
 };
 export declare function branchNameToDate(br_name: string): moment.Moment;
@@ -82,6 +81,6 @@ export declare function parseBranchGroup(r: string[]): {
         [k: string]: string[];
     };
 };
-export declare function gitCleanAll(REPO_PATH: string): SpawnSyncReturns<Buffer> & {
+export declare function gitCleanAll(REPO_PATH: string): import("child_process").SpawnSyncReturns<Buffer> & {
     errorCrossSpawn?: Error;
 };

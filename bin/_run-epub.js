@@ -7,6 +7,7 @@ const config_1 = require("@node-novel/task/lib/config");
 const fs = require("fs-extra");
 const index_1 = require("../index");
 const git_1 = require("../data/git");
+const share_1 = require("../lib/share");
 const util_1 = require("../lib/util");
 const project_config_1 = require("../project.config");
 const path = require("upath2");
@@ -23,7 +24,9 @@ if (!index_1.isGitRoot(git_1.GIT_SETTING_EPUB.targetPath)) {
     throw new Error(`something wrong when create git`);
 }
 log_1.default.info(`git: ${git_1.GIT_SETTING_EPUB.targetPath}`);
-(async () => {
+share_1.checkShareStatesNotExists([
+    share_1.EnumShareStates.WAIT_CREATE_GIT
+]) && (async () => {
     let jsonfile = path.join(project_config_1.default.cache_root, 'diff-novel.json');
     let epub_json = path.join(project_config_1.default.cache_root, 'epub.json');
     let ls = [];

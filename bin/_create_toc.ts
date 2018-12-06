@@ -2,15 +2,16 @@
  * Created by user on 2018/7/28/028.
  */
 
-import { createTocRoot } from '@node-novel/toc/toc-root';
-import { crossSpawnSync, crossSpawnAsync } from '../index';
-import ProjectConfig from '../project.config';
 // @ts-ignore
 import { processToc, Promise } from '@node-novel/toc';
+import { crossSpawnAsync } from '../index';
+import { checkShareStatesNotExists, EnumShareStates } from '../lib/share';
+import ProjectConfig from '../project.config';
 import path = require('path');
-import console from '../lib/log';
 
-processToc(ProjectConfig.novel_root)
+checkShareStatesNotExists([
+	EnumShareStates.WAIT_CREATE_GIT
+]) && processToc(ProjectConfig.novel_root)
 	.then(async function (ls)
 	{
 		await Promise.each(Object.keys(ls), function (pathMain)

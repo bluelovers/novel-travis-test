@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 
+import { processToc } from '@node-novel/toc';
 import {
 	GIT_SETTING_DIST_NOVEL,
 	GIT_SETTING_EPUB,
 } from '../data/git';
 
 import * as fs from 'fs-extra';
+import { checkShareStatesNotExists, EnumShareStates } from '../lib/share';
 import ProjectConfig from '../project.config';
 
 import { getPushUrl, pushGit } from '../script/git';
@@ -15,7 +17,9 @@ import console from '../lib/log';
 
 let waitpush = path.join(ProjectConfig.cache_root, 'epub.waitpush');
 
-(async () =>
+checkShareStatesNotExists([
+	EnumShareStates.WAIT_CREATE_GIT
+]) && (async () =>
 {
 	if (!isGitRoot(GIT_SETTING_EPUB.targetPath))
 	{

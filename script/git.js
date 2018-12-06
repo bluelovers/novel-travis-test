@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const moment = require("moment");
 const path = require("upath2");
 const crlf_normalize_1 = require("crlf-normalize");
 const crossSpawn = require("cross-spawn");
@@ -7,8 +8,8 @@ const fs = require("fs-extra");
 const gitlog2_1 = require("gitlog2");
 const __1 = require("..");
 const index_1 = require("../index");
-const moment = require("moment");
 const log_1 = require("../lib/log");
+const share_1 = require("../lib/share");
 const init_1 = require("./init");
 exports.DATE_FORMAT = 'YYYY-MM-DD-HH-mm-ss';
 /**
@@ -156,6 +157,8 @@ function getPushUrlGitee(url, login_token = init_1.GITEE_TOKEN) {
 }
 exports.getPushUrlGitee = getPushUrlGitee;
 function createGit(options) {
+    const wait_create_git = share_1.shareStates(share_1.EnumShareStates.WAIT_CREATE_GIT);
+    wait_create_git.ensure();
     let targetName = path.basename(options.targetPath);
     let targetPath = path.normalize(options.targetPath);
     let REPO_PATH = targetPath;
@@ -249,6 +252,7 @@ function createGit(options) {
     else {
         gitGc(data.targetPath);
     }
+    wait_create_git.remove();
     log_1.default.timeEnd(label);
     return { data, temp };
 }

@@ -6,6 +6,7 @@ import * as fs from 'fs-extra';
 import { crossSpawnAsync, crossSpawnSync } from '..';
 import { crossSpawnOutput, isGitRoot } from '../index';
 import { loadCacheConfig, loadMainConfig } from '@node-novel/task/lib/config';
+import { checkShareStatesNotExists, EnumShareStates } from '../lib/share';
 import ProjectConfig from '../project.config';
 import moment = require('moment');
 import * as FastGlob from 'fast-glob';
@@ -29,4 +30,6 @@ import {
 	GIT_SETTING_EPUB,
 } from '../data/git';
 
-createGit(GIT_SETTING_EPUB);
+checkShareStatesNotExists([
+	EnumShareStates.WAIT_CREATE_GIT
+]) && createGit(GIT_SETTING_EPUB);

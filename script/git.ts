@@ -1,20 +1,16 @@
+import moment = require('moment');
 import path = require('upath2');
 import { LF } from 'crlf-normalize';
 import * as crossSpawn from 'cross-spawn';
-import { gitDiffFrom, IGitDiffFrom, IGitDiffFromRow } from 'git-diff-from';
-import gitRoot from 'git-root2';
-import { config as dotenvConfig } from 'dotenv';
 import * as fs from 'fs-extra';
 import gitlog from 'gitlog2';
-import { crossSpawnAsync, crossSpawnSync } from '..';
-import { crossSpawnOutput, isGitRoot, SpawnOptions, SpawnSyncReturns } from '../index';
-import { loadCacheConfig, loadMainConfig } from '@node-novel/task/lib/config';
-import ProjectConfig, { novel_root } from '../project.config';
-import moment = require('moment');
-import * as FastGlob from 'fast-glob';
+import { crossSpawnSync } from '..';
+import { crossSpawnOutput, isGitRoot } from '../index';
 import console from '../lib/log';
+import { EnumShareStates, shareStates } from '../lib/share';
+import ProjectConfig from '../project.config';
 
-import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, GITEE_TOKEN, DEBUG, NO_PUSH } from './init';
+import { GITEE_TOKEN, NO_PUSH, NOT_DONE, PROJECT_ROOT } from './init';
 
 export const DATE_FORMAT = 'YYYY-MM-DD-HH-mm-ss';
 
@@ -222,6 +218,10 @@ export function getPushUrlGitee(url: string, login_token: string = GITEE_TOKEN)
 
 export function createGit(options: IOptionsCreateGit)
 {
+	const wait_create_git = shareStates(EnumShareStates.WAIT_CREATE_GIT);
+
+	wait_create_git.ensure();
+
 	let targetName = path.basename(options.targetPath);
 	let targetPath = path.normalize(options.targetPath);
 
@@ -362,6 +362,8 @@ export function createGit(options: IOptionsCreateGit)
 	{
 		gitGc(data.targetPath);
 	}
+
+	wait_create_git.remove();
 
 	console.timeEnd(label);
 

@@ -2,13 +2,14 @@
  * Created by user on 2018/8/14/014.
  */
 
-import { get_ids } from '@node-novel/toc';
+import { get_ids, processToc } from '@node-novel/toc';
 import { md_href } from '@node-novel/toc/index';
 import { createTocRoot } from '@node-novel/toc/toc-root';
 import processTocContents, { makeHeader, makeLink, md_link_escape } from '@node-novel/toc/toc_contents';
 import * as Promise from 'bluebird';
 import { makeFilename } from 'novel-epub/lib/txt2epub3';
 import { GIT_SETTING_DIST_NOVEL, GIT_SETTING_EPUB } from '../data/git';
+import { checkShareStatesNotExists, EnumShareStates } from '../lib/share';
 import { qrcode_link } from '../lib/util';
 import ProjectConfig from '../project.config';
 import { getPushUrl, getPushUrlGitee, pushGit } from '../script/git';
@@ -25,7 +26,9 @@ import console from '../lib/log';
 
 let _update: boolean;
 
-Promise.resolve((async () =>
+checkShareStatesNotExists([
+	EnumShareStates.WAIT_CREATE_GIT
+]) && Promise.resolve((async () =>
 {
 	let _cache_init = path.join(ProjectConfig.cache_root, '.toc_contents.cache');
 	let jsonfile = path.join(ProjectConfig.cache_root, 'diff-novel.json');
