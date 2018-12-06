@@ -47,5 +47,10 @@ export function checkShareStatesNotExists(list: EnumShareStates[])
 		return bool;
 	});
 
+	if (bool)
+	{
+		process.exit()
+	}
+
 	return !bool;
 }
