@@ -334,6 +334,11 @@ export function createGit(options: IOptionsCreateGit)
 		});
 	}
 
+	if (temp.cp.error || temp.cp.errorCrossSpawn)
+	{
+		throw (temp.cp.error || temp.cp.errorCrossSpawn)
+	}
+
 	if (options.on && options.on.create)
 	{
 		options.on.create(data, temp);

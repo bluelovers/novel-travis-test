@@ -232,6 +232,9 @@ function createGit(options) {
             cwd: init_1.PROJECT_ROOT,
         });
     }
+    if (temp.cp.error || temp.cp.errorCrossSpawn) {
+        throw (temp.cp.error || temp.cp.errorCrossSpawn);
+    }
     if (options.on && options.on.create) {
         options.on.create(data, temp);
     }

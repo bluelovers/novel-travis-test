@@ -49,6 +49,8 @@ export function checkShareStatesNotExists(list: EnumShareStates[])
 
 	if (bool)
 	{
+		console.error('[process.exit]', name, `should not exists`);
+
 		process.exit()
 	}
 
