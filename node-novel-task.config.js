@@ -11,7 +11,7 @@ let DIST_NOVEL = project_config_1.default.novel_root;
 exports.default = {
     cwd: DIST_NOVEL,
     dist_novel: DIST_NOVEL,
-    disableInit: true,
+    //	disableInit: true,
     //	nocache: true,
     //	debug: {
     //		no_push: true,

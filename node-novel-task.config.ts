@@ -22,7 +22,7 @@ export default {
 	cwd: DIST_NOVEL,
 	dist_novel: DIST_NOVEL,
 
-	disableInit: true,
+//	disableInit: true,
 
 //	nocache: true,
 
