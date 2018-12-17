@@ -10,6 +10,7 @@ import * as Promise from 'bluebird';
 import envBool, { envVal } from 'env-bool';
 import console from '../lib/log';
 import { showMemoryUsage, freeGC } from '../lib/util';
+import { NovelStatCache, getNovelStatCache } from '../lib/cache/novel-stat';
 
 let { pathMain, novelID, novel_root, runAll } = yargs.argv;
 
@@ -101,6 +102,14 @@ if (pathMain && novelID)
 				if (ls.length == 0 || 1)
 				{
 					await fs.remove(jsonfile);
+				}
+
+				if (ret.count.changed > 0)
+				{
+					const novelStatCache = getNovelStatCache();
+					let stat = novelStatCache.novel(pathMain, novelID);
+					stat.segment_date = Date.now();
+					novelStatCache.save();
 				}
 
 				return ret.count.changed;

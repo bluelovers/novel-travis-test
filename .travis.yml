@@ -28,6 +28,7 @@ script:
 - travis_wait 30 npm run do-epub-init
 - npm run do-epub
 - travis_wait 30 npm run do-epub-push
+- npm run output-stat
 env:
   global:
   - CLONE_DEPTH=50

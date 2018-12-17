@@ -10,6 +10,7 @@ import {
 	GIT_SETTING_DIST_NOVEL,
 	GIT_SETTING_EPUB,
 } from '../data/git';
+import { NovelStatCache, getNovelStatCache } from '../lib/cache/novel-stat';
 import { checkShareStatesNotExists, EnumShareStates } from '../lib/share';
 import { git_fake_author } from '../lib/util';
 import ProjectConfig from '../project.config';
@@ -109,6 +110,9 @@ checkShareStatesNotExists([
 
 	if (ls && ls.length)
 	{
+		const novelStatCache = getNovelStatCache();
+		const historyToday = novelStatCache.historyToday();
+
 		await Promise
 			.mapSeries(ls, async function (data)
 			{
@@ -218,7 +222,7 @@ checkShareStatesNotExists([
 
 							if (meta && meta.novel && meta.novel.author)
 							{
-								author_name = git_fake_author(author_name);
+								author_name = git_fake_author(meta.novel.author);
 							}
 
 							await crossSpawnSync('git', [
@@ -229,6 +233,25 @@ checkShareStatesNotExists([
 								cwd: outputPath,
 							});
 
+							let commit_msg = `[epub] ${pathMain} ${novelID}`;
+
+							historyToday.epub.push([pathMain, novelID]);
+
+							let novel = novelStatCache.novel(pathMain, novelID);
+
+							novel.epub_date = Date.now();
+
+							if (ret.stat)
+							{
+								novel.volume_old = novel.volume | 0;
+								novel.chapter_old = novel.chapter | 0;
+
+								novel.volume = ret.stat.volume;
+								novel.chapter = ret.stat.chapter;
+
+								commit_msg += `( v:${novel.volume}, c:${novel.chapter}, add:${novel.chapter - novel.chapter_old} )`;
+							}
+
 							/**
 							 * 實驗性功能 可利用 git user 來過濾作者
 							 */
@@ -238,7 +261,7 @@ checkShareStatesNotExists([
 									'commit',
 									'-a',
 									'-m',
-									`[epub] ${pathMain} ${novelID}`,
+									commit_msg,
 									`--author=${author_name}`,
 								], {
 									stdio: 'inherit',
@@ -251,7 +274,7 @@ checkShareStatesNotExists([
 									'commit',
 									'-a',
 									'-m',
-									`[epub] ${pathMain} ${novelID}`,
+									commit_msg,
 								], {
 									stdio: 'inherit',
 									cwd: GIT_SETTING_EPUB.targetPath,
@@ -299,6 +322,8 @@ checkShareStatesNotExists([
 				let count = ls.filter(v => v).length;
 
 				console.info(`本次共更新 ${count} 小說`);
+
+				novelStatCache.save();
 			})
 			.tap(async function ()
 			{

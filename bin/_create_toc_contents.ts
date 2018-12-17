@@ -4,11 +4,12 @@
 
 import { get_ids, processToc } from '@node-novel/toc';
 import { md_href } from '@node-novel/toc/index';
-import { createTocRoot } from '@node-novel/toc/toc-root';
+import { createTocRoot, IDataAuthorNovelItem } from '@node-novel/toc/toc-root';
 import processTocContents, { makeHeader, makeLink, md_link_escape } from '@node-novel/toc/toc_contents';
 import * as Promise from 'bluebird';
 import { makeFilename } from 'novel-epub/lib/txt2epub3';
 import { GIT_SETTING_DIST_NOVEL, GIT_SETTING_EPUB } from '../data/git';
+import { getNovelStatCache } from '../lib/cache/novel-stat';
 import { checkShareStatesNotExists, EnumShareStates } from '../lib/share';
 import { qrcode_link } from '../lib/util';
 import ProjectConfig from '../project.config';
@@ -23,8 +24,11 @@ import EpubMaker, { hashSum, slugify } from 'epub-maker2';
 import txtMerge, { makeFilename as makeFilenameTxt } from 'novel-txt-merge';
 import novelEpub from 'novel-epub';
 import console from '../lib/log';
+import moment = require('moment');
 
 let _update: boolean;
+
+const novelStatCache = getNovelStatCache();
 
 checkShareStatesNotExists([
 	EnumShareStates.WAIT_CREATE_GIT
@@ -326,7 +330,41 @@ checkShareStatesNotExists([
 			})
 		;
 
-		await createTocRoot(ProjectConfig.novel_root)
+		await createTocRoot(ProjectConfig.novel_root, null, {
+			cbForEachSubNovel(text, item)
+			{
+				let { pathMain, novelID } = item;
+
+				let stat = novelStatCache.novel(pathMain, novelID);
+
+				let text_plus: string = '';
+
+				if (stat.epub_date)
+				{
+					text_plus += `build: ${moment.unix(stat.epub_date).format('YYYY-MM-DD')}  `;
+				}
+
+				if (stat.chapter)
+				{
+					text_plus += `chapter: ${stat.chapter}  `;
+
+					let n = (stat.chapter_old | 0) - stat.chapter;
+					n = n || 0;
+
+					if (n != stat.chapter)
+					{
+						text_plus += `add: ${n}  `;
+					}
+				}
+
+				if (text_plus)
+				{
+					text += '<br/>' + text_plus;
+				}
+
+				return text;
+			}
+		})
 			.tap(async function (md)
 			{
 				if (md && md !== old)

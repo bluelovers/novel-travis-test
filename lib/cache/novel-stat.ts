@@ -1,0 +1,240 @@
+/**
+ * Created by user on 2018/12/17/017.
+ */
+
+import ProjectConfig from '../../project.config';
+import path = require('upath2');
+import fs = require('fs-extra');
+import moment = require('moment');
+import { array_unique } from 'array-hyper-unique';
+import { defaultSortCallback } from '@node-novel/sort';
+import sortObject = require('sort-object-keys2');
+
+let opened: NovelStatCache;
+const todayMoment = moment().startOf('day');
+
+export interface INovelStatCache
+{
+	novels: {
+		[pathMain: string]: {
+			[novelID: string]: INovelStatCacheNovel,
+		},
+	},
+
+	history: {
+		[date: string]: INovelStatCacheHistory,
+		[date: number]: INovelStatCacheHistory,
+	},
+}
+
+export interface INovelStatCacheNovel
+{
+	segment_date?: number,
+	epub_date?: number,
+	volume?: number,
+	chapter?: number,
+
+	volume_old?: number,
+	chapter_old?: number,
+}
+
+export interface INovelStatCacheHistory
+{
+	epub_count?: number,
+	epub?: Array<[string, string]>,
+}
+
+export interface INovelStatCacheOptions
+{
+
+}
+
+export class NovelStatCache
+{
+	file: string = path.join(ProjectConfig.cache_root, 'novel-stat.json');
+	data: INovelStatCache = null;
+	options: INovelStatCacheOptions;
+
+	inited: boolean = false;
+
+	/**
+	 * @deprecated
+	 */
+	constructor(options?: INovelStatCacheOptions)
+	{
+		this.options = options || {};
+
+		this.open();
+	}
+
+	protected open()
+	{
+		if (!this.inited)
+		{
+			this.inited = true;
+
+			if (fs.pathExistsSync(this.file))
+			{
+				this.data = fs.readJSONSync(this.file);
+			}
+			else
+			{
+				// @ts-ignore
+				this.data = {};
+			}
+
+			this.data.novels = this.data.novels || {};
+			this.data.history = this.data.history || {};
+		}
+
+		return this;
+	}
+
+	pathMain(pathMain: string)
+	{
+		return this.data.novels[pathMain] = this.data.novels[pathMain] || {};
+	}
+
+	novel(pathMain: string, novelID: string)
+	{
+		this.pathMain(pathMain);
+
+		this.data.novels[pathMain][novelID] = this.data.novels[pathMain][novelID] || {};
+
+		return this.data.novels[pathMain][novelID];
+	}
+
+	/**
+	 * @deprecated
+	 */
+	_beforeSave()
+	{
+		let timestamp = this.timestamp;
+		let ks = Object.keys(this.data.history);
+
+		if (ks.length > 7)
+		{
+			ks.sort().slice(0, -7).forEach(k => delete this.data.history[k])
+		}
+
+		if (timestamp in this.data.history)
+		{
+			let today = this.data.history[timestamp];
+
+			if (today.epub)
+			{
+				array_unique(today.epub, {
+					overwrite: true,
+				});
+
+				today.epub.sort(function (a, b)
+				{
+					return defaultSortCallback(a[0], b[0])
+					|| defaultSortCallback(a[1], b[1])
+				});
+
+				today.epub_count = today.epub.length | 0;
+			}
+		}
+
+		sortObject(this.data, {
+			useSource: true,
+			keys: [
+				'history',
+				'novels',
+			],
+		});
+
+		return this;
+	}
+
+	public save()
+	{
+		fs.outputJSONSync(this.file, this.toJSON(true));
+
+		return this;
+	}
+
+	get timestamp()
+	{
+		return todayMoment.unix();
+	}
+
+	historyPrev()
+	{
+		let timestamp = this.timestamp;
+
+		let ks: string[];
+
+		if (timestamp in this.data.history)
+		{
+			ks = Object.keys(this.data.history);
+			ks.pop();
+		}
+		else
+		{
+			ks = Object.keys(this.data.history);
+		}
+
+		let k = ks.pop();
+
+		if (k in this.data.history)
+		{
+			return this.data.history[k];
+		}
+
+		return null;
+	}
+
+	historyToday()
+	{
+		let timestamp = this.timestamp;
+
+		let data = this.data.history[timestamp] = this.data.history[timestamp] || {};
+
+		data.epub_count = data.epub_count | 0;
+		data.epub = data.epub || [];
+
+		return this.data.history[timestamp];
+	}
+
+	static create(options?: INovelStatCacheOptions)
+	{
+		if (opened)
+		{
+			return opened;
+		}
+
+		return opened = new this(options);
+	}
+
+	toJSON(bool?: boolean)
+	{
+		if (bool)
+		{
+			this._beforeSave()
+		}
+		return this.data;
+	}
+
+}
+
+export function getNovelStatCache()
+{
+	return NovelStatCache.create();
+}
+
+/*
+let c = NovelStatCache.create();
+
+let t = c.historyToday();
+
+t.epub.push(['k', 'b']);
+t.epub.push(['a', 'b']);
+
+c._beforeSave();
+
+console.dir(c, {
+	depth: null,
+});
+*/
