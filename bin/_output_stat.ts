@@ -34,13 +34,17 @@ checkShareStatesNotExists([
 		{
 			let [timestamp, stat] = b;
 
+			let date = moment.unix(parseInt(timestamp)).format('YYYY-MM-DD');
+			console.log(date);
+
+			let _md2: string[] = [];
+
+			let _do: boolean;
+
 			if (stat.epub && stat.epub.length)
 			{
-				let date = moment.unix(parseInt(timestamp)).format('YYYY-MM-DD');
-
-				console.log(date);
-
-				_md.push(`## ${date}\n`);
+				_md2.push(`### Epub\n`);
+				console.log(`Epub`);
 
 				stat.epub.sort(function (a, b)
 				{
@@ -59,10 +63,48 @@ checkShareStatesNotExists([
 
 					console.log(pathMain, novelID);
 
-					_md.push(text);
+					_md2.push(text);
 				});
 
-				_md.push(``);
+				_md2.push(``);
+
+				_do = true;
+			}
+
+			if (stat.segment && stat.segment.length)
+			{
+				_md2.push(`### Segment\n`);
+				console.log(`Segment`);
+
+				stat.segment.sort(function (a, b)
+				{
+					return defaultSortCallback(a[0], b[0])
+						|| defaultSortCallback(a[1], b[1])
+				}).forEach(function ([pathMain, novelID])
+				{
+					let novel = novelStatCache.novel(pathMain, novelID);
+
+					let title = md_link_escape(novelID);
+					let href = md_href([
+						pathMain, novelID,
+					].join('/'));
+
+					let text = `- [${title}](${href}) - ${pathMain}`;
+
+					console.log(pathMain, novelID);
+
+					_md2.push(text);
+				});
+
+				_md2.push(``);
+
+				_do = true;
+			}
+
+			if (_do)
+			{
+				_md.push(`## ${date}\n`);
+				_md.push(..._md2);
 
 				_ok = true;
 			}

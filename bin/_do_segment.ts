@@ -109,6 +109,11 @@ if (pathMain && novelID)
 					const novelStatCache = getNovelStatCache();
 					let stat = novelStatCache.novel(pathMain, novelID);
 					stat.segment_date = Date.now();
+
+					let today = novelStatCache.historyToday();
+
+					today.segment.push([pathMain, novelID]);
+
 					novelStatCache.save();
 				}
 

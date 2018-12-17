@@ -23,6 +23,8 @@ export interface INovelStatCacheNovel {
 export interface INovelStatCacheHistory {
     epub_count?: number;
     epub?: Array<[string, string]>;
+    segment_count?: number;
+    segment?: Array<[string, string]>;
 }
 export interface INovelStatCacheOptions {
 }

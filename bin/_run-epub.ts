@@ -252,6 +252,8 @@ checkShareStatesNotExists([
 								commit_msg += `( v:${novel.volume}, c:${novel.chapter}, add:${novel.chapter - novel.chapter_old} )`;
 							}
 
+							//console.log(novel);
+
 							/**
 							 * 實驗性功能 可利用 git user 來過濾作者
 							 */

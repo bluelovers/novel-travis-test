@@ -42,6 +42,8 @@ export interface INovelStatCacheHistory
 {
 	epub_count?: number,
 	epub?: Array<[string, string]>,
+	segment_count?: number,
+	segment?: Array<[string, string]>,
 }
 
 export interface INovelStatCacheOptions
@@ -135,6 +137,21 @@ export class NovelStatCache
 
 				today.epub_count = today.epub.length | 0;
 			}
+
+			if (today.segment)
+			{
+				array_unique(today.segment, {
+					overwrite: true,
+				});
+
+				today.segment.sort(function (a, b)
+				{
+					return defaultSortCallback(a[0], b[0])
+						|| defaultSortCallback(a[1], b[1])
+				});
+
+				today.segment_count = today.segment.length | 0;
+			}
 		}
 
 		sortObject(this.data, {
@@ -195,6 +212,9 @@ export class NovelStatCache
 		data.epub_count = data.epub_count | 0;
 		data.epub = data.epub || [];
 
+		data.segment_count = data.segment_count | 0;
+		data.segment = data.segment || [];
+
 		return this.data.history[timestamp];
 	}
 
@@ -227,7 +247,15 @@ export function getNovelStatCache()
 /*
 let c = NovelStatCache.create();
 
+console.dir(c.data, {
+	depth: null,
+});
+
 let t = c.historyToday();
+
+let n = c.novel('1', '2');
+
+n.chapter = 10;
 
 t.epub.push(['k', 'b']);
 t.epub.push(['a', 'b']);
@@ -237,4 +265,6 @@ c._beforeSave();
 console.dir(c, {
 	depth: null,
 });
+
+c.save();
 */
