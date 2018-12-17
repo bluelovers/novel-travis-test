@@ -28,7 +28,10 @@ checkShareStatesNotExists([
 
 	let _ok: boolean;
 
-	console.debug(novelStatCache.data);
+	console.dir(novelStatCache.data, {
+		depth: null,
+		colors: true,
+	});
 
 	Object.entries(novelStatCache.data.history)
 		.reduceRight(function (a, b)
