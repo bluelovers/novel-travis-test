@@ -117,6 +117,19 @@ export class NovelStatCache
 		let timestamp = this.timestamp;
 		let ks = Object.keys(this.data.history);
 
+		if (ks.length)
+		{
+			let h = this.data.history;
+
+			ks.forEach(function (k)
+			{
+				if (!Object.keys(h[k]).length)
+				{
+					delete h[k];
+				}
+			})
+		}
+
 		if (ks.length > 7)
 		{
 			ks.sort().slice(0, -7).forEach(k => delete this.data.history[k])
