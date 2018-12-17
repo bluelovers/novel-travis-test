@@ -110,6 +110,9 @@ if (pathMain && novelID)
 					let stat = novelStatCache.novel(pathMain, novelID);
 					stat.segment_date = Date.now();
 
+					stat.segment_old = stat.segment | 0;
+					stat.segment = ret.count.changed;
+
 					let today = novelStatCache.historyToday();
 
 					today.segment.push([pathMain, novelID]);

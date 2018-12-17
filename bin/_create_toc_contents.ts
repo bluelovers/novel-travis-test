@@ -348,7 +348,7 @@ checkShareStatesNotExists([
 				{
 					text_plus += `chapter: ${stat.chapter}  `;
 
-					let n = (stat.chapter_old | 0) - stat.chapter;
+					let n = stat.chapter - (stat.chapter_old | 0);
 					n = n || 0;
 
 					if (n != stat.chapter)

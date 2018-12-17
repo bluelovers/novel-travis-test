@@ -59,7 +59,11 @@ checkShareStatesNotExists([
 						pathMain, novelID,
 					].join('/'));
 
+					let n = novel.chapter - (novel.chapter_old | 0);
+
 					let text = `- [${title}](${href}) - ${pathMain}`;
+
+					text += ` ( v: ${novel.volume} , c: ${novel.chapter}, add: ${n} )`;
 
 					console.log(pathMain, novelID);
 
@@ -90,6 +94,8 @@ checkShareStatesNotExists([
 					].join('/'));
 
 					let text = `- [${title}](${href}) - ${pathMain}`;
+
+					text += ` ( s: ${novel.segment} )`;
 
 					console.log(pathMain, novelID);
 

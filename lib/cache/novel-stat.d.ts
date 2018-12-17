@@ -19,6 +19,8 @@ export interface INovelStatCacheNovel {
     chapter?: number;
     volume_old?: number;
     chapter_old?: number;
+    segment?: number;
+    segment_old?: number;
 }
 export interface INovelStatCacheHistory {
     epub_count?: number;
