@@ -15,6 +15,7 @@ import { getPushUrlGitee, pushGit } from '../script/git';
 import moment = require('moment');
 import path = require('upath2');
 import fs = require('fs-extra');
+import console from '../lib/log';
 
 checkShareStatesNotExists([
 	EnumShareStates.WAIT_CREATE_GIT
@@ -35,6 +36,8 @@ checkShareStatesNotExists([
 			{
 				let date = moment.unix(parseInt(timestamp)).format('YYYY-MM-DD');
 
+				console.log(date);
+
 				_md.push(`## ${date}\n`);
 
 				stat.epub.sort(function (a, b)
@@ -50,7 +53,9 @@ checkShareStatesNotExists([
 						pathMain, novelID,
 					].join('/'));
 
-					let text = `- [${title}](${href})`;
+					let text = `- [${title}](${href}) - ${pathMain}`;
+
+					console.log(pathMain, novelID);
 
 					_md.push(text);
 				});
@@ -64,7 +69,11 @@ checkShareStatesNotExists([
 		}, [])
 	;
 
-	if (_ok)
+	if (!_ok)
+	{
+		console.error(`無法生成統計資料`);
+	}
+	else
 	{
 		let out = [
 			`# HISTORY\n`,
@@ -88,7 +97,11 @@ checkShareStatesNotExists([
 			_do = true;
 		}
 
-		if (_do)
+		if (!_do)
+		{
+			console.gray(`檔案無變化`);
+		}
+		else
 		{
 			fs.outputFileSync(file, out);
 
@@ -112,6 +125,8 @@ checkShareStatesNotExists([
 			});
 
 			await pushGit(ProjectConfig.novel_root, getPushUrlGitee(GIT_SETTING_DIST_NOVEL.url));
+
+			console.success(`成功建立統計資料`);
 		}
 	}
 
