@@ -4,8 +4,9 @@
 
 import { get_ids, processToc } from '@node-novel/toc';
 import { md_href } from '@node-novel/toc/index';
+import { md_link_escape } from '@node-novel/toc/lib/util';
 import { createTocRoot, IDataAuthorNovelItem } from '@node-novel/toc/toc-root';
-import processTocContents, { makeHeader, makeLink, md_link_escape } from '@node-novel/toc/toc_contents';
+import processTocContents, { makeHeader, makeLink} from '@node-novel/toc/toc_contents';
 import * as Promise from 'bluebird';
 import { makeFilename } from 'novel-epub/lib/txt2epub3';
 import { GIT_SETTING_DIST_NOVEL, GIT_SETTING_EPUB } from '../data/git';

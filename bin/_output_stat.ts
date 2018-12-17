@@ -4,6 +4,7 @@
 
 import defaultSortCallback from '@node-novel/sort';
 import { md_href } from '@node-novel/toc';
+import { tocSortCallback } from '@node-novel/toc/lib/util';
 import { md_link_escape } from '@node-novel/toc/toc_contents';
 import crlf from 'crlf-normalize';
 import { GIT_SETTING_DIST_NOVEL } from '../data/git';
@@ -52,8 +53,8 @@ checkShareStatesNotExists([
 
 				stat.epub.sort(function (a, b)
 				{
-					return defaultSortCallback(a[0], b[0])
-						|| defaultSortCallback(a[1], b[1])
+					return tocSortCallback(a[0], b[0])
+						|| tocSortCallback(a[1], b[1])
 				}).forEach(function ([pathMain, novelID])
 				{
 					let novel = novelStatCache.novel(pathMain, novelID);
@@ -86,8 +87,8 @@ checkShareStatesNotExists([
 
 				stat.segment.sort(function (a, b)
 				{
-					return defaultSortCallback(a[0], b[0])
-						|| defaultSortCallback(a[1], b[1])
+					return tocSortCallback(a[0], b[0])
+						|| tocSortCallback(a[1], b[1])
 				}).forEach(function ([pathMain, novelID])
 				{
 					let novel = novelStatCache.novel(pathMain, novelID);

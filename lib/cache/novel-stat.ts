@@ -2,6 +2,7 @@
  * Created by user on 2018/12/17/017.
  */
 
+import { tocSortCallback } from '@node-novel/toc/lib/util';
 import ProjectConfig from '../../project.config';
 import path = require('upath2');
 import fs = require('fs-extra');
@@ -147,8 +148,8 @@ export class NovelStatCache
 
 				today.epub.sort(function (a, b)
 				{
-					return defaultSortCallback(a[0], b[0])
-					|| defaultSortCallback(a[1], b[1])
+					return tocSortCallback(a[0], b[0])
+					|| tocSortCallback(a[1], b[1])
 				});
 
 				today.epub_count = today.epub.length | 0;
@@ -162,8 +163,8 @@ export class NovelStatCache
 
 				today.segment.sort(function (a, b)
 				{
-					return defaultSortCallback(a[0], b[0])
-						|| defaultSortCallback(a[1], b[1])
+					return tocSortCallback(a[0], b[0])
+						|| tocSortCallback(a[1], b[1])
 				});
 
 				today.segment_count = today.segment.length | 0;
