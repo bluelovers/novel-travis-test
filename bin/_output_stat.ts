@@ -16,6 +16,7 @@ import moment = require('moment');
 import path = require('upath2');
 import fs = require('fs-extra');
 import console from '../lib/log';
+import { createPullRequests } from '../script/gitee-pr';
 
 checkShareStatesNotExists([
 	EnumShareStates.WAIT_CREATE_GIT
@@ -125,6 +126,9 @@ checkShareStatesNotExists([
 	}
 	else
 	{
+
+		_md.push('\n\n');
+
 		let out = [
 			`# HISTORY\n`,
 		].concat(_md).join('\n');
@@ -177,6 +181,8 @@ checkShareStatesNotExists([
 			await pushGit(ProjectConfig.novel_root, getPushUrlGitee(GIT_SETTING_DIST_NOVEL.url));
 
 			console.success(`成功建立統計資料`);
+
+			await createPullRequests();
 		}
 	}
 
