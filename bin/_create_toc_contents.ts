@@ -342,7 +342,7 @@ checkShareStatesNotExists([
 
 				if (stat.epub_date)
 				{
-					text_plus += `build: ${moment.unix(stat.epub_date).format('YYYY-MM-DD')}  `;
+					text_plus += `build: ${moment(stat.epub_date).format('YYYY-MM-DD')}  `;
 				}
 
 				if (stat.chapter)
