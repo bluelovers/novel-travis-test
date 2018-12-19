@@ -40,7 +40,7 @@ checkShareStatesNotExists([
 			let [timestamp, stat] = b;
 
 			let date = moment.unix(parseInt(timestamp)).format('YYYY-MM-DD');
-			console.log(date);
+			//console.log(date);
 
 			let _md2: string[] = [];
 
@@ -49,7 +49,7 @@ checkShareStatesNotExists([
 			if (stat.epub && stat.epub.length)
 			{
 				_md2.push(`### Epub\n`);
-				console.log(`Epub`);
+				//console.log(`Epub`);
 
 				stat.epub.sort(function (a, b)
 				{
@@ -68,9 +68,9 @@ checkShareStatesNotExists([
 
 					let text = `- [${title}](${href}) - ${pathMain}`;
 
-					text += ` ( v: ${novel.volume} , c: ${novel.chapter}, add: ${n} )`;
+					text += `\n  ( v: ${novel.volume} , c: ${novel.chapter}, add: ${n} )`;
 
-					console.log(pathMain, novelID);
+					//console.log(pathMain, novelID);
 
 					_md2.push(text);
 				});
@@ -83,7 +83,7 @@ checkShareStatesNotExists([
 			if (stat.segment && stat.segment.length)
 			{
 				_md2.push(`### Segment\n`);
-				console.log(`Segment`);
+				//console.log(`Segment`);
 
 				stat.segment.sort(function (a, b)
 				{
@@ -100,9 +100,9 @@ checkShareStatesNotExists([
 
 					let text = `- [${title}](${href}) - ${pathMain}`;
 
-					text += ` ( s: ${novel.segment} )`;
+					text += `\n  ( s: ${novel.segment} )`;
 
-					console.log(pathMain, novelID);
+					//console.log(pathMain, novelID);
 
 					_md2.push(text);
 				});

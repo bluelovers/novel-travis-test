@@ -360,7 +360,7 @@ checkShareStatesNotExists([
 
 				if (text_plus)
 				{
-					text += '<br/>' + text_plus;
+					text += '\n  ' + text_plus;
 				}
 
 				return text;
