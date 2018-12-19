@@ -153,6 +153,12 @@ export class NovelStatCache
 				});
 
 				today.epub_count = today.epub.length | 0;
+
+				if (!today.epub_count)
+				{
+					delete today.epub;
+					delete today.epub_count;
+				}
 			}
 
 			if (today.segment)
@@ -168,6 +174,17 @@ export class NovelStatCache
 				});
 
 				today.segment_count = today.segment.length | 0;
+
+				if (!today.segment_count)
+				{
+					delete today.segment;
+					delete today.segment_count;
+				}
+			}
+
+			if (!Object.keys(today).length)
+			{
+				delete this.data.history[timestamp];
 			}
 		}
 
