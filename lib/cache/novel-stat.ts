@@ -116,25 +116,6 @@ export class NovelStatCache
 	_beforeSave()
 	{
 		let timestamp = this.timestamp;
-		let ks = Object.keys(this.data.history);
-
-		if (ks.length)
-		{
-			let h = this.data.history;
-
-			ks.forEach(function (k)
-			{
-				if (!Object.keys(h[k]).length)
-				{
-					delete h[k];
-				}
-			})
-		}
-
-		if (ks.length > 7)
-		{
-			ks.sort().slice(0, -7).forEach(k => delete this.data.history[k])
-		}
 
 		if (timestamp in this.data.history)
 		{
@@ -185,6 +166,26 @@ export class NovelStatCache
 			if (!Object.keys(today).length)
 			{
 				delete this.data.history[timestamp];
+			}
+		}
+
+		let ks = Object.keys(this.data.history);
+
+		if (ks.length)
+		{
+			let h = this.data.history;
+
+			ks.forEach(function (k)
+			{
+				if (!Object.keys(h[k]).length)
+				{
+					delete h[k];
+				}
+			});
+
+			if (ks.length > 7)
+			{
+				ks.sort().slice(0, -7).forEach(k => delete this.data.history[k])
 			}
 		}
 
