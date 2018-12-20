@@ -49,6 +49,8 @@ if (ls.length)
 
 	const novelStatCache = getNovelStatCache();
 
+	const timestamp = novelStatCache.timestamp;
+
 	let _ok: boolean;
 
 	Object.entries(novelStatCache.data.history)
@@ -66,6 +68,35 @@ if (ls.length)
 				_ok = true;
 			}
 
+		})
+	;
+
+	Object.entries(novelStatCache.data.novels)
+		.forEach(([pathMain, data], i) =>
+		{
+			Object.entries(novelStatCache.data.novels[pathMain])
+				.forEach(([novelID, data]) =>
+				{
+					let ks: (keyof typeof data)[] = [
+						'init_date',
+						'epub_date',
+						'segment_date',
+					];
+
+					ks.forEach(k => {
+
+						if (data[k] && now_unix >= data[k])
+						{
+							let ms = moment.unix(data[k]).valueOf();
+
+							data[k] = ms;
+
+							_ok = true;
+						}
+
+					});
+				})
+			;
 		})
 	;
 
