@@ -25,6 +25,8 @@ checkShareStatesNotExists([
 
 	const novelStatCache = getNovelStatCache();
 
+	console.debug(moment(novelStatCache.timestamp));
+
 	let _md: string[] = [];
 
 	let _ok: boolean;
