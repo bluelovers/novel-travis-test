@@ -207,12 +207,23 @@ export class NovelStatCache
 		}
 
 		Object.entries(this.data.novels)
-			.forEach(([pathMain, data], i) => {
+			.forEach(([pathMain, data], i) =>
+			{
 				Object.entries(this.data.novels[pathMain])
-					.forEach(([novelID, data], i) => {
-
-						data.init_date = data.init_date || timestamp;
-
+					.forEach(([novelID, data]) =>
+					{
+						data.init_date = [
+								data.init_date,
+								data.epub_date,
+								data.segment_date,
+							]
+								.filter(v => v && v > 0)
+								.reduce((a, b) =>
+								{
+									return Math.min(a, b);
+								})
+							|| timestamp
+						;
 					})
 				;
 			})

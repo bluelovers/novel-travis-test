@@ -104,10 +104,11 @@ if (pathMain && novelID)
 					await fs.remove(jsonfile);
 				}
 
+				const novelStatCache = getNovelStatCache();
+				let stat = novelStatCache.novel(pathMain, novelID);
+
 				if (ret.count.changed > 0)
 				{
-					const novelStatCache = getNovelStatCache();
-					let stat = novelStatCache.novel(pathMain, novelID);
 					stat.segment_date = Date.now();
 
 					stat.segment_old = stat.segment | 0;
@@ -116,9 +117,9 @@ if (pathMain && novelID)
 					let today = novelStatCache.historyToday();
 
 					today.segment.push([pathMain, novelID]);
-
-					novelStatCache.save();
 				}
+
+				novelStatCache.save();
 
 				return ret.count.changed;
 			})
