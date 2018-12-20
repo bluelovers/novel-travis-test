@@ -55,9 +55,9 @@ checkShareStatesNotExists([
 				{
 					return tocSortCallback(a[0], b[0])
 						|| tocSortCallback(a[1], b[1])
-				}).forEach(function ([pathMain, novelID])
+				}).forEach(function ([pathMain, novelID, novelData])
 				{
-					let novel = novelStatCache.novel(pathMain, novelID);
+					let novel = novelData || novelStatCache.novel(pathMain, novelID);
 
 					let title = md_link_escape(novelID);
 					let href = md_href([
@@ -89,9 +89,9 @@ checkShareStatesNotExists([
 				{
 					return tocSortCallback(a[0], b[0])
 						|| tocSortCallback(a[1], b[1])
-				}).forEach(function ([pathMain, novelID])
+				}).forEach(function ([pathMain, novelID, novelData])
 				{
-					let novel = novelStatCache.novel(pathMain, novelID);
+					let novel = novelData || novelStatCache.novel(pathMain, novelID);
 
 					let title = md_link_escape(novelID);
 					let href = md_href([

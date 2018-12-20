@@ -32,6 +32,8 @@ export interface INovelStatCacheNovel
 {
 	segment_date?: number,
 	epub_date?: number,
+	init_date?: number,
+
 	volume?: number,
 	chapter?: number,
 
@@ -45,9 +47,9 @@ export interface INovelStatCacheNovel
 export interface INovelStatCacheHistory
 {
 	epub_count?: number,
-	epub?: Array<[string, string]>,
+	epub?: Array<[string, string, INovelStatCacheNovel?]>,
 	segment_count?: number,
-	segment?: Array<[string, string]>,
+	segment?: Array<[string, string, INovelStatCacheNovel?]>,
 }
 
 export interface INovelStatCacheOptions
@@ -119,6 +121,7 @@ export class NovelStatCache
 
 		if (timestamp in this.data.history)
 		{
+
 			let today = this.data.history[timestamp];
 
 			if (today.epub)
@@ -130,7 +133,7 @@ export class NovelStatCache
 				today.epub.sort(function (a, b)
 				{
 					return tocSortCallback(a[0], b[0])
-					|| tocSortCallback(a[1], b[1])
+						|| tocSortCallback(a[1], b[1])
 				});
 
 				today.epub_count = today.epub.length | 0;
@@ -139,6 +142,13 @@ export class NovelStatCache
 				{
 					delete today.epub;
 					delete today.epub_count;
+				}
+				else
+				{
+					today.epub.forEach((v, i) =>
+					{
+						today.epub[i] = [v[0], v[1], this.novel(v[0], v[1])]
+					})
 				}
 			}
 
@@ -160,6 +170,13 @@ export class NovelStatCache
 				{
 					delete today.segment;
 					delete today.segment_count;
+				}
+				else
+				{
+					today.segment.forEach((v, i) =>
+					{
+						today.segment[i] = [v[0], v[1], this.novel(v[0], v[1])]
+					})
 				}
 			}
 
@@ -188,6 +205,18 @@ export class NovelStatCache
 				ks.sort().slice(0, -7).forEach(k => delete this.data.history[k])
 			}
 		}
+
+		Object.entries(this.data.novels)
+			.forEach(([pathMain, data], i) => {
+				Object.entries(this.data.novels[pathMain])
+					.forEach(([novelID, data], i) => {
+
+						data.init_date = data.init_date || timestamp;
+
+					})
+				;
+			})
+		;
 
 		sortObject(this.data, {
 			useSource: true,

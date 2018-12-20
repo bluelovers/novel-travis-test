@@ -15,6 +15,7 @@ export interface INovelStatCache {
 export interface INovelStatCacheNovel {
     segment_date?: number;
     epub_date?: number;
+    init_date?: number;
     volume?: number;
     chapter?: number;
     volume_old?: number;
@@ -24,9 +25,9 @@ export interface INovelStatCacheNovel {
 }
 export interface INovelStatCacheHistory {
     epub_count?: number;
-    epub?: Array<[string, string]>;
+    epub?: Array<[string, string, INovelStatCacheNovel?]>;
     segment_count?: number;
-    segment?: Array<[string, string]>;
+    segment?: Array<[string, string, INovelStatCacheNovel?]>;
 }
 export interface INovelStatCacheOptions {
 }
