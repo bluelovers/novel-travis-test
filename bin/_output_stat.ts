@@ -9,7 +9,7 @@ import { md_link_escape } from '@node-novel/toc/toc_contents';
 import crlf from 'crlf-normalize';
 import { GIT_SETTING_DIST_NOVEL } from '../data/git';
 import { crossSpawnAsync, crossSpawnSync } from '../index';
-import { getNovelStatCache } from '../lib/cache/novel-stat';
+import { getNovelStatCache, createMoment } from '../lib/cache/novel-stat';
 import { checkShareStatesNotExists, EnumShareStates } from '../lib/share';
 import { ProjectConfig } from '../project.config';
 import { getPushUrlGitee, pushGit } from '../script/git';
@@ -41,8 +41,7 @@ checkShareStatesNotExists([
 		{
 			let [timestamp, stat] = b;
 
-			let date = moment.unix(parseInt(timestamp)).format('YYYY-MM-DD');
-			//console.log(date);
+			let date = createMoment(parseInt(timestamp)).format('YYYY-MM-DD');
 
 			let _md2: string[] = [];
 

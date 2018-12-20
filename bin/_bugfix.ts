@@ -7,6 +7,7 @@ import { crossSpawnAsync, crossSpawnSync } from '..';
 import { crossSpawnOutput, isGitRoot } from '../index';
 import { loadCacheConfig, loadMainConfig, loadConfig } from '@node-novel/task/lib/config';
 import { IConfig } from '@node-novel/task';
+import { getNovelStatCache } from '../lib/cache/novel-stat';
 import ProjectConfig from '../project.config';
 import moment = require('moment');
 import * as FastGlob from 'fast-glob';
@@ -40,6 +41,38 @@ if (ls.length)
 		console.log('[delete]', file);
 		fs.removeSync(file)
 	})
+}
+
+{
+	let now = moment();
+	let now_unix = now.unix();
+
+	const novelStatCache = getNovelStatCache();
+
+	let _ok: boolean;
+
+	Object.entries(novelStatCache.data.history)
+		.forEach(function ([timestamp, stat])
+		{
+			let n_timestamp = parseInt(timestamp);
+
+			if (now_unix >= n_timestamp)
+			{
+				let ms = moment.unix(n_timestamp).valueOf();
+
+				delete novelStatCache.data.history[timestamp];
+				novelStatCache.data.history[ms] = stat;
+
+				_ok = true;
+			}
+
+		})
+	;
+
+	if (_ok)
+	{
+		novelStatCache.save();
+	}
 }
 
 console.timeEnd('bugfix');

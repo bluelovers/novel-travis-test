@@ -1,6 +1,7 @@
 /**
  * Created by user on 2018/12/17/017.
  */
+import moment = require('moment');
 export interface INovelStatCache {
     novels: {
         [pathMain: string]: {
@@ -57,3 +58,4 @@ export declare class NovelStatCache {
     toJSON(bool?: boolean): INovelStatCache;
 }
 export declare function getNovelStatCache(): NovelStatCache;
+export declare function createMoment(...argv: any[]): moment.Moment;

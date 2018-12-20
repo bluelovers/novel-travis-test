@@ -12,7 +12,7 @@ import { defaultSortCallback } from '@node-novel/sort';
 import sortObject = require('sort-object-keys2');
 
 let opened: NovelStatCache;
-const todayMoment = moment().utcOffset(8).startOf('day');
+const todayMoment = createMoment().startOf('day');
 
 export interface INovelStatCache
 {
@@ -249,7 +249,7 @@ export class NovelStatCache
 
 	get timestamp()
 	{
-		return todayMoment.unix();
+		return todayMoment.valueOf();
 	}
 
 	historyPrev()
@@ -317,6 +317,11 @@ export class NovelStatCache
 export function getNovelStatCache()
 {
 	return NovelStatCache.create();
+}
+
+export function createMoment(...argv)
+{
+	return moment(...argv).utcOffset(8);
 }
 
 /*

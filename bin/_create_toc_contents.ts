@@ -10,7 +10,7 @@ import processTocContents, { makeHeader, makeLink} from '@node-novel/toc/toc_con
 import * as Promise from 'bluebird';
 import { makeFilename } from 'novel-epub/lib/txt2epub3';
 import { GIT_SETTING_DIST_NOVEL, GIT_SETTING_EPUB } from '../data/git';
-import { getNovelStatCache } from '../lib/cache/novel-stat';
+import { createMoment, getNovelStatCache } from '../lib/cache/novel-stat';
 import { checkShareStatesNotExists, EnumShareStates } from '../lib/share';
 import { qrcode_link } from '../lib/util';
 import ProjectConfig from '../project.config';
@@ -342,7 +342,7 @@ checkShareStatesNotExists([
 
 				if (stat.epub_date)
 				{
-					text_plus += `build: ${moment(stat.epub_date).format('YYYY-MM-DD')}  `;
+					text_plus += `build: ${createMoment(stat.epub_date).format('YYYY-MM-DD')}  `;
 				}
 
 				if (stat.chapter)
