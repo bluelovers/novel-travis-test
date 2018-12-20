@@ -119,6 +119,29 @@ export class NovelStatCache
 	{
 		let timestamp = this.timestamp;
 
+		Object.entries(this.data.novels)
+			.forEach(([pathMain, data], i) =>
+			{
+				Object.entries(this.data.novels[pathMain])
+					.forEach(([novelID, data]) =>
+					{
+						data.init_date = [
+								data.init_date,
+								data.epub_date,
+								data.segment_date,
+							]
+							.filter(v => v && v > 0)
+							.reduce((a, b) =>
+							{
+								return Math.min(a, b);
+							})
+							|| timestamp
+						;
+					})
+				;
+			})
+		;
+
 		if (timestamp in this.data.history)
 		{
 
@@ -147,7 +170,7 @@ export class NovelStatCache
 				{
 					today.epub.forEach((v, i) =>
 					{
-						today.epub[i] = [v[0], v[1], this.novel(v[0], v[1])]
+						today.epub[i][2] = this.novel(v[0], v[1]);
 					})
 				}
 			}
@@ -175,7 +198,7 @@ export class NovelStatCache
 				{
 					today.segment.forEach((v, i) =>
 					{
-						today.segment[i] = [v[0], v[1], this.novel(v[0], v[1])]
+						today.segment[i][2] = this.novel(v[0], v[1]);
 					})
 				}
 			}
@@ -205,29 +228,6 @@ export class NovelStatCache
 				ks.sort().slice(0, -7).forEach(k => delete this.data.history[k])
 			}
 		}
-
-		Object.entries(this.data.novels)
-			.forEach(([pathMain, data], i) =>
-			{
-				Object.entries(this.data.novels[pathMain])
-					.forEach(([novelID, data]) =>
-					{
-						data.init_date = [
-								data.init_date,
-								data.epub_date,
-								data.segment_date,
-							]
-								.filter(v => v && v > 0)
-								.reduce((a, b) =>
-								{
-									return Math.min(a, b);
-								})
-							|| timestamp
-						;
-					})
-				;
-			})
-		;
 
 		sortObject(this.data, {
 			useSource: true,
