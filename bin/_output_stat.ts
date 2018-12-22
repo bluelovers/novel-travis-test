@@ -31,11 +31,6 @@ checkShareStatesNotExists([
 
 	let _ok: boolean;
 
-	console.dir(novelStatCache.data, {
-		depth: null,
-		colors: true,
-	});
-
 	Object.entries(novelStatCache.data.history)
 		.reduceRight(function (a, b)
 		{
@@ -173,6 +168,22 @@ checkShareStatesNotExists([
 				cwd: ProjectConfig.novel_root,
 			});
 
+			let api_file = novelStatCache.file_git;
+
+			fs.copySync(novelStatCache.file, api_file, {
+				overwrite: true,
+				preserveTimestamps: true,
+			});
+
+			await crossSpawnAsync('git', [
+				'add',
+				'--verbose',
+				api_file,
+			], {
+				stdio: 'inherit',
+				cwd: ProjectConfig.novel_root,
+			});
+
 			await crossSpawnAsync('git', [
 				'commit',
 				'-a',
@@ -190,5 +201,10 @@ checkShareStatesNotExists([
 			await createPullRequests();
 		}
 	}
+
+	console.dir(novelStatCache.data, {
+		depth: null,
+		colors: true,
+	});
 
 })();

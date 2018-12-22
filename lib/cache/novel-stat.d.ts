@@ -3,6 +3,7 @@
  */
 import moment = require('moment');
 import { EnumNovelStatus } from 'node-novel-info/lib/const';
+import { IMdconfMeta } from 'node-novel-info';
 export interface INovelStatCache {
     novels: {
         [pathMain: string]: {
@@ -12,6 +13,11 @@ export interface INovelStatCache {
     history: {
         [date: string]: INovelStatCacheHistory;
         [date: number]: INovelStatCacheHistory;
+    };
+    mdconf: {
+        [pathMain: string]: {
+            [novelID: string]: IMdconfMeta;
+        };
     };
 }
 export interface INovelStatCacheNovel {
@@ -63,6 +69,10 @@ export interface INovelStatCacheNovel {
      * 紀錄變動次數
      */
     update_count?: number;
+    /**
+     * epub filename
+     */
+    epub_basename?: string;
 }
 export interface INovelStatCacheHistory {
     epub_count?: number;
@@ -74,6 +84,7 @@ export interface INovelStatCacheOptions {
 }
 export declare class NovelStatCache {
     file: string;
+    file_git: string;
     data: INovelStatCache;
     options: INovelStatCacheOptions;
     inited: boolean;
@@ -86,6 +97,8 @@ export declare class NovelStatCache {
         [novelID: string]: INovelStatCacheNovel;
     };
     novel(pathMain: string, novelID: string): INovelStatCacheNovel;
+    mdconf_get(pathMain: string, novelID: string): IMdconfMeta;
+    mdconf_set(pathMain: string, novelID: string, meta: IMdconfMeta): this;
     /**
      * @deprecated
      */

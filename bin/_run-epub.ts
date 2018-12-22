@@ -252,12 +252,16 @@ checkShareStatesNotExists([
 								commit_msg += `( v:${novel.volume}, c:${novel.chapter}, add:${novel.chapter - novel.chapter_old} )`;
 							}
 
+							novel.epub_basename = ret.basename;
+
 							novel.novel_status = (meta && meta.novel) ? meta.novel.novel_status : 0;
 
 							if (!novel.novel_status)
 							{
 								delete novel.novel_status;
 							}
+
+							novelStatCache.mdconf_set(pathMain, novelID, meta);
 
 							//console.log(novel);
 

@@ -11,6 +11,7 @@ import { array_unique } from 'array-hyper-unique';
 import { defaultSortCallback } from '@node-novel/sort';
 import sortObject = require('sort-object-keys2');
 import { EnumNovelStatus } from 'node-novel-info/lib/const';
+import { IMdconfMeta } from 'node-novel-info';
 
 let opened: NovelStatCache;
 const todayMoment = createMoment().startOf('day');
@@ -26,6 +27,12 @@ export interface INovelStatCache
 	history: {
 		[date: string]: INovelStatCacheHistory,
 		[date: number]: INovelStatCacheHistory,
+	},
+
+	mdconf: {
+		[pathMain: string]: {
+			[novelID: string]: IMdconfMeta,
+		},
 	},
 }
 
@@ -85,6 +92,11 @@ export interface INovelStatCacheNovel
 	 * 紀錄變動次數
 	 */
 	update_count?: number;
+
+	/**
+	 * epub filename
+	 */
+	epub_basename?: string,
 }
 
 export interface INovelStatCacheHistory
@@ -103,6 +115,7 @@ export interface INovelStatCacheOptions
 export class NovelStatCache
 {
 	file: string = path.join(ProjectConfig.cache_root, 'novel-stat.json');
+	file_git: string = path.join(ProjectConfig.novel_root, 'novel-stat.json');
 	data: INovelStatCache = null;
 	options: INovelStatCacheOptions;
 
@@ -128,14 +141,17 @@ export class NovelStatCache
 			{
 				this.data = fs.readJSONSync(this.file);
 			}
-			else
+			else if (fs.pathExistsSync(this.file_git))
 			{
-				// @ts-ignore
-				this.data = {};
+				this.data = fs.readJSONSync(this.file_git);
 			}
 
-			this.data.novels = this.data.novels || {};
+			// @ts-ignore
+			this.data = this.data || {};
+
 			this.data.history = this.data.history || {};
+			this.data.novels = this.data.novels || {};
+			this.data.mdconf = this.data.mdconf || {};
 		}
 
 		return this;
@@ -153,6 +169,22 @@ export class NovelStatCache
 		this.data.novels[pathMain][novelID] = this.data.novels[pathMain][novelID] || {};
 
 		return this.data.novels[pathMain][novelID];
+	}
+
+	mdconf_get(pathMain: string, novelID: string)
+	{
+		this.data.mdconf[pathMain] = this.data.mdconf[pathMain] || {};
+
+		return this.data.mdconf[pathMain][novelID];
+	}
+
+	mdconf_set(pathMain: string, novelID: string, meta: IMdconfMeta)
+	{
+		this.data.mdconf[pathMain] = this.data.mdconf[pathMain] || {};
+
+		this.data.mdconf[pathMain][novelID] = meta;
+
+		return this;
 	}
 
 	/**
@@ -306,6 +338,7 @@ export class NovelStatCache
 			keys: [
 				'history',
 				'novels',
+				'mdconf',
 			],
 		});
 
@@ -314,7 +347,9 @@ export class NovelStatCache
 
 	public save()
 	{
-		fs.outputJSONSync(this.file, this.toJSON(true));
+		fs.outputJSONSync(this.file, this.toJSON(true), {
+			spaces: 2,
+		});
 
 		return this;
 	}
