@@ -10,8 +10,8 @@ export declare let MyConfig: {
 };
 export declare let CacheConfig: {
     config: {
-        last: import("node-novel-info").INumber;
-        last_from?: import("node-novel-info").INumber;
+        last: string | number;
+        last_from?: string | number;
         done?: number;
         last_push_head?: string;
     };
@@ -20,7 +20,7 @@ export declare let CacheConfig: {
 export declare let GITEE_TOKEN: string;
 export declare let GITLAB_TOKEN: string;
 export declare const DIST_NOVEL: string;
-export declare let CLONE_DEPTH: import("node-novel-info").INumber;
+export declare let CLONE_DEPTH: string | number;
 export declare let NOT_DONE: boolean;
 export declare const BR_NAME: string;
 export declare const NO_PUSH: boolean;

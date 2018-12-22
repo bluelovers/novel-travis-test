@@ -15,16 +15,54 @@ export interface INovelStatCache {
     };
 }
 export interface INovelStatCacheNovel {
+    /**
+     * segment 更新時間
+     */
     segment_date?: number;
+    /**
+     * epub 更新時間
+     */
     epub_date?: number;
+    /**
+     * 初始化時間
+     */
     init_date?: number;
+    /**
+     * 總章/卷數量
+     */
     volume?: number;
+    /**
+     * 總話數
+     */
     chapter?: number;
+    /**
+     * 上次的總章/卷數量
+     */
     volume_old?: number;
+    /**
+     * 上次的總話數
+     */
     chapter_old?: number;
+    /**
+     * segment 變動數量
+     */
     segment?: number;
+    /**
+     * 上次的 segment 變動數量
+     */
     segment_old?: number;
+    /**
+     * 小說狀態 根據 readme,md 內設定
+     */
     novel_status?: EnumNovelStatus;
+    /**
+     * 最後變動時間
+     */
+    update_date?: number;
+    /**
+     * 紀錄變動次數
+     */
+    update_count?: number;
 }
 export interface INovelStatCacheHistory {
     epub_count?: number;

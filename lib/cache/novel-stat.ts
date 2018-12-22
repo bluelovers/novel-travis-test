@@ -31,20 +31,60 @@ export interface INovelStatCache
 
 export interface INovelStatCacheNovel
 {
+	/**
+	 * segment 更新時間
+	 */
 	segment_date?: number,
+	/**
+	 * epub 更新時間
+	 */
 	epub_date?: number,
+
+	/**
+	 * 初始化時間
+	 */
 	init_date?: number,
 
+	/**
+	 * 總章/卷數量
+	 */
 	volume?: number,
+	/**
+	 * 總話數
+	 */
 	chapter?: number,
 
+	/**
+	 * 上次的總章/卷數量
+	 */
 	volume_old?: number,
+	/**
+	 * 上次的總話數
+	 */
 	chapter_old?: number,
 
+	/**
+	 * segment 變動數量
+	 */
 	segment?: number,
+	/**
+	 * 上次的 segment 變動數量
+	 */
 	segment_old?: number,
 
+	/**
+	 * 小說狀態 根據 readme,md 內設定
+	 */
 	novel_status?: EnumNovelStatus,
+
+	/**
+	 * 最後變動時間
+	 */
+	update_date?: number;
+	/**
+	 * 紀錄變動次數
+	 */
+	update_count?: number;
 }
 
 export interface INovelStatCacheHistory
@@ -147,6 +187,7 @@ export class NovelStatCache
 
 		if (timestamp in this.data.history)
 		{
+			let _list = new Set<INovelStatCacheNovel>();
 
 			let today = this.data.history[timestamp];
 
@@ -173,7 +214,11 @@ export class NovelStatCache
 				{
 					today.epub.forEach((v, i) =>
 					{
-						today.epub[i][2] = this.novel(v[0], v[1]);
+						let novel = this.novel(v[0], v[1]);
+
+						_list.add(novel);
+
+						today.epub[i][2] = novel;
 					})
 				}
 			}
@@ -201,7 +246,11 @@ export class NovelStatCache
 				{
 					today.segment.forEach((v, i) =>
 					{
-						today.segment[i][2] = this.novel(v[0], v[1]);
+						let novel = this.novel(v[0], v[1]);
+
+						_list.add(novel);
+
+						today.segment[i][2] = novel;
 					})
 				}
 			}
@@ -209,6 +258,26 @@ export class NovelStatCache
 			if (!Object.keys(today).length)
 			{
 				delete this.data.history[timestamp];
+			}
+			else
+			{
+				_list.forEach(function (data)
+				{
+					data.update_date = [
+							data.init_date,
+							data.epub_date,
+							data.segment_date,
+						]
+						.filter(v => v && v > 0)
+						.reduce((a, b) =>
+						{
+							return Math.max(a, b);
+						})
+						|| timestamp
+					;
+
+					data.update_count = (data.update_count | 0) + 1;
+				})
 			}
 		}
 
