@@ -10,6 +10,7 @@ import moment = require('moment');
 import { array_unique } from 'array-hyper-unique';
 import { defaultSortCallback } from '@node-novel/sort';
 import sortObject = require('sort-object-keys2');
+import { EnumNovelStatus } from 'node-novel-info/lib/const';
 
 let opened: NovelStatCache;
 const todayMoment = createMoment().startOf('day');
@@ -42,6 +43,8 @@ export interface INovelStatCacheNovel
 
 	segment?: number,
 	segment_old?: number,
+
+	novel_status?: EnumNovelStatus,
 }
 
 export interface INovelStatCacheHistory

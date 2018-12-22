@@ -56,7 +56,7 @@
     "gitee-api-token": "^1.0.1",
     "gitlog2": "^4.1.1",
     "moment": "^2.23.0",
-    "node-novel-info": "^2.3.10",
+    "node-novel-info": "^2.3.12",
     "novel-epub": "^1.1.16",
     "novel-segment": "^2.2.4",
     "novel-txt-merge": "^1.0.14",

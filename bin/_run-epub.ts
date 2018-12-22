@@ -202,7 +202,7 @@ checkShareStatesNotExists([
 						})
 						.then(async function (ret)
 						{
-							let meta = await fs.readFile(path.join(inputPath, 'README.md'))
+							let meta: Partial<IMdconfMeta> = await fs.readFile(path.join(inputPath, 'README.md'))
 								.then(function (data)
 								{
 									return mdconf_parse(data, {
@@ -250,6 +250,13 @@ checkShareStatesNotExists([
 								novel.chapter = ret.stat.chapter;
 
 								commit_msg += `( v:${novel.volume}, c:${novel.chapter}, add:${novel.chapter - novel.chapter_old} )`;
+							}
+
+							novel.novel_status = (meta && meta.novel) ? meta.novel.novel_status : 0;
+
+							if (!novel.novel_status)
+							{
+								delete novel.novel_status;
 							}
 
 							//console.log(novel);

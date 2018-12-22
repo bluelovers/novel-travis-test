@@ -2,6 +2,7 @@
  * Created by user on 2018/12/17/017.
  */
 import moment = require('moment');
+import { EnumNovelStatus } from 'node-novel-info/lib/const';
 export interface INovelStatCache {
     novels: {
         [pathMain: string]: {
@@ -23,6 +24,7 @@ export interface INovelStatCacheNovel {
     chapter_old?: number;
     segment?: number;
     segment_old?: number;
+    novel_status?: EnumNovelStatus;
 }
 export interface INovelStatCacheHistory {
     epub_count?: number;
