@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Created by user on 2018/12/24/024.
+ */
+const novel_stat_1 = require("../../lib/cache/novel-stat");
+const novelStatCache = novel_stat_1.getNovelStatCache();
+Object.entries(novelStatCache.data.novels)
+    .forEach(function ([pathMain, ls]) {
+    Object.entries(ls)
+        .forEach(function ([novelID, novel]) {
+        console.log(pathMain, novelID);
+        delete novel.update_count;
+        delete novel.update_date;
+    });
+});
+novelStatCache.save();
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicmVzZXQtdXBkYXRlLWNvdW50LmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsicmVzZXQtdXBkYXRlLWNvdW50LnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBQUE7O0dBRUc7QUFDSCwyREFBK0U7QUFFL0UsTUFBTSxjQUFjLEdBQUcsOEJBQWlCLEVBQUUsQ0FBQztBQUUzQyxNQUFNLENBQUMsT0FBTyxDQUFDLGNBQWMsQ0FBQyxJQUFJLENBQUMsTUFBTSxDQUFDO0tBQ3hDLE9BQU8sQ0FBQyxVQUFVLENBQUMsUUFBUSxFQUFFLEVBQUUsQ0FBQztJQUVoQyxNQUFNLENBQUMsT0FBTyxDQUFDLEVBQUUsQ0FBQztTQUNoQixPQUFPLENBQUMsVUFBVSxDQUFDLE9BQU8sRUFBRSxLQUFLLENBQUM7UUFFbEMsT0FBTyxDQUFDLEdBQUcsQ0FBQyxRQUFRLEVBQUUsT0FBTyxDQUFDLENBQUM7UUFFL0IsT0FBTyxLQUFLLENBQUMsWUFBWSxDQUFDO1FBQzFCLE9BQU8sS0FBSyxDQUFDLFdBQVcsQ0FBQztJQUMxQixDQUFDLENBQUMsQ0FBQztBQUNMLENBQUMsQ0FBQyxDQUNGO0FBRUQsY0FBYyxDQUFDLElBQUksRUFBRSxDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiLyoqXG4gKiBDcmVhdGVkIGJ5IHVzZXIgb24gMjAxOC8xMi8yNC8wMjQuXG4gKi9cbmltcG9ydCB7IGdldE5vdmVsU3RhdENhY2hlLCBOb3ZlbFN0YXRDYWNoZSB9IGZyb20gJy4uLy4uL2xpYi9jYWNoZS9ub3ZlbC1zdGF0JztcblxuY29uc3Qgbm92ZWxTdGF0Q2FjaGUgPSBnZXROb3ZlbFN0YXRDYWNoZSgpO1xuXG5PYmplY3QuZW50cmllcyhub3ZlbFN0YXRDYWNoZS5kYXRhLm5vdmVscylcblx0LmZvckVhY2goZnVuY3Rpb24gKFtwYXRoTWFpbiwgbHNdKVxuXHR7XG5cdFx0T2JqZWN0LmVudHJpZXMobHMpXG5cdFx0XHQuZm9yRWFjaChmdW5jdGlvbiAoW25vdmVsSUQsIG5vdmVsXSlcblx0XHRcdHtcblx0XHRcdFx0Y29uc29sZS5sb2cocGF0aE1haW4sIG5vdmVsSUQpO1xuXG5cdFx0XHRcdGRlbGV0ZSBub3ZlbC51cGRhdGVfY291bnQ7XG5cdFx0XHRcdGRlbGV0ZSBub3ZlbC51cGRhdGVfZGF0ZTtcblx0XHRcdH0pO1xuXHR9KVxuO1xuXG5ub3ZlbFN0YXRDYWNoZS5zYXZlKCk7XG4iXX0=

@@ -211,7 +211,7 @@ export class NovelStatCache
 	/**
 	 * @deprecated
 	 */
-	_beforeSave()
+	_beforeSave(bool?: boolean | number)
 	{
 		let timestamp = this.timestamp;
 
@@ -323,7 +323,7 @@ export class NovelStatCache
 			{
 				delete this.data.history[timestamp];
 			}
-			else
+			else if (bool > 1)
 			{
 				_list.forEach(function (data)
 				{
@@ -394,9 +394,9 @@ export class NovelStatCache
 		return this;
 	}
 
-	public save()
+	public save(bool?: boolean | number)
 	{
-		fs.outputJSONSync(this.file, this.toJSON(true), {
+		fs.outputJSONSync(this.file, this.toJSON(bool || true), {
 			spaces: 2,
 		});
 
@@ -459,11 +459,11 @@ export class NovelStatCache
 		return opened = new this(options);
 	}
 
-	toJSON(bool?: boolean)
+	toJSON(bool?: boolean | number)
 	{
 		if (bool)
 		{
-			this._beforeSave()
+			this._beforeSave(bool)
 		}
 		return this.data;
 	}

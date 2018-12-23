@@ -123,13 +123,13 @@ export declare class NovelStatCache {
     /**
      * @deprecated
      */
-    _beforeSave(): this;
-    save(): this;
+    _beforeSave(bool?: boolean | number): this;
+    save(bool?: boolean | number): this;
     readonly timestamp: number;
     historyPrev(): INovelStatCacheHistory;
     historyToday(): INovelStatCacheHistory;
     static create(options?: INovelStatCacheOptions): NovelStatCache;
-    toJSON(bool?: boolean): INovelStatCache;
+    toJSON(bool?: boolean | number): INovelStatCache;
 }
 export declare function getNovelStatCache(): NovelStatCache;
 export declare function createMoment(...argv: any[]): moment.Moment;

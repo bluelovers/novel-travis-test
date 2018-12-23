@@ -126,7 +126,6 @@ checkShareStatesNotExists([
 	}
 	else
 	{
-
 		_md.push('\n\n');
 
 		let out = [
@@ -157,6 +156,8 @@ checkShareStatesNotExists([
 		}
 		else
 		{
+			novelStatCache.save(2);
+
 			fs.outputFileSync(file, out);
 
 			await crossSpawnAsync('git', [
