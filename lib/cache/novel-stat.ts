@@ -200,18 +200,28 @@ export class NovelStatCache
 				Object.entries(this.data.novels[pathMain])
 					.forEach(([novelID, data]) =>
 					{
-						data.init_date = [
-								data.init_date,
-								data.epub_date,
-								data.segment_date,
-							]
+						let _a = [
+							data.init_date,
+							data.epub_date,
+							data.segment_date,
+						]
 							.filter(v => v && v > 0)
-							.reduce((a, b) =>
-							{
-								return Math.min(a, b);
-							})
-							|| timestamp
 						;
+
+						if (!_a.length)
+						{
+							data.init_date = timestamp
+						}
+						else
+						{
+							data.init_date = _a
+								.reduce((a, b) =>
+								{
+									return Math.min(a, b);
+								})
+								|| timestamp
+							;
+						}
 					})
 				;
 			})
@@ -295,18 +305,29 @@ export class NovelStatCache
 			{
 				_list.forEach(function (data)
 				{
-					data.update_date = [
+
+					let _a = [
 							data.init_date,
 							data.epub_date,
 							data.segment_date,
 						]
 						.filter(v => v && v > 0)
-						.reduce((a, b) =>
-						{
-							return Math.max(a, b);
-						})
-						|| timestamp
 					;
+
+					if (!_a.length)
+					{
+						data.update_date = timestamp
+					}
+					else
+					{
+						data.update_date = _a
+							.reduce((a, b) =>
+							{
+								return Math.max(a, b);
+							})
+							|| timestamp
+						;
+					}
 
 					data.update_count = (data.update_count | 0) + 1;
 				})
