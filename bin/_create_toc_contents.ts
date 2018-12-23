@@ -345,6 +345,11 @@ checkShareStatesNotExists([
 					text_plus += `build: ${createMoment(stat.epub_date).format('YYYY-MM-DD')}  `;
 				}
 
+				if (item.meta)
+				{
+					novelStatCache.mdconf_set(pathMain, novelID, item.meta);
+				}
+
 				if (stat.chapter)
 				{
 					text_plus += `chapter: ${stat.chapter}  `;
@@ -401,6 +406,8 @@ checkShareStatesNotExists([
 				}
 			})
 		;
+
+		novelStatCache.save();
 	})
 	.tap(async function ()
 	{
