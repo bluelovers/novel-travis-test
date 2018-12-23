@@ -177,6 +177,10 @@ checkShareStatesNotExists([
 
 								file = path.join(outputPath_src, 'out', txt.filename);
 
+								let novel = novelStatCache.novel(pathMain, novelID);
+
+								novel.txt_basename = txt.filename;
+
 								if (fs.existsSync(file))
 								{
 									try
@@ -252,7 +256,7 @@ checkShareStatesNotExists([
 								commit_msg += `( v:${novel.volume}, c:${novel.chapter}, add:${novel.chapter - novel.chapter_old} )`;
 							}
 
-							novel.epub_basename = ret.basename;
+							novel.epub_basename = ret.filename;
 
 							novel.novel_status = (meta && meta.novel) ? meta.novel.novel_status : 0;
 

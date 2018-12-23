@@ -73,6 +73,7 @@ export interface INovelStatCacheNovel {
      * epub filename
      */
     epub_basename?: string;
+    txt_basename?: string;
 }
 export interface INovelStatCacheHistory {
     epub_count?: number;

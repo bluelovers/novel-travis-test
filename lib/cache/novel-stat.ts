@@ -97,6 +97,7 @@ export interface INovelStatCacheNovel
 	 * epub filename
 	 */
 	epub_basename?: string,
+	txt_basename?: string,
 }
 
 export interface INovelStatCacheHistory
@@ -314,6 +315,8 @@ export class NovelStatCache
 						.filter(v => v && v > 0)
 					;
 
+					let old = data.update_date;
+
 					if (!_a.length)
 					{
 						data.update_date = timestamp
@@ -329,7 +332,10 @@ export class NovelStatCache
 						;
 					}
 
-					data.update_count = (data.update_count | 0) + 1;
+					if (old !== data.update_date)
+					{
+						data.update_count = (data.update_count | 0) + 1;
+					}
 				})
 			}
 		}
