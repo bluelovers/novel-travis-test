@@ -16,19 +16,33 @@ import { IMdconfMeta } from 'node-novel-info';
 let opened: NovelStatCache;
 const todayMoment = createMoment().startOf('day');
 
+/**
+ * 所有 timestamp 為 Unix timestamp in milliseconds 為 utc +8
+ * pathMain 為 主資夾名稱
+ * novelID 為 小說資料夾名稱
+ */
 export interface INovelStatCache
 {
+	/**
+	 * 小說緩存狀態
+	 */
 	novels: {
 		[pathMain: string]: {
 			[novelID: string]: INovelStatCacheNovel,
 		},
 	},
 
+	/**
+	 * 歷史紀錄
+	 */
 	history: {
-		[date: string]: INovelStatCacheHistory,
-		[date: number]: INovelStatCacheHistory,
+		[timestamp: string]: INovelStatCacheHistory,
+		[timestamp: number]: INovelStatCacheHistory,
 	},
 
+	/**
+	 * 透過 node-novel-conf 解析過的 META 資料 (README.md)
+	 */
 	mdconf: {
 		[pathMain: string]: {
 			[novelID: string]: IMdconfMeta,
@@ -80,7 +94,7 @@ export interface INovelStatCacheNovel
 	segment_old?: number,
 
 	/**
-	 * 小說狀態 根據 readme,md 內設定
+	 * 小說狀態 flag 根據 readme.md 內設定
 	 */
 	novel_status?: EnumNovelStatus,
 
@@ -102,7 +116,13 @@ export interface INovelStatCacheNovel
 
 export interface INovelStatCacheHistory
 {
+	/**
+	 * 本次記錄內的 epub 總數
+	 */
 	epub_count?: number,
+	/**
+	 * 本次記錄內的 epub
+	 */
 	epub?: Array<[string, string, INovelStatCacheNovel?]>,
 	segment_count?: number,
 	segment?: Array<[string, string, INovelStatCacheNovel?]>,
