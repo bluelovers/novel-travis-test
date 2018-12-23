@@ -205,6 +205,7 @@ export class NovelStatCache
 							data.init_date,
 							data.epub_date,
 							data.segment_date,
+							data.update_date,
 						]
 							.filter(v => v && v > 0)
 						;
@@ -311,6 +312,7 @@ export class NovelStatCache
 							data.init_date,
 							data.epub_date,
 							data.segment_date,
+							data.update_date,
 						]
 						.filter(v => v && v > 0)
 					;
