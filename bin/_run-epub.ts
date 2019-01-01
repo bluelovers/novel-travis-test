@@ -146,6 +146,22 @@ checkShareStatesNotExists([
 						{
 							let txt = await txtMerge(inputPath, outputPath, ret.basename);
 
+							let novel = novelStatCache.novel(pathMain, novelID);
+
+							if (novel.txt_basename && novel.txt_basename != txt.filename)
+							{
+								let file = path.join(outputPath, 'out', novel.txt_basename);
+
+								await _remove_file_git(file);
+							}
+
+							if (novel.epub_basename && novel.epub_basename != ret.filename)
+							{
+								let file = path.join(outputPath, novel.epub_basename);
+
+								await _remove_file_git(file);
+							}
+
 							if (pathMain.match(/_out$/))
 							{
 								let pathMain_src = pathMain.replace(/_out$/, '');
@@ -155,51 +171,27 @@ checkShareStatesNotExists([
 
 								let file = path.join(outputPath_src, ret.filename);
 
-								if (fs.existsSync(file))
+								await _remove_file_git(file);
+
+								if (novel.txt_basename)
 								{
-									try
-									{
-										await crossSpawnSync('git', [
-											'rm',
-											file,
-										], {
-											stdio: 'inherit',
-											cwd: outputPath,
-										});
-									}
-									catch (e)
-									{
+									file = path.join(outputPath_src, 'out', novel.txt_basename);
 
-									}
+									await _remove_file_git(file);
+								}
 
-									await fs.remove(file).catch(v => null);
+								if (novel.epub_basename)
+								{
+									file = path.join(outputPath_src, novel.epub_basename);
+
+									await _remove_file_git(file);
 								}
 
 								file = path.join(outputPath_src, 'out', txt.filename);
 
-								let novel = novelStatCache.novel(pathMain, novelID);
-
 								novel.txt_basename = txt.filename;
 
-								if (fs.existsSync(file))
-								{
-									try
-									{
-										await crossSpawnSync('git', [
-											'rm',
-											file,
-										], {
-											stdio: 'inherit',
-											cwd: outputPath,
-										});
-									}
-									catch (e)
-									{
-
-									}
-
-									await fs.remove(file).catch(v => null);
-								}
+								await _remove_file_git(file);
 							}
 
 							return ret;
@@ -372,4 +364,34 @@ function filterCache(ls: { pathMain: string, novelID: string }[], pathMain: stri
 
 		return v && !bool
 	});
+}
+
+async function _remove_file_git(file: string, cwd?: string)
+{
+	if (fs.pathExistsSync(file))
+	{
+		if (!cwd)
+		{
+			cwd = path.dirname(file);
+		}
+
+		try
+		{
+			await crossSpawnSync('git', [
+				'rm',
+				file,
+			], {
+				stdio: 'inherit',
+				cwd,
+			});
+		}
+		catch (e)
+		{
+
+		}
+
+		await fs.remove(file).catch(v => null);
+
+		return fs.pathExistsSync(file);
+	}
 }
