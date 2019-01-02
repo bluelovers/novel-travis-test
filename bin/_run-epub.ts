@@ -113,6 +113,8 @@ checkShareStatesNotExists([
 		const novelStatCache = getNovelStatCache();
 		const historyToday = novelStatCache.historyToday();
 
+		const novelStatCacheTimestamp = novelStatCache.timestamp;
+
 		await Promise
 			.mapSeries(ls, async function (data)
 			{
@@ -239,8 +241,11 @@ checkShareStatesNotExists([
 
 							if (ret.stat)
 							{
-								novel.volume_old = novel.volume | 0;
-								novel.chapter_old = novel.chapter | 0;
+								if (novelStatCacheTimestamp != novel.update_date)
+								{
+									novel.volume_old = novel.volume | 0;
+									novel.chapter_old = novel.chapter | 0;
+								}
 
 								novel.volume = ret.stat.volume;
 								novel.chapter = ret.stat.chapter;

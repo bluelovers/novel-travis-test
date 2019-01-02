@@ -339,7 +339,7 @@ export class NovelStatCache
 
 					let old = data.update_date;
 
-					if (!_a.length)
+					if (!_a.length || true)
 					{
 						data.update_date = timestamp
 					}
