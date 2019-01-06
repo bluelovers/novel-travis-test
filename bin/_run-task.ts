@@ -149,7 +149,7 @@ function runTask()
 
 //	console.log(bin);
 
-	crossSpawnSync('node', [
+	return crossSpawnSync('node', [
 		bin,
 	], {
 		stdio: 'inherit',
