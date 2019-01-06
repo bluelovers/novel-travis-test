@@ -1,7 +1,7 @@
 /**
  * Created by user on 2018/12/24/024.
  */
-import { getNovelStatCache, NovelStatCache } from '../../lib/cache/novel-stat';
+import { getNovelStatCache } from '../../lib/cache/novel-stat';
 
 const novelStatCache = getNovelStatCache();
 
