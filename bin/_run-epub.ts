@@ -10,7 +10,7 @@ import {
 	GIT_SETTING_DIST_NOVEL,
 	GIT_SETTING_EPUB,
 } from '../data/git';
-import { NovelStatCache, getNovelStatCache } from '../lib/cache/novel-stat';
+import { getNovelStatCache } from '../lib/cache/novel-stat';
 import { checkShareStatesNotExists, EnumShareStates } from '../lib/share';
 import { git_fake_author } from '../lib/util';
 import ProjectConfig from '../project.config';

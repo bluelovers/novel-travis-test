@@ -36,6 +36,7 @@
     "test": "node -v"
   },
   "dependencies": {
+    "@node-novel/cache-loader": "^1.0.1",
     "@node-novel/sort": "^1.0.3",
     "@node-novel/task": "^1.0.21",
     "@node-novel/toc": "^1.0.34",
