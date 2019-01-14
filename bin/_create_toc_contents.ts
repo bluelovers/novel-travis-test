@@ -159,7 +159,7 @@ checkShareStatesNotExists([
 									_pathMain = pathMain + '_out';
 								}
 
-								let link_base = `https://gitlab.com/demonovel/epub-txt/blob/master/${_pathMain}/`;
+								let link_base = `${ProjectConfig.outputUrl}/${_pathMain}/`;
 
 								let t: string;
 								let link: string;
@@ -176,7 +176,7 @@ checkShareStatesNotExists([
 
 								_add.push(`[${md_link_escape(t)}](${link_base + md_href(link)})`);
 
-								ret.push('- ' + _add.join(` ／ `) + ` - 如果連結錯誤 請點[這裡](https://gitlab.com/demonovel/epub-txt/tree/master)`);
+								ret.push('- ' + _add.join(` ／ `) + ` - 如果連結錯誤 請點[這裡](${ProjectConfig.outputUrl})`);
 
 
 								{
@@ -217,7 +217,7 @@ checkShareStatesNotExists([
 							{
 								let qt = qrcode_link(DISCORD_LINK);
 								let qu = qrcode_link([
-									`https://gitee.com/bluelovers/novel/blob/master`,
+									ProjectConfig.sourceUrl,
 									pathMain,
 									novelID,
 									'導航目錄.md',

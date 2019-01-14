@@ -156,6 +156,17 @@ checkShareStatesNotExists([
 		}
 		else
 		{
+			/**
+			 * 防止安裝到舊版
+			 */
+			if (novelStatCache.data.meta)
+			{
+				// @ts-ignore
+				novelStatCache.data.meta.sourceUrl = ProjectConfig.sourceUrl || novelStatCache.data.meta.sourceUrl;
+				// @ts-ignore
+				novelStatCache.data.meta.outputUrl = ProjectConfig.outputUrl || novelStatCache.data.meta.outputUrl;
+			}
+
 			novelStatCache.save(2);
 
 			fs.outputFileSync(file, out);
