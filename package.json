@@ -60,7 +60,7 @@
     "moment": "^2.23.0",
     "node-novel-info": "^2.3.19",
     "novel-epub": "^1.1.20",
-    "novel-segment": "^2.2.9",
+    "novel-segment": "^2.2.10",
     "novel-txt-merge": "^1.0.14",
     "prettyuse": "^0.0.0",
     "sort-object-keys2": "^1.1.0",

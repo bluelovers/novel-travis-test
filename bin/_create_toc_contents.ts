@@ -176,7 +176,7 @@ checkShareStatesNotExists([
 
 								_add.push(`[${md_link_escape(t)}](${link_base + md_href(link)})`);
 
-								ret.push('- ' + _add.join(` ／ `) + ` - 如果連結錯誤 請點[這裡](${ProjectConfig.outputUrl})`);
+								ret.push('- ' + _add.join(` ／ `) + ` - 如果連結錯誤 請點[這裡](${link_base})`);
 
 
 								{
@@ -197,7 +197,7 @@ checkShareStatesNotExists([
 
 									let md = `[${md_link_escape(t)}](${link_base + md_href(link)})`;
 
-									ret.push('- ' + md + ` - 如果連結錯誤 請點[這裡](https://github.com/bluelovers/node-novel/tree/master/lib/locales)`);
+									ret.push('- ' + md + ` - 如果連結錯誤 請點[這裡](${link_base})`);
 								}
 
 
