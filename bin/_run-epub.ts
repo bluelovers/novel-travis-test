@@ -131,6 +131,8 @@ checkShareStatesNotExists([
 					_do = true;
 				}
 
+				console.debug(pathMain, novelID, _do);
+
 				if (_do)
 				{
 					const outputPath = path.join(GIT_SETTING_EPUB.targetPath, pathMain);
