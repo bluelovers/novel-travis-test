@@ -1,11 +1,10 @@
 import moment = require('moment');
 import path = require('upath2');
 import { LF } from 'crlf-normalize';
-import * as crossSpawn from 'cross-spawn';
 import * as fs from 'fs-extra';
 import gitlog from 'gitlog2';
-import { crossSpawnSync } from '..';
-import { crossSpawnOutput, isGitRoot } from '../index';
+import { crossSpawnSync, SpawnSyncReturns } from '..';
+import { crossSpawnOutput, isGitRoot, getCrossSpawnError } from '../index';
 import console from '../lib/log';
 import { EnumShareStates, shareStates } from '../lib/share';
 import ProjectConfig from '../project.config';
@@ -46,7 +45,7 @@ export function pushGit(REPO_PATH: string, repo: string, force?: boolean)
 
 export function pullGit(REPO_PATH: string)
 {
-	return crossSpawn.sync('git', [
+	return crossSpawnSync('git', [
 		'pull',
 	], {
 		stdio: 'inherit',
@@ -249,7 +248,7 @@ export function createGit(options: IOptionsCreateGit)
 	};
 
 	let temp: {
-		cp: ReturnType<typeof crossSpawnSync>,
+		cp: SpawnSyncReturns,
 
 		[k: string]: any,
 	} = {
@@ -334,9 +333,11 @@ export function createGit(options: IOptionsCreateGit)
 		});
 	}
 
-	if (temp.cp.error || temp.cp.errorCrossSpawn)
+	let _cp_error = getCrossSpawnError(temp.cp);
+
+	if (_cp_error)
 	{
-		throw (temp.cp.error || temp.cp.errorCrossSpawn)
+		throw _cp_error
 	}
 
 	if (options.on && options.on.create)

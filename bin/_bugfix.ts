@@ -1,5 +1,4 @@
 import path = require('upath2');
-import * as crossSpawn from 'cross-spawn';
 import gitRoot from 'git-root2';
 import { config as dotenvConfig } from 'dotenv';
 import * as fs from 'fs-extra';
@@ -87,6 +86,7 @@ if (ls.length)
 
 						if (data[k] && now_unix >= data[k])
 						{
+							// @ts-ignore
 							let ms = moment.unix(data[k]).valueOf();
 
 							data[k] = ms;

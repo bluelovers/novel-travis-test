@@ -1,5 +1,4 @@
 import path = require('upath2');
-import * as crossSpawn from 'cross-spawn';
 import gitRoot from 'git-root2';
 import { config as dotenvConfig } from 'dotenv';
 import * as fs from 'fs-extra';
