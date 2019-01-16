@@ -8,6 +8,7 @@ import { crossSpawnOutput, isGitRoot, getCrossSpawnError } from '../index';
 import console from '../lib/log';
 import { EnumShareStates, shareStates } from '../lib/share';
 import ProjectConfig from '../project.config';
+import { crossSpawnSyncGit } from './git/cross-spawn';
 
 import { GITEE_TOKEN, NO_PUSH, NOT_DONE, PROJECT_ROOT } from './init';
 
@@ -55,7 +56,7 @@ export function pullGit(REPO_PATH: string)
 
 export function fetchGit(REPO_PATH: string)
 {
-	return crossSpawnSync('git', [
+	return crossSpawnSyncGit('git', [
 		'fetch',
 		'--force',
 		'origin',
@@ -68,7 +69,7 @@ export function fetchGit(REPO_PATH: string)
 
 export function fetchGitAll(REPO_PATH: string)
 {
-	let cp = crossSpawnSync('git', [
+	return crossSpawnSyncGit('git', [
 		'fetch',
 		'--all',
 		'--prune',
@@ -76,15 +77,6 @@ export function fetchGitAll(REPO_PATH: string)
 		stdio: 'inherit',
 		cwd: REPO_PATH,
 	});
-
-	console.debug(`cp.stdout`);
-	console.dir(cp.stdout);
-	console.debug(`cp.stderr`);
-	console.dir(cp.stderr);
-	console.debug(`cp.error`);
-	console.dir(cp.error);
-
-	return cp;
 }
 
 export function newBranch(REPO_PATH: string, BR_NAME: string)

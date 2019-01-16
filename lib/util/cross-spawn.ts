@@ -4,7 +4,9 @@
 
 import { crlf } from 'crlf-normalize';
 import { async as crossSpawnAsync, sync as crossSpawnSync } from 'cross-spawn-extra';
-import { SpawnASyncReturns, SpawnASyncReturnsPromise, ISpawnASyncError, SpawnSyncReturns, SpawnOptions, SpawnSyncOptions } from 'cross-spawn-extra/core';
+import { SpawnASyncReturns, SpawnASyncReturnsPromise, ISpawnASyncError, SpawnSyncReturns, SpawnOptions, SpawnSyncOptions, CrossSpawnExtra } from 'cross-spawn-extra/core';
+
+export const stripAnsi = CrossSpawnExtra.stripAnsi;
 
 export { crossSpawnAsync, crossSpawnSync }
 
