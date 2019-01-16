@@ -382,6 +382,8 @@ async function _remove_file_git(file: string, cwd?: string)
 			cwd = path.dirname(file);
 		}
 
+		console.log(`移除舊檔案 ${file}`);
+
 		try
 		{
 			await crossSpawnSync('git', [
