@@ -6,7 +6,7 @@ import { async as crossSpawnAsync, sync as crossSpawnSync } from 'cross-spawn-ex
 import { SpawnASyncReturns, SpawnASyncReturnsPromise, ISpawnASyncError, SpawnSyncReturns, SpawnOptions, SpawnSyncOptions, CrossSpawnExtra } from 'cross-spawn-extra/core';
 export declare const stripAnsi: typeof CrossSpawnExtra.stripAnsi;
 export { crossSpawnAsync, crossSpawnSync };
-export { SpawnASyncReturns, SpawnASyncReturnsPromise, SpawnSyncReturns, SpawnOptions, SpawnSyncOptions };
+export { SpawnASyncReturns, SpawnASyncReturnsPromise, SpawnSyncReturns, SpawnOptions, SpawnSyncOptions, ISpawnASyncError };
 export declare function getCrossSpawnError<T extends SpawnASyncReturns>(cp: T | any): ISpawnASyncError<T>;
 export declare function crossSpawnOutput(buf: SpawnSyncReturns["output"] | Buffer, options?: {
     clearEol?: boolean;

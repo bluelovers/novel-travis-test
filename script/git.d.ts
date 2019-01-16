@@ -36,6 +36,7 @@ export declare type IOptionsCreateGit = {
 };
 export declare function getPushUrl(url: string, login_token?: string): string;
 export declare function getPushUrlGitee(url: string, login_token?: string): string;
+export declare function gitCheckRemote(REPO_PATH: string, remote?: string): SpawnSyncReturns<Buffer>;
 export declare function createGit(options: IOptionsCreateGit): {
     data: {
         targetName: string;

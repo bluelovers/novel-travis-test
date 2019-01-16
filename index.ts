@@ -4,9 +4,9 @@
 
 import NodeNovelTask from '@node-novel/task';
 
-import { crossSpawnAsync, crossSpawnSync, getCrossSpawnError, SpawnASyncReturnsPromise, SpawnASyncReturns, SpawnSyncReturns, SpawnOptions, SpawnSyncOptions, crossSpawnOutput } from './lib/util/cross-spawn';
+import { crossSpawnAsync, crossSpawnSync, getCrossSpawnError, SpawnASyncReturnsPromise, SpawnASyncReturns, SpawnSyncReturns, SpawnOptions, SpawnSyncOptions, crossSpawnOutput, ISpawnASyncError, stripAnsi } from './lib/util/cross-spawn';
 
-export { crossSpawnAsync, crossSpawnSync, getCrossSpawnError, SpawnASyncReturnsPromise, SpawnASyncReturns, SpawnSyncReturns, SpawnOptions, SpawnSyncOptions, crossSpawnOutput }
+export { crossSpawnAsync, crossSpawnSync, getCrossSpawnError, SpawnASyncReturnsPromise, SpawnASyncReturns, SpawnSyncReturns, SpawnOptions, SpawnSyncOptions, crossSpawnOutput, ISpawnASyncError, stripAnsi }
 
 import { config as dotenvConfig } from 'dotenv';
 import path = require('upath2');

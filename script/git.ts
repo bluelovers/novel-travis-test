@@ -4,7 +4,7 @@ import { LF } from 'crlf-normalize';
 import * as fs from 'fs-extra';
 import gitlog from 'gitlog2';
 import { crossSpawnSync, SpawnSyncReturns } from '..';
-import { crossSpawnOutput, isGitRoot, getCrossSpawnError } from '../index';
+import { crossSpawnOutput, isGitRoot, getCrossSpawnError, ISpawnASyncError } from '../index';
 import console from '../lib/log';
 import { EnumShareStates, shareStates } from '../lib/share';
 import ProjectConfig from '../project.config';
@@ -232,6 +232,20 @@ export function getPushUrlGitee(url: string, login_token: string = GITEE_TOKEN)
 	return getPushUrl(url, login_token);
 }
 
+export function gitCheckRemote(REPO_PATH: string, remote?: string)
+{
+	return crossSpawnSyncGit('git', [
+		'ls-remote',
+		'--exit-code',
+		'--heads',
+		'--quiet',
+		(remote || 'origin'),
+	], {
+		stdio: 'inherit',
+		cwd: REPO_PATH,
+	});
+}
+
 export function createGit(options: IOptionsCreateGit)
 {
 	const wait_create_git = shareStates(EnumShareStates.WAIT_CREATE_GIT);
@@ -272,6 +286,8 @@ export function createGit(options: IOptionsCreateGit)
 		cp: null,
 	};
 
+	let _cp_error: ISpawnASyncError;
+
 	let label: string;
 
 	console.info(`create git: ${targetName}`);
@@ -290,6 +306,15 @@ export function createGit(options: IOptionsCreateGit)
 	console.time(label);
 
 	temp.cp = null;
+
+	temp.cp = gitCheckRemote(data.targetPath, data.urlClone);
+
+	_cp_error = getCrossSpawnError(temp.cp);
+
+	if (_cp_error)
+	{
+		throw _cp_error
+	}
 
 	let _deleted: boolean;
 
@@ -350,7 +375,7 @@ export function createGit(options: IOptionsCreateGit)
 		});
 	}
 
-	let _cp_error = getCrossSpawnError(temp.cp);
+	_cp_error = getCrossSpawnError(temp.cp);
 
 	if (_cp_error)
 	{

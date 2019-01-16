@@ -10,7 +10,7 @@ export const stripAnsi = CrossSpawnExtra.stripAnsi;
 
 export { crossSpawnAsync, crossSpawnSync }
 
-export { SpawnASyncReturns, SpawnASyncReturnsPromise, SpawnSyncReturns, SpawnOptions, SpawnSyncOptions }
+export { SpawnASyncReturns, SpawnASyncReturnsPromise, SpawnSyncReturns, SpawnOptions, SpawnSyncOptions, ISpawnASyncError }
 
 export function getCrossSpawnError<T extends SpawnASyncReturns>(cp: T | any): ISpawnASyncError<T>
 {
