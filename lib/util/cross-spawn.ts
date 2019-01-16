@@ -3,12 +3,23 @@
  */
 
 import { crlf } from 'crlf-normalize';
-import { async as crossSpawnAsync, sync as crossSpawnSync } from 'cross-spawn-extra';
+import { async as crossSpawnAsync, sync as _crossSpawnSync } from 'cross-spawn-extra';
 import { SpawnASyncReturns, SpawnASyncReturnsPromise, ISpawnASyncError, SpawnSyncReturns, SpawnOptions, SpawnSyncOptions, CrossSpawnExtra } from 'cross-spawn-extra/core';
 
 export const stripAnsi = CrossSpawnExtra.stripAnsi;
 
-export { crossSpawnAsync, crossSpawnSync }
+export { crossSpawnAsync }
+
+export function crossSpawnSync(...argv: Parameters<typeof _crossSpawnSync>)
+{
+	let cp = _crossSpawnSync(...argv);
+
+	delete cp.then;
+	// @ts-ignore
+	delete cp.catch;
+
+	return cp;
+}
 
 export { SpawnASyncReturns, SpawnASyncReturnsPromise, SpawnSyncReturns, SpawnOptions, SpawnSyncOptions, ISpawnASyncError }
 

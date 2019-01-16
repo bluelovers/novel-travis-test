@@ -5,7 +5,7 @@
 import { loadMainConfig } from '@node-novel/task/lib/config';
 import { processToc } from '@node-novel/toc';
 import * as fs from 'fs-extra';
-import { crossSpawnOutput, crossSpawnSync, isGitRoot } from '../index';
+import { crossSpawnAsync, crossSpawnOutput, crossSpawnSync, isGitRoot } from '../index';
 import {
 	GIT_SETTING_DIST_NOVEL,
 	GIT_SETTING_EPUB,
@@ -273,7 +273,7 @@ checkShareStatesNotExists([
 							 */
 							if (author_name)
 							{
-								await crossSpawnSync('git', [
+								await crossSpawnAsync('git', [
 									'commit',
 									'-a',
 									'-m',
@@ -286,7 +286,7 @@ checkShareStatesNotExists([
 							}
 							else
 							{
-								await crossSpawnSync('git', [
+								await crossSpawnAsync('git', [
 									'commit',
 									'-a',
 									'-m',
