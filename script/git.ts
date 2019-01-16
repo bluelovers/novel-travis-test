@@ -68,7 +68,7 @@ export function fetchGit(REPO_PATH: string)
 
 export function fetchGitAll(REPO_PATH: string)
 {
-	return crossSpawnSync('git', [
+	let cp = crossSpawnSync('git', [
 		'fetch',
 		'--all',
 		'--prune',
@@ -76,6 +76,15 @@ export function fetchGitAll(REPO_PATH: string)
 		stdio: 'inherit',
 		cwd: REPO_PATH,
 	});
+
+	console.debug(`cp.stdout`);
+	console.dir(cp.stdout);
+	console.debug(`cp.stderr`);
+	console.dir(cp.stderr);
+	console.debug(`cp.error`);
+	console.dir(cp.error);
+
+	return cp;
 }
 
 export function newBranch(REPO_PATH: string, BR_NAME: string)
@@ -302,7 +311,7 @@ export function createGit(options: IOptionsCreateGit)
 	{
 		console.warn(`${targetName} already exists`);
 
-		console.log(`取得所有遠端分支`);
+		console.info(`取得所有遠端分支`);
 		fetchGitAll(data.targetPath);
 
 		_deleted = gitRemoveBranchOutdate(data.targetPath);
