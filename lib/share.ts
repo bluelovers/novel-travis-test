@@ -39,10 +39,16 @@ export function shareStates(name: EnumShareStates)
 
 export function checkShareStatesNotExists(list: EnumShareStates[])
 {
-	let bool = list.some(name => {
-		let bool = shareStates(name).exists();
+	let name: string;
 
-		bool && console.error(name, `should not exists`);
+	let bool = list.some(_name => {
+		let bool = shareStates(_name).exists();
+
+		if (bool)
+		{
+			console.error(_name, `should not exists`);
+			name = _name;
+		}
 
 		return bool;
 	});
