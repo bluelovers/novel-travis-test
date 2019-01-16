@@ -127,6 +127,9 @@ export function deleteBranch(REPO_PATH: string, name: string, force?: boolean)
 	});
 }
 
+/**
+ * @FIXME 不知道為什麼沒有刪除 所以多做一次另外一種刪除步驟
+ */
 export function deleteBranchRemote(REPO_PATH: string, remote: string, name: string, force?: boolean)
 {
 	if (name == 'master' || !name || !remote)
@@ -136,11 +139,24 @@ export function deleteBranchRemote(REPO_PATH: string, remote: string, name: stri
 
 	console.debug(`嘗試刪除遠端分支 ${name}`);
 
-	return crossSpawnSync('git', [
+	crossSpawnSync('git', [
 		'push',
 		remote,
 		'--delete',
 		name,
+	], {
+		stdio: 'inherit',
+		cwd: REPO_PATH,
+	});
+
+	/**
+	 * 不知道為什麼沒有刪除 所以多做一次另外一種刪除步驟
+	 * https://zlargon.gitbooks.io/git-tutorial/content/remote/delete_branch.html
+	 */
+	crossSpawnSync('git', [
+		'push',
+		remote,
+		':' + name,
 	], {
 		stdio: 'inherit',
 		cwd: REPO_PATH,

@@ -12,7 +12,10 @@ export declare function fetchGitAll(REPO_PATH: string): SpawnSyncReturns<Buffer>
 export declare function newBranch(REPO_PATH: string, BR_NAME: string): SpawnSyncReturns<Buffer>;
 export declare function currentBranchName(REPO_PATH: string): string;
 export declare function deleteBranch(REPO_PATH: string, name: string, force?: boolean): SpawnSyncReturns<Buffer>;
-export declare function deleteBranchRemote(REPO_PATH: string, remote: string, name: string, force?: boolean): SpawnSyncReturns<Buffer>;
+/**
+ * @FIXME 不知道為什麼沒有刪除 所以多做一次另外一種刪除步驟
+ */
+export declare function deleteBranchRemote(REPO_PATH: string, remote: string, name: string, force?: boolean): void;
 export declare function oldBranch(REPO_PATH: string): string;
 export declare function diffOrigin(REPO_PATH: string): number;
 export declare function getHashHEAD(REPO_PATH: string, branch?: string): string;
