@@ -377,19 +377,7 @@ checkShareStatesNotExists([
 					novelStatCache.mdconf_set(pathMain, novelID, item.meta);
 				}
 
-				if (stat.chapter)
-				{
-					text_plus += `chapter: ${stat.chapter}  `;
-
-					let n = stat.chapter - (stat.chapter_old | 0);
-					n = n || 0;
-
-					if (n != stat.chapter)
-					{
-						text_plus += `add: ${n}  `;
-					}
-				}
-				else
+				if (!stat.chapter)
 				{
 					/**
 					 * 補充沒有被記錄的資訊
@@ -401,10 +389,23 @@ checkShareStatesNotExists([
 						throwEmpty: false,
 					});
 
-					if (txts.length)
+					if (txts && txts.length)
 					{
 						stat.chapter_old = stat.chapter | 0;
 						stat.chapter = txts.length;
+					}
+				}
+
+				if (stat.chapter)
+				{
+					text_plus += `chapter: ${stat.chapter}  `;
+
+					let n = stat.chapter - (stat.chapter_old | 0);
+					n = n || 0;
+
+					if (n != stat.chapter)
+					{
+						text_plus += `add: ${n}  `;
 					}
 				}
 
