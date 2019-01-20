@@ -7,7 +7,8 @@ import { md_href } from '@node-novel/toc/index';
 import { md_link_escape } from '@node-novel/toc/lib/util';
 import { createTocRoot, IDataAuthorNovelItem } from '@node-novel/toc/toc-root';
 import processTocContents, { makeHeader, makeLink, getList as getTxtList } from '@node-novel/toc/toc_contents';
-import * as Promise from 'bluebird';
+import Promise = require('bluebird');
+import novelGlobby = require('node-novel-globby/g');
 import { makeFilename } from 'novel-epub/lib/txt2epub3';
 import { GIT_SETTING_DIST_NOVEL, GIT_SETTING_EPUB } from '../data/git';
 import { createMoment, getNovelStatCache } from '../lib/cache/novel-stat';
@@ -380,6 +381,24 @@ checkShareStatesNotExists([
 					if (n != stat.chapter)
 					{
 						text_plus += `add: ${n}  `;
+					}
+				}
+				else
+				{
+					/**
+					 * 補充沒有被記錄的資訊
+					 */
+					let txts = novelGlobby.globbySync([
+						'**/*.txt',
+					], {
+						cwd: path.join(ProjectConfig.novel_root, pathMain, novelID),
+						throwEmpty: false,
+					});
+
+					if (txts.length)
+					{
+						stat.chapter_old = stat.chapter | 0;
+						stat.chapter = txts.length;
 					}
 				}
 
