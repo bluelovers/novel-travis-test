@@ -6,7 +6,7 @@ import { get_ids, processToc } from '@node-novel/toc';
 import { md_href } from '@node-novel/toc/index';
 import { md_link_escape } from '@node-novel/toc/lib/util';
 import { createTocRoot, IDataAuthorNovelItem } from '@node-novel/toc/toc-root';
-import processTocContents, { makeHeader, makeLink} from '@node-novel/toc/toc_contents';
+import processTocContents, { makeHeader, makeLink, getList as getTxtList } from '@node-novel/toc/toc_contents';
 import * as Promise from 'bluebird';
 import { makeFilename } from 'novel-epub/lib/txt2epub3';
 import { GIT_SETTING_DIST_NOVEL, GIT_SETTING_EPUB } from '../data/git';
@@ -92,6 +92,14 @@ checkShareStatesNotExists([
 
 				if (fs.existsSync(path.join(basePath, 'README.md')))
 				{
+					let txts = await getTxtList(basePath);
+
+					if (!txts.length)
+					{
+						console.warn(`[toc:contents]`, pathMain, novelID, '此目錄為書籤');
+						return;
+					}
+
 					let file = path.join(basePath, '導航目錄.md');
 
 					let old = await fs.readFile(file)
