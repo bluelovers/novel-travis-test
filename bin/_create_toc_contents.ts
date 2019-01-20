@@ -95,9 +95,32 @@ checkShareStatesNotExists([
 				{
 					let txts = await getTxtList(basePath);
 
+					let meta: IMdconfMeta = await (async () =>
+						{
+							let data = await fs.readFile(path.join(basePath, 'README.md'));
+
+							return mdconf_parse(data, {
+								throw: false,
+							});
+						})()
+						.then(chkInfo)
+						.catch(function (e)
+						{
+							console.error(e);
+
+							return null;
+						})
+					;
+
 					if (!txts.length)
 					{
 						console.warn(`[toc:contents]`, pathMain, novelID, '此目錄為書籤');
+
+						if (meta)
+						{
+							novelStatCache.mdconf_set(pathMain, novelID, meta);
+						}
+
 						return;
 					}
 
@@ -119,23 +142,6 @@ checkShareStatesNotExists([
 					let ret = await processTocContents(basePath, file, async function (basePath: string, ...argv)
 						{
 							let ret = await makeHeader(basePath, ...argv);
-
-							let meta: IMdconfMeta = await (async () =>
-								{
-									let data = await fs.readFile(path.join(basePath, 'README.md'));
-
-									return mdconf_parse(data, {
-										throw: false,
-									});
-								})()
-								.then(chkInfo)
-								.catch(function (e)
-								{
-									console.error(e);
-
-									return null;
-								})
-							;
 
 							if (meta)
 							{
