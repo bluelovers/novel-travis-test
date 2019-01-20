@@ -169,7 +169,7 @@ checkShareStatesNotExists([
 
 								let _add = [];
 
-								_add.push(`[${md_link_escape(t)}](${link_base + md_href(link)})`);
+								_add.push(`[<span style="color:fuchsia;font-weight:bold;">${md_link_escape(t)}</span>](${link_base + md_href(link)})`);
 
 								t = 'TXT';
 								link = 'out/' + txt_file;
