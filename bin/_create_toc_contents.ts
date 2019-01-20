@@ -249,6 +249,7 @@ checkShareStatesNotExists([
 										cwd: basePath,
 									});
 
+									/*
 									await crossSpawnSync('git', [
 										'commit',
 										'-a',
@@ -258,6 +259,7 @@ checkShareStatesNotExists([
 										stdio: 'inherit',
 										cwd: basePath,
 									});
+									*/
 
 									_did = true;
 									_update = true;
@@ -296,6 +298,16 @@ checkShareStatesNotExists([
 			{
 				if (_update)
 				{
+					await crossSpawnSync('git', [
+						'commit',
+						'-a',
+						'-m',
+						`[toc:contents] 導航目錄.md`,
+					], {
+						stdio: 'inherit',
+						cwd: ProjectConfig.novel_root,
+					});
+
 					console.info(`[toc:contents] 完成`);
 
 					await fs.ensureFile(_cache_init);
