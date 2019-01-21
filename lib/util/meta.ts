@@ -53,7 +53,7 @@ export function filterIDs(rootPath: string)
 			let is_out = !!_m[2];
 			let pathMain_base = _m[1];
 
-			memo[pathMain_base] = memo[pathMain] || {};
+			memo[pathMain_base] = memo[pathMain_base] || {};
 
 			FastGlob.sync<string>([
 					'*/README.md',
