@@ -102,10 +102,12 @@ checkShareStatesNotExists([
 					{
 						console.warn(`[toc:contents]`, pathMain, novelID, '此目錄為書籤');
 
+						/*
 						if (meta)
 						{
 							novelStatCache.mdconf_set(pathMain, novelID, meta);
 						}
+						*/
 
 						return;
 					}
@@ -358,6 +360,7 @@ checkShareStatesNotExists([
 					text_plus += `build: ${createMoment(stat.epub_date).format('YYYY-MM-DD')}  `;
 				}
 
+				/*
 				if (item.meta)
 				{
 					novelStatCache.mdconf_set(pathMain, novelID, item.meta);
@@ -373,6 +376,7 @@ checkShareStatesNotExists([
 						novelStatCache.mdconf_set(pathMain, novelID, item.meta);
 					}
 				}
+				*/
 
 				if (!stat.chapter)
 				{
