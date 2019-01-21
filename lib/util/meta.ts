@@ -6,6 +6,8 @@ import path = require('path');
 import FastGlob = require('fast-glob');
 import ProjectConfig from '../../project.config';
 import { get_ids } from '@node-novel/toc';
+import { tocSortCallback } from '@node-novel/toc/lib/util';
+import { cacheSortCallback } from '@node-novel/cache-loader/lib/util'
 
 const metaMap = new Map<string, IMdconfMeta>();
 
@@ -58,6 +60,7 @@ export function filterIDs(rootPath: string)
 				], {
 					cwd: path.join(rootPath, pathMain),
 				})
+				.sort(cacheSortCallback)
 				.forEach(function (p)
 				{
 					let novelID = path.basename(path.dirname(p));
