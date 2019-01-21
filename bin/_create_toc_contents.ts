@@ -27,6 +27,7 @@ import txtMerge, { makeFilename as makeFilenameTxt } from 'novel-txt-merge';
 import novelEpub from 'novel-epub';
 import console from '../lib/log';
 import moment = require('moment');
+import { getMdconfMeta, getMdconfMetaByPath } from '../lib/util/meta';
 
 let _update: boolean;
 
@@ -95,22 +96,7 @@ checkShareStatesNotExists([
 				{
 					let txts = await getTxtList(basePath);
 
-					let meta: IMdconfMeta = await (async () =>
-						{
-							let data = await fs.readFile(path.join(basePath, 'README.md'));
-
-							return mdconf_parse(data, {
-								throw: false,
-							});
-						})()
-						.then(chkInfo)
-						.catch(function (e)
-						{
-							console.error(e);
-
-							return null;
-						})
-					;
+					let meta = getMdconfMeta(pathMain, novelID);
 
 					if (!txts.length)
 					{
@@ -377,6 +363,17 @@ checkShareStatesNotExists([
 					novelStatCache.mdconf_set(pathMain, novelID, item.meta);
 				}
 
+				if (!stat.chapter || !item.meta)
+				{
+					let meta = getMdconfMeta(pathMain, novelID);
+
+					if (meta)
+					{
+						item.meta = meta;
+						novelStatCache.mdconf_set(pathMain, novelID, item.meta);
+					}
+				}
+
 				if (!stat.chapter)
 				{
 					/**
@@ -467,3 +464,4 @@ checkShareStatesNotExists([
 		}
 	})
 ;
+
