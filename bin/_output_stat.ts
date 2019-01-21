@@ -150,9 +150,44 @@ checkShareStatesNotExists([
 			_do = true;
 		}
 
+		let _create_pr: boolean;
+
+		let api_file = novelStatCache.file_git;
+
 		if (!_do)
 		{
 			console.gray(`檔案無變化`);
+
+			try
+			{
+				let f1: Buffer = await fs.readFile(api_file);
+				let f2: Buffer = await fs.readFile(novelStatCache.file);
+
+				if (!f1.equals(f2))
+				{
+					console.info(`複製 ${novelStatCache.file} => ${api_file}`);
+
+					fs.copySync(novelStatCache.file, api_file, {
+						overwrite: true,
+						preserveTimestamps: true,
+					});
+
+					await crossSpawnAsync('git', [
+						'add',
+						'--verbose',
+						api_file,
+					], {
+						stdio: 'inherit',
+						cwd: ProjectConfig.novel_root,
+					});
+
+					_create_pr = true;
+				}
+			}
+			catch (e)
+			{
+
+			}
 		}
 		else
 		{
@@ -180,8 +215,6 @@ checkShareStatesNotExists([
 				cwd: ProjectConfig.novel_root,
 			});
 
-			let api_file = novelStatCache.file_git;
-
 			fs.copySync(novelStatCache.file, api_file, {
 				overwrite: true,
 				preserveTimestamps: true,
@@ -196,6 +229,13 @@ checkShareStatesNotExists([
 				cwd: ProjectConfig.novel_root,
 			});
 
+			_create_pr = true;
+
+			console.success(`成功建立統計資料`);
+		}
+
+		if (_create_pr)
+		{
 			await crossSpawnAsync('git', [
 				'commit',
 				'-a',
@@ -207,8 +247,6 @@ checkShareStatesNotExists([
 			});
 
 			await pushGit(ProjectConfig.novel_root, getPushUrlGitee(GIT_SETTING_DIST_NOVEL.url));
-
-			console.success(`成功建立統計資料`);
 
 			await createPullRequests();
 		}
