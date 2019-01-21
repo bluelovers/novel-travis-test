@@ -72,6 +72,11 @@ export function filterIDs(rootPath: string)
 				})
 			;
 
+			if (!Object.keys(memo[pathMain_base]).length)
+			{
+				delete memo[pathMain_base];
+			}
+
 			return memo;
 		}, {} as {
 			[pathMain_base: string]: {
