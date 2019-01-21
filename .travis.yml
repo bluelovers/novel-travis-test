@@ -27,6 +27,7 @@ script:
 - travis_wait 30 npm run do-epub-init
 - npm run do-epub
 - travis_wait 30 npm run do-epub-push
+- npm run update-meta-cache
 - npm run do-toc-contents
 - npm run output-stat
 env:
