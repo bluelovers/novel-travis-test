@@ -39,7 +39,7 @@ export function createPullRequestsGitlab(): Bluebird<IGitlabMergeRequestsCreateR
 
 			let projectId = decodeProjectId('novel-group/txt-source');
 
-			let sourceBranch: string = `demonovel:${br_name}`;
+			let sourceBranch: string = `demonovel/txt-source:${br_name}`;
 			let targetBranch: string = 'master';
 
 			let title: string = `auto pr (${br_name})`;
