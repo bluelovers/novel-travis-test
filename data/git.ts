@@ -31,7 +31,7 @@ export const GIT_SETTING_DIST_NOVEL: IOptionsCreateGit = {
 	//urlClone: 'https://gitee.com/bluelovers/novel.git',
 
 	url: 'gitlab.com/demonovel/txt-source.git',
-	urlClone: 'https://gitee.com/novel-group/txt-source.git',
+	urlClone: 'https://gitlab.com/novel-group/txt-source.git',
 
 	targetPath: DIST_NOVEL,
 	NOT_DONE,
