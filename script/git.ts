@@ -11,6 +11,7 @@ import ProjectConfig from '../project.config';
 import { crossSpawnSyncGit } from './git/cross-spawn';
 
 import { GITEE_TOKEN, NO_PUSH, NOT_DONE, PROJECT_ROOT } from './init';
+import { GIT_TOKEN } from './git/token';
 
 export const DATE_FORMAT = 'YYYY-MM-DD-HH-mm-ss';
 
@@ -227,7 +228,7 @@ export function getPushUrl(url: string, login_token?: string)
 	return `https://${login_token ? login_token : ''}${url}`;
 }
 
-export function getPushUrlGitee(url: string, login_token: string = GITEE_TOKEN)
+export function getPushUrlGitee(url: string, login_token: string = GIT_TOKEN)
 {
 	return getPushUrl(url, login_token);
 }
@@ -240,6 +241,35 @@ export function gitCheckRemote(REPO_PATH: string, remote?: string)
 		'--heads',
 		'--quiet',
 		(remote || 'origin'),
+	], {
+		stdio: 'inherit',
+		cwd: REPO_PATH,
+	});
+}
+
+export function gitSetRemote(REPO_PATH: string, remoteUrl: string, remotePushUrl?: string)
+{
+	console.debug(`嘗試覆寫遠端設定於 ${REPO_PATH}`);
+
+	console.debug(`移除舊的遠端 origin`);
+
+	crossSpawnSync('git', [
+		'remote',
+		'rm',
+		'origin',
+	], {
+		stdio: 'inherit',
+		cwd: REPO_PATH,
+	});
+
+	console.debug(`設定遠端 origin`);
+
+	return crossSpawnSyncGit('git', [
+		'remote',
+		'add',
+		'--no-tags',
+		'origin',
+		remoteUrl,
 	], {
 		stdio: 'inherit',
 		cwd: REPO_PATH,
@@ -289,6 +319,15 @@ export function createGit(options: IOptionsCreateGit)
 	let _cp_error: ISpawnASyncError;
 
 	let label: string;
+
+	label = `--- CONFIG ---`;
+
+	console.info(label);
+	console.time(label);
+
+	gitSetRemote(data.targetPath, data.pushUrl);
+
+	console.timeEnd(label);
 
 	console.info(`create git: ${targetName}`);
 

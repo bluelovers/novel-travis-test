@@ -1,0 +1,9 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Created by user on 2019/1/26/026.
+ */
+const gitlab_1 = require("./git/gitlab");
+exports.createPullRequests = gitlab_1.createPullRequestsGitlab;
+exports.default = gitlab_1.createPullRequestsGitlab;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZ2l0LWFwaS1wci5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbImdpdC1hcGktcHIudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFBQTs7R0FFRztBQUNILHlDQUF3RDtBQUVuQiw2QkFGNUIsaUNBQXdCLENBRXNCO0FBRXZELGtCQUFlLGlDQUF3QixDQUFBIiwic291cmNlc0NvbnRlbnQiOlsiLyoqXG4gKiBDcmVhdGVkIGJ5IHVzZXIgb24gMjAxOS8xLzI2LzAyNi5cbiAqL1xuaW1wb3J0IHsgY3JlYXRlUHVsbFJlcXVlc3RzR2l0bGFiIH0gZnJvbSAnLi9naXQvZ2l0bGFiJztcblxuZXhwb3J0IHsgY3JlYXRlUHVsbFJlcXVlc3RzR2l0bGFiIGFzIGNyZWF0ZVB1bGxSZXF1ZXN0cyB9XG5cbmV4cG9ydCBkZWZhdWx0IGNyZWF0ZVB1bGxSZXF1ZXN0c0dpdGxhYlxuIl19

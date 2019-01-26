@@ -12,6 +12,8 @@ import gitlog from 'gitlog2';
 
 import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, CLONE_DEPTH, GITEE_TOKEN, GITLAB_TOKEN } from '../script/init';
 
+import { GIT_TOKEN } from '../script/git/token';
+
 import {
 	pushGit,
 	pullGit,
@@ -24,14 +26,21 @@ import {
 } from '../script/git';
 
 export const GIT_SETTING_DIST_NOVEL: IOptionsCreateGit = {
-	url: 'gitee.com/demogitee/novel.git',
-	urlClone: 'https://gitee.com/bluelovers/novel.git',
+
+	//url: 'gitee.com/demogitee/novel.git',
+	//urlClone: 'https://gitee.com/bluelovers/novel.git',
+
+	url: 'gitlab.com/demonovel/txt-source.git',
+	urlClone: 'https://gitee.com/novel-group/txt-source.git',
+
 	targetPath: DIST_NOVEL,
 	NOT_DONE,
 
 	newBranchName: BR_NAME,
 
-	LOGIN_TOKEN: GITEE_TOKEN,
+	//LOGIN_TOKEN: GITEE_TOKEN,
+	//LOGIN_TOKEN: GITLAB_TOKEN,
+	LOGIN_TOKEN: GIT_TOKEN,
 
 	on: {
 		create_before(data, temp)

@@ -4,13 +4,13 @@
 
 import getToken from 'gitee-api-token';
 import ClientRequest from 'client-oauth2-request';
-import { currentBranchName } from './git';
-import ProjectConfig, { novel_root } from '../project.config';
+import { currentBranchName } from '../git';
+import ProjectConfig, { novel_root } from '../../project.config';
 import { config as dotenvConfig } from 'dotenv';
 import path = require('upath2');
-import console from '../lib/log';
+import console from '../../lib/log';
 
-export async function createPullRequests()
+export async function createPullRequestsGitee()
 {
 	console.info(`嘗試建立 PR`);
 
@@ -106,4 +106,4 @@ export async function createPullRequests()
 	;
 }
 
-export default createPullRequests;
+export default createPullRequestsGitee;

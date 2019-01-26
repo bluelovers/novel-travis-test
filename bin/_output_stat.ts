@@ -17,7 +17,7 @@ import moment = require('moment');
 import path = require('upath2');
 import fs = require('fs-extra');
 import console from '../lib/log';
-import { createPullRequests } from '../script/gitee-pr';
+import { createPullRequests } from '../script/git-api-pr';
 
 checkShareStatesNotExists([
 	EnumShareStates.WAIT_CREATE_GIT

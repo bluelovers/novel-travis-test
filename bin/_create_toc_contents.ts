@@ -16,7 +16,7 @@ import { checkShareStatesNotExists, EnumShareStates } from '../lib/share';
 import { qrcode_link } from '../lib/util';
 import ProjectConfig from '../project.config';
 import { getPushUrl, getPushUrlGitee, pushGit } from '../script/git';
-import { createPullRequests } from '../script/gitee-pr';
+import { createPullRequests } from '../script/git-api-pr';
 import { crossSpawnSync, crossSpawnAsync } from '../index';
 import path = require('path');
 import * as fs from 'fs-extra';

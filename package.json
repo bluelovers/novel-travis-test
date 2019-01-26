@@ -38,12 +38,13 @@
   },
   "dependencies": {
     "@bluelovers/tsconfig": "^1.0.0",
-    "@node-novel/cache-loader": "^1.0.8",
+    "@node-novel/cache-loader": "^1.0.9",
     "@node-novel/sort": "^1.0.4",
     "@node-novel/task": "^1.0.22",
     "@node-novel/toc": "^1.0.36",
     "array-hyper-unique": "^1.0.7",
     "bluebird": "^3.5.3",
+    "chai": "^4.2.0",
     "client-oauth2-request": "^1.0.0",
     "crlf-normalize": "^1.0.3",
     "cross-spawn-extra": "^1.0.4",
@@ -56,12 +57,13 @@
     "git-diff-from": "^1.1.5",
     "git-root2": "^1.0.4",
     "gitee-api-token": "^1.0.1",
+    "gitlab": "^5.0.0-rc.8",
     "gitlog2": "^5.0.2",
-    "moment": "^2.23.0",
-    "node-novel-info": "^2.3.19",
+    "moment": "^2.24.0",
+    "node-novel-info": "^2.3.24",
     "novel-epub": "^1.1.20",
-    "novel-segment": "^2.2.10",
-    "novel-txt-merge": "^1.0.15",
+    "novel-segment": "^2.2.12",
+    "novel-txt-merge": "^1.0.17",
     "prettyuse": "^0.0.0",
     "sort-object-keys2": "^1.1.0",
     "uni-string": "^1.1.0",
@@ -69,6 +71,7 @@
     "yargs": "^12.0.5"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.7",
     "travis-ci-encrypt": "^1.0.7"
   }
 }

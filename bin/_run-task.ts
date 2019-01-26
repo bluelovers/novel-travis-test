@@ -21,7 +21,7 @@ import Promise = require('bluebird');
 import {
 	GIT_SETTING_DIST_NOVEL,
 } from '../data/git';
-import { createPullRequests } from '../script/gitee-pr';
+import { createPullRequests } from '../script/git-api-pr';
 
 import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, MyConfig, CacheConfig } from '../script/init';
 import { diffOrigin, getHashHEAD, getPushUrl, getPushUrlGitee, pushGit } from '../script/git';
