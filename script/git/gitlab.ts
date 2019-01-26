@@ -35,12 +35,30 @@ export function createPullRequestsGitlab(): Bluebird<IGitlabMergeRequestsCreateR
 				console.info(`目前分支為 ${br_name}`);
 			}
 
+			let _p = [
+				{
+					id: 10539227,
+					br: `${br_name}`,
+				},
+				{
+					id: 10538240,
+					br: `master`,
+				},
+			];
+
+			let _i = 0;
+			let _ij = Math.abs(_i - 1);
+
 			const api = apiGitlab();
 
-			let projectId = decodeProjectId('novel-group/txt-source');
+			let projectId = decodeProjectId(_p[_i].id);
 
-			let sourceBranch: string = `demonovel/txt-source:${br_name}`;
-			let targetBranch: string = 'master';
+			let sourceBranch: string = _p[_i].br;
+			let targetBranch: string = _p[_ij].br;
+
+//			sourceBranch = encodeProjectId(sourceBranch);
+
+			let target_project_id: number = _p[_ij].id;
 
 			let title: string = `auto pr (${br_name})`;
 
@@ -62,6 +80,10 @@ export function createPullRequestsGitlab(): Bluebird<IGitlabMergeRequestsCreateR
 
 							].join(','),
 							*/
+
+							target_project_id,
+
+							//squash: true,
 						},
 					)
 				})
@@ -69,8 +91,16 @@ export function createPullRequestsGitlab(): Bluebird<IGitlabMergeRequestsCreateR
 				{
 					let data = filterGitlabMergeRequestsCreateReturn(ret);
 
-					console.success(`成功建立 PR #${data.id} ${data.title}`);
-					console.dir(data);
+					if (!data.merge_status || String(data.merge_status) == 'cannot_be_merged')
+					{
+						console.error(`建立 PR 失敗 #${data.id} ${data.title}`);
+						console.red.dir(data);
+					}
+					else
+					{
+						console.success(`成功建立 PR #${data.id} ${data.title}`);
+						console.dir(data);
+					}
 				})
 				.catch(function (err: IGitlabMergeRequestsCreateError)
 				{
@@ -85,6 +115,8 @@ export function createPullRequestsGitlab(): Bluebird<IGitlabMergeRequestsCreateR
 							console.info(`本次使用的分支已經建立過 PR，無須在意此錯誤訊息`);
 						}
 					}
+
+					console.dir(err);
 
 					if (_know_error)
 					{
@@ -111,14 +143,23 @@ export default createPullRequestsGitlab;
 type HTTPError = Error
 
 export type IGitlabMergeRequestsCreateError = HTTPError & {
+
+	statusCode: number,
+	statusMessage: number,
+
 	body: {
-		message: string,
+		message: string[],
 	},
 }
 
 export interface IGitlabMergeRequestsCreateReturn
 {
 	id: number,
+	iid: number,
+	project_id: number,
+
+	state: string,
+
 	title: string,
 	description: string,
 
@@ -128,12 +169,18 @@ export interface IGitlabMergeRequestsCreateReturn
 	target_branch: string,
 	source_branch: string,
 
+	source_project_id: number,
+	target_project_id: number,
+
 	labels: string[],
 
 	work_in_progress: boolean,
 
 	merge_status: string,
 	merge_error: any,
+
+	squash: boolean,
+	changes_count: number,
 
 	should_remove_source_branch: boolean,
 
@@ -151,8 +198,13 @@ export function filterGitlabMergeRequestsCreateReturn(ret: IGitlabMergeRequestsC
 {
 	let {
 		id,
+		iid,
+		project_id,
+
 		title,
 		description,
+
+		state,
 
 		created_at,
 		updated_at,
@@ -160,11 +212,17 @@ export function filterGitlabMergeRequestsCreateReturn(ret: IGitlabMergeRequestsC
 		target_branch,
 		source_branch,
 
+		target_project_id,
+		source_project_id,
+
 		labels,
 		work_in_progress,
 
 		merge_status,
 		merge_error,
+
+		squash,
+		changes_count,
 
 		should_remove_source_branch,
 
@@ -174,10 +232,22 @@ export function filterGitlabMergeRequestsCreateReturn(ret: IGitlabMergeRequestsC
 
 	} = ret;
 
+	/*
+	console.dir(ret, {
+		depth: 5,
+		colors: true,
+	});
+	*/
+
 	return {
 		id,
+		iid,
+		project_id,
+
 		title,
 		description,
+
+		state,
 
 		created_at,
 		updated_at,
@@ -185,11 +255,17 @@ export function filterGitlabMergeRequestsCreateReturn(ret: IGitlabMergeRequestsC
 		target_branch,
 		source_branch,
 
+		target_project_id,
+		source_project_id,
+
 		labels,
 		work_in_progress,
 
 		merge_status,
 		merge_error,
+
+		squash,
+		changes_count,
 
 		should_remove_source_branch,
 
@@ -207,7 +283,12 @@ export function apiGitlab()
 
 	try
 	{
+		/*
 		const api = new ProjectsBundle({
+			token: _env.ACCESS_TOKEN,
+		});
+		*/
+		const api = new Gitlab({
 			token: _env.ACCESS_TOKEN,
 		});
 
@@ -237,6 +318,28 @@ export function decodeProjectId(projectId: ProjectId): ProjectId
 		expect(arr).have.lengthOf(2);
 
 		return arr.join('/');
+	}
+
+	expect(projectId).a('number');
+
+	return projectId;
+}
+
+export function encodeProjectId(projectId: number): number
+export function encodeProjectId(projectId: string): string
+export function encodeProjectId(projectId: ProjectId): ProjectId
+export function encodeProjectId(projectId: ProjectId): ProjectId
+{
+	if (typeof projectId === 'string')
+	{
+		if (/^\d+$/.test(projectId))
+		{
+			return projectId;
+		}
+
+		let arr = projectId.split(/%2F|\//);
+
+		return arr.join('%2F');
 	}
 
 	expect(projectId).a('number');

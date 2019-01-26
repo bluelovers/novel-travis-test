@@ -8,22 +8,31 @@ export declare function createPullRequestsGitlab(): Bluebird<IGitlabMergeRequest
 export default createPullRequestsGitlab;
 declare type HTTPError = Error;
 export declare type IGitlabMergeRequestsCreateError = HTTPError & {
+    statusCode: number;
+    statusMessage: number;
     body: {
-        message: string;
+        message: string[];
     };
 };
 export interface IGitlabMergeRequestsCreateReturn {
     id: number;
+    iid: number;
+    project_id: number;
+    state: string;
     title: string;
     description: string;
     created_at: string;
     updated_at: string;
     target_branch: string;
     source_branch: string;
+    source_project_id: number;
+    target_project_id: number;
     labels: string[];
     work_in_progress: boolean;
     merge_status: string;
     merge_error: any;
+    squash: boolean;
+    changes_count: number;
     should_remove_source_branch: boolean;
     web_url: string;
     diff_refs: {
@@ -34,16 +43,23 @@ export interface IGitlabMergeRequestsCreateReturn {
 }
 export declare function filterGitlabMergeRequestsCreateReturn(ret: IGitlabMergeRequestsCreateReturn): {
     id: number;
+    iid: number;
+    project_id: number;
     title: string;
     description: string;
+    state: string;
     created_at: string;
     updated_at: string;
     target_branch: string;
     source_branch: string;
+    target_project_id: number;
+    source_project_id: number;
     labels: string[];
     work_in_progress: boolean;
     merge_status: string;
     merge_error: any;
+    squash: boolean;
+    changes_count: number;
     should_remove_source_branch: boolean;
     web_url: string;
     diff_refs: {
@@ -52,53 +68,14 @@ export declare function filterGitlabMergeRequestsCreateReturn(ret: IGitlabMergeR
         start_sha: string;
     };
 };
-export declare function apiGitlab(): import("gitlab/types/types").Mapper<{
-    Branches: typeof APIServices.Branches;
-    Commits: typeof APIServices.Commits;
-    CommitDiscussions: typeof APIServices.CommitDiscussions;
-    DeployKeys: typeof APIServices.DeployKeys;
-    Deployments: typeof APIServices.Deployments;
-    Environments: typeof APIServices.Environments;
-    Issues: typeof APIServices.Issues;
-    IssueAwardEmojis: typeof APIServices.IssueAwardEmojis;
-    IssueNotes: typeof APIServices.IssueNotes;
-    IssueDiscussions: typeof APIServices.IssueDiscussions;
-    Jobs: typeof APIServices.Jobs;
-    Labels: typeof APIServices.Labels;
-    MergeRequests: typeof APIServices.MergeRequests;
-    MergeRequestAwardEmojis: typeof APIServices.MergeRequestAwardEmojis;
-    MergeRequestDiscussions: typeof APIServices.MergeRequestDiscussions;
-    MergeRequestNotes: typeof APIServices.MergeRequestNotes;
-    Pipelines: typeof APIServices.Pipelines;
-    PipelineSchedules: typeof APIServices.PipelineSchedules;
-    PipelineScheduleVariables: typeof APIServices.PipelineScheduleVariables;
-    Projects: typeof APIServices.Projects;
-    ProjectAccessRequests: typeof APIServices.ProjectAccessRequests;
-    ProjectBadges: typeof APIServices.ProjectBadges;
-    ProjectCustomAttributes: typeof APIServices.ProjectCustomAttributes;
-    ProjectImportExport: typeof APIServices.ProjectImportExport;
-    ProjectIssueBoards: typeof APIServices.ProjectIssueBoards;
-    ProjectHooks: typeof APIServices.ProjectHooks;
-    ProjectMembers: typeof APIServices.ProjectMembers;
-    ProjectMilestones: typeof APIServices.ProjectMilestones;
-    ProjectSnippets: typeof APIServices.ProjectSnippets;
-    ProjectSnippetNotes: typeof APIServices.ProjectSnippetNotes;
-    ProjectSnippetDiscussions: typeof APIServices.ProjectSnippetDiscussions;
-    ProjectSnippetAwardEmojis: typeof APIServices.ProjectSnippetAwardEmojis;
-    ProtectedBranches: typeof APIServices.ProtectedBranches;
-    ProtectedTags: typeof APIServices.ProtectedTags;
-    ProjectVariables: typeof APIServices.ProjectVariables;
-    Repositories: typeof APIServices.Repositories;
-    RepositoryFiles: typeof APIServices.RepositoryFiles;
-    Runners: typeof APIServices.Runners;
-    Services: typeof APIServices.Services;
-    Tags: typeof APIServices.Tags;
-    Triggers: typeof APIServices.Triggers;
-}, "Branches" | "Commits" | "CommitDiscussions" | "DeployKeys" | "Deployments" | "Environments" | "Issues" | "IssueAwardEmojis" | "IssueNotes" | "IssueDiscussions" | "Jobs" | "Labels" | "MergeRequests" | "MergeRequestAwardEmojis" | "MergeRequestDiscussions" | "MergeRequestNotes" | "Pipelines" | "PipelineSchedules" | "PipelineScheduleVariables" | "Projects" | "ProjectAccessRequests" | "ProjectBadges" | "ProjectCustomAttributes" | "ProjectImportExport" | "ProjectIssueBoards" | "ProjectHooks" | "ProjectMembers" | "ProjectMilestones" | "ProjectSnippets" | "ProjectSnippetNotes" | "ProjectSnippetDiscussions" | "ProjectSnippetAwardEmojis" | "ProtectedBranches" | "ProtectedTags" | "ProjectVariables" | "Repositories" | "RepositoryFiles" | "Runners" | "Services" | "Tags" | "Triggers">;
+export declare function apiGitlab(): import("gitlab/types/types").Mapper<typeof APIServices, "Groups" | "GroupAccessRequests" | "GroupBadges" | "GroupCustomAttributes" | "GroupIssueBoards" | "GroupMembers" | "GroupMilestones" | "GroupProjects" | "GroupVariables" | "Epics" | "EpicIssues" | "EpicNotes" | "EpicDiscussions" | "Users" | "UserCustomAttributes" | "UserEmails" | "UserImpersonationTokens" | "UserKeys" | "UserGPGKeys" | "Branches" | "Commits" | "CommitDiscussions" | "DeployKeys" | "Deployments" | "Environments" | "Issues" | "IssueAwardEmojis" | "IssueNotes" | "IssueDiscussions" | "Jobs" | "Labels" | "MergeRequests" | "MergeRequestAwardEmojis" | "MergeRequestDiscussions" | "MergeRequestNotes" | "Pipelines" | "PipelineSchedules" | "PipelineScheduleVariables" | "Projects" | "ProjectAccessRequests" | "ProjectBadges" | "ProjectCustomAttributes" | "ProjectImportExport" | "ProjectIssueBoards" | "ProjectHooks" | "ProjectMembers" | "ProjectMilestones" | "ProjectSnippets" | "ProjectSnippetNotes" | "ProjectSnippetDiscussions" | "ProjectSnippetAwardEmojis" | "ProtectedBranches" | "ProtectedTags" | "ProjectVariables" | "Repositories" | "RepositoryFiles" | "Runners" | "Services" | "Tags" | "Triggers" | "Todos" | "PushRule" | "ApplicationSettings" | "BroadcastMessages" | "Events" | "FeatureFlags" | "GeoNodes" | "GitignoreTemplates" | "GitLabCIYMLTemplates" | "Keys" | "Licence" | "LicenceTemplates" | "Lint" | "Namespaces" | "NotificationSettings" | "Markdown" | "PagesDomains" | "Search" | "SidekiqMetrics" | "Snippets" | "SystemHooks" | "Version" | "Wikis">;
 /**
  * because gitlab will auto do `const pId = encodeURIComponent(projectId);`
  */
 export declare function decodeProjectId(projectId: ProjectId): ProjectId;
+export declare function encodeProjectId(projectId: number): number;
+export declare function encodeProjectId(projectId: string): string;
+export declare function encodeProjectId(projectId: ProjectId): ProjectId;
 export declare function _getEnvGitlab(): {
     /**
      * for api. Can be created in your profile.
