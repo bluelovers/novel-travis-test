@@ -116,7 +116,7 @@ export function createPullRequestsGitlab(): Bluebird<IGitlabMergeRequestsCreateR
 						}
 					}
 
-					console.dir(err);
+					//console.dir(err);
 
 					if (_know_error)
 					{
