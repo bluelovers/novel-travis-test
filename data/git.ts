@@ -32,7 +32,9 @@ export const GIT_SETTING_DIST_NOVEL: IOptionsCreateGit = {
 
 	url: 'gitlab.com/demonovel/txt-source.git',
 	//urlClone: 'https://gitlab.com/novel-group/txt-source.git',
-	urlClone: 'https://gitlab.com/novel-group-hidden/txt-source.git',
+	//urlClone: 'https://gitlab.com/novel-group-hidden/txt-source.git',
+
+	urlClone: getPushUrl('gitlab.com/novel-group-hidden/txt-source.git', GIT_TOKEN),
 
 	targetPath: DIST_NOVEL,
 	NOT_DONE,
