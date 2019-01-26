@@ -6,6 +6,12 @@ import Bluebird = require('bluebird');
 import * as APIServices from 'gitlab/dist/services';
 export declare function createPullRequestsGitlab(): Bluebird<IGitlabMergeRequestsCreateReturn>;
 export default createPullRequestsGitlab;
+declare type HTTPError = Error;
+export declare type IGitlabMergeRequestsCreateError = HTTPError & {
+    body: {
+        message: string;
+    };
+};
 export interface IGitlabMergeRequestsCreateReturn {
     id: number;
     title: string;

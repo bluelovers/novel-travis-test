@@ -72,11 +72,21 @@ export function createPullRequestsGitlab(): Bluebird<IGitlabMergeRequestsCreateR
 					console.success(`成功建立 PR #${data.id} ${data.title}`);
 					console.dir(data);
 				})
-				.catch(function (err)
+				.catch(function (err: IGitlabMergeRequestsCreateError)
 				{
 					console.error(`建立 PR 失敗`);
 					console.error(err.toString());
-					console.error(err.code, err.status, err.body);
+					console.red.dir(err.body);
+
+					let _know_error = false;
+
+					if (err.body)
+					{
+						if (err.body.message.match(/Another open merge request already exists for this source branch/))
+						{
+							_know_error = true;
+						}
+					}
 
 					return err as any
 				})
@@ -86,6 +96,14 @@ export function createPullRequestsGitlab(): Bluebird<IGitlabMergeRequestsCreateR
 }
 
 export default createPullRequestsGitlab;
+
+type HTTPError = Error
+
+export type IGitlabMergeRequestsCreateError = HTTPError & {
+	body: {
+		message: string,
+	},
+}
 
 export interface IGitlabMergeRequestsCreateReturn
 {
