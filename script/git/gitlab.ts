@@ -74,18 +74,28 @@ export function createPullRequestsGitlab(): Bluebird<IGitlabMergeRequestsCreateR
 				})
 				.catch(function (err: IGitlabMergeRequestsCreateError)
 				{
-					console.error(`建立 PR 失敗`);
-					console.error(err.toString());
-					console.red.dir(err.body);
-
 					let _know_error = false;
 
 					if (err.body)
 					{
-						if (err.body.message.match(/Another open merge request already exists for this source branch/))
+						if (err.body.message && err.body.message.match(/Another open merge request already exists for this source branch/))
 						{
 							_know_error = true;
+
+							console.info(`本次使用的分支已經建立過 PR，無須在意此錯誤訊息`);
 						}
+					}
+
+					if (_know_error)
+					{
+						console.info(err.toString());
+						console.dir(err.body);
+					}
+					else
+					{
+						console.error(`建立 PR 失敗`);
+						console.error(err.toString());
+						console.red.dir(err.body);
 					}
 
 					return err as any
