@@ -166,21 +166,7 @@ checkShareStatesNotExists([
 
 								let t: string;
 								let link: string;
-
-								t = 'EPUB';
-								link = epub_file;
-
 								let _add = [];
-
-								_add.push(`[<span style="color:fuchsia;font-weight:bold;">${md_link_escape(t)}</span>](${link_base + md_href(link)})`);
-
-								t = 'TXT';
-								link = 'out/' + txt_file;
-
-								_add.push(`[${md_link_escape(t)}](${link_base + md_href(link)})`);
-
-								ret.push('- ' + _add.join(` ／ `) + ` - 如果連結錯誤 請點[這裡](${link_base})`);
-
 
 								{
 									link_base = 'https://github.com/bluelovers/node-novel/blob/master/lib/locales/';
@@ -203,6 +189,17 @@ checkShareStatesNotExists([
 									ret.push('- ' + md + ` - 如果連結錯誤 請點[這裡](${link_base})`);
 								}
 
+								t = 'EPUB';
+								link = epub_file;
+
+								_add.push(` :heart: [${md_link_escape(t)}](${link_base + md_href(link)}) :heart: `);
+
+								t = 'TXT';
+								link = 'out/' + txt_file;
+
+								_add.push(`[${md_link_escape(t)}](${link_base + md_href(link)})`);
+
+								ret.push('- ' + _add.join(` ／ `) + ` - 如果連結錯誤 請點[這裡](${link_base}${_pathMain})`);
 
 							}
 
@@ -214,7 +211,7 @@ checkShareStatesNotExists([
 
 								let md = `[${md_link_escape(t)}](${link})`;
 
-								ret.push(`- ${md} - 報錯交流群，如果已經加入請點[這裡](https://discordapp.com/channels/467794087769014273/467794088285175809) 或 [Discord](https://discordapp.com/channels/@me)`);
+								ret.push(`- :mega: ${md} - 報錯交流群，如果已經加入請點[這裡](https://discordapp.com/channels/467794087769014273/467794088285175809) 或 [Discord](https://discordapp.com/channels/@me)`);
 							}
 
 							{
@@ -229,8 +226,8 @@ checkShareStatesNotExists([
 								let c = `\n\n`;
 
 								ret.push(c + [
-									`![導航目錄](${md_link_escape(qu)})`,
-									`![Discord](${md_link_escape(qt)})`,
+									`![導航目錄](${md_link_escape(qu)} "導航目錄")`,
+									//`![Discord](${md_link_escape(qt)})`,
 								].join('  ') + c);
 							}
 
