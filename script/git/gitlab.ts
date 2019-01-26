@@ -78,7 +78,7 @@ export function createPullRequestsGitlab(): Bluebird<IGitlabMergeRequestsCreateR
 
 					if (err.body)
 					{
-						if (err.body.message && err.body.message.match(/Another open merge request already exists for this source branch/))
+						if (err.body.message && String(err.body.message).match(/Another open merge request already exists for this source branch/))
 						{
 							_know_error = true;
 
@@ -98,8 +98,9 @@ export function createPullRequestsGitlab(): Bluebird<IGitlabMergeRequestsCreateR
 						console.red.dir(err.body);
 					}
 
-					return err as any
+					return err
 				})
+				.catch(e => e)
 				;
 		})
 	;
