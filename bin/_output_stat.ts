@@ -12,6 +12,7 @@ import { crossSpawnAsync, crossSpawnSync } from '../index';
 import { getNovelStatCache, createMoment } from '../lib/cache/novel-stat';
 import { checkShareStatesNotExists, EnumShareStates } from '../lib/share';
 import { ProjectConfig } from '../project.config';
+import { updateCacheConfigHashHEAD } from '../script/cache/cache-json';
 import { getPushUrlGitee, pushGit } from '../script/git';
 import moment = require('moment');
 import path = require('upath2');
@@ -249,6 +250,8 @@ checkShareStatesNotExists([
 			await pushGit(ProjectConfig.novel_root, getPushUrlGitee(GIT_SETTING_DIST_NOVEL.url));
 
 			await createPullRequests();
+
+			updateCacheConfigHashHEAD();
 		}
 	}
 

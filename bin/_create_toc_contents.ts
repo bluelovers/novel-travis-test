@@ -15,6 +15,7 @@ import { createMoment, getNovelStatCache } from '../lib/cache/novel-stat';
 import { checkShareStatesNotExists, EnumShareStates } from '../lib/share';
 import { qrcode_link } from '../lib/util';
 import ProjectConfig from '../project.config';
+import { updateCacheConfigHashHEAD } from '../script/cache/cache-json';
 import { getPushUrl, getPushUrlGitee, pushGit } from '../script/git';
 import { createPullRequests } from '../script/git-api-pr';
 import { crossSpawnSync, crossSpawnAsync } from '../index';
@@ -462,6 +463,8 @@ checkShareStatesNotExists([
 			let cp = await pushGit(ProjectConfig.novel_root, getPushUrlGitee(GIT_SETTING_DIST_NOVEL.url), true);
 
 			await createPullRequests();
+
+			updateCacheConfigHashHEAD();
 		}
 	})
 ;
