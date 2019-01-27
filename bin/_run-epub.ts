@@ -95,6 +95,9 @@ checkShareStatesNotExists([
 
 	console.debug(`本次新增 ${ls.length} , 上次未完成 ${ls2.length}`);
 
+	console.dir(ls);
+	console.dir(ls2);
+
 	ls = (ls || []).concat(ls2 || []);
 
 	ls = ls.filter(function (v)
