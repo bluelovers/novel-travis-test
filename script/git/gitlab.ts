@@ -95,12 +95,12 @@ export function createPullRequestsGitlab(): Bluebird<IGitlabMergeRequestsCreateR
 
 					if (!data.merge_status || String(data.merge_status) == 'cannot_be_merged')
 					{
-						console.error(`建立 PR 失敗 #${data.id} ${data.title}`);
+						console.error(`建立 PR 失敗 #${data.iid} ${data.title}`);
 						console.red.dir(data);
 					}
 					else
 					{
-						console.success(`成功建立 PR #${data.id} ${data.title}`);
+						console.success(`成功建立 PR #${data.iid} ${data.title}`);
 						console.dir(data);
 					}
 				})
