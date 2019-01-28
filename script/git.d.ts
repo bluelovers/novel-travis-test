@@ -1,13 +1,14 @@
 /// <reference types="node" />
 import moment = require('moment');
 import { SpawnSyncReturns } from '..';
+export * from './git/lib';
 export declare const DATE_FORMAT = "YYYY-MM-DD-HH-mm-ss";
 /**
  * Created by user on 2018/5/17/017.
  */
-export declare function pushGit(REPO_PATH: string, repo: string, force?: boolean): SpawnSyncReturns<Buffer>;
+export declare function pushGit(REPO_PATH: string, repo: string, force?: boolean, upstream?: boolean): SpawnSyncReturns<Buffer>;
 export declare function pullGit(REPO_PATH: string): SpawnSyncReturns<Buffer>;
-export declare function fetchGit(REPO_PATH: string): SpawnSyncReturns<Buffer>;
+export declare function fetchGit(REPO_PATH: string, remote?: string): SpawnSyncReturns<Buffer>;
 export declare function fetchGitAll(REPO_PATH: string): SpawnSyncReturns<Buffer>;
 export declare function newBranch(REPO_PATH: string, BR_NAME: string): SpawnSyncReturns<Buffer>;
 export declare function currentBranchName(REPO_PATH: string): string;
@@ -37,7 +38,6 @@ export declare type IOptionsCreateGit = {
 export declare function getPushUrl(url: string, login_token?: string): string;
 export declare function getPushUrlGitee(url: string, login_token?: string): string;
 export declare function gitCheckRemote(REPO_PATH: string, remote?: string): SpawnSyncReturns<Buffer>;
-export declare function gitSetRemote(REPO_PATH: string, remoteUrl: string, remotePushUrl?: string): SpawnSyncReturns<Buffer>;
 export declare function createGit(options: IOptionsCreateGit): {
     data: {
         targetName: string;
@@ -61,7 +61,6 @@ export declare function gitGcAggressive(REPO_PATH: string, argv?: string[]): Spa
 export declare function branchNameToDate(br_name: string): moment.Moment;
 export declare function gitRemoveBranchOutdate(REPO_PATH: string): boolean;
 export declare function gitBranchMergedList(REPO_PATH: string, noMerged?: boolean, BR_NAME?: string): string[];
-export declare function filterArgv(argv: string[]): string[];
 export declare function parseBranchGroup(r: string[]): {
     heads: string[];
     remotes: {

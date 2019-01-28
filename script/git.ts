@@ -1,17 +1,20 @@
+import fs = require('fs-extra');
 import moment = require('moment');
 import path = require('upath2');
 import { LF } from 'crlf-normalize';
-import * as fs from 'fs-extra';
 import gitlog from 'gitlog2';
 import { crossSpawnSync, SpawnSyncReturns } from '..';
-import { crossSpawnOutput, isGitRoot, getCrossSpawnError, ISpawnASyncError } from '../index';
+import { crossSpawnOutput, getCrossSpawnError, isGitRoot, ISpawnASyncError } from '../index';
 import console from '../lib/log';
 import { EnumShareStates, shareStates } from '../lib/share';
-import ProjectConfig from '../project.config';
+import { filterArgv } from '../lib/util';
 import { crossSpawnSyncGit } from './git/cross-spawn';
-
-import { GITEE_TOKEN, NO_PUSH, NOT_DONE, PROJECT_ROOT } from './init';
+import { gitSetRemote } from './git/lib';
 import { GIT_TOKEN } from './git/token';
+
+import { NO_PUSH, NOT_DONE, PROJECT_ROOT } from './init';
+
+export * from './git/lib';
 
 export const DATE_FORMAT = 'YYYY-MM-DD-HH-mm-ss';
 
@@ -19,16 +22,17 @@ export const DATE_FORMAT = 'YYYY-MM-DD-HH-mm-ss';
  * Created by user on 2018/5/17/017.
  */
 
-export function pushGit(REPO_PATH: string, repo: string, force?: boolean)
+export function pushGit(REPO_PATH: string, repo: string, force?: boolean, upstream: boolean = true)
 {
 	let argv = [
 		'push',
+		upstream && '-u',
 		'--progress',
 		force ? '--force' : undefined,
 		repo,
 	];
 
-	argv = argv.filter(v => v);
+	argv = filterArgv(argv);
 
 	if (NO_PUSH)
 	{
@@ -55,12 +59,12 @@ export function pullGit(REPO_PATH: string)
 	});
 }
 
-export function fetchGit(REPO_PATH: string)
+export function fetchGit(REPO_PATH: string, remote?: string)
 {
 	return crossSpawnSyncGit('git', [
 		'fetch',
 		'--force',
-		'origin',
+		remote || 'origin',
 		'master',
 	], {
 		stdio: 'inherit',
@@ -247,35 +251,6 @@ export function gitCheckRemote(REPO_PATH: string, remote?: string)
 	});
 }
 
-export function gitSetRemote(REPO_PATH: string, remoteUrl: string, remotePushUrl?: string)
-{
-	console.debug(`嘗試覆寫遠端設定於 ${REPO_PATH}`);
-
-	console.debug(`移除舊的遠端 origin`);
-
-	crossSpawnSync('git', [
-		'remote',
-		'rm',
-		'origin',
-	], {
-		stdio: 'inherit',
-		cwd: REPO_PATH,
-	});
-
-	console.debug(`設定遠端 origin`);
-
-	return crossSpawnSyncGit('git', [
-		'remote',
-		'add',
-		'--no-tags',
-		'origin',
-		remoteUrl,
-	], {
-		stdio: 'inherit',
-		cwd: REPO_PATH,
-	});
-}
-
 export function createGit(options: IOptionsCreateGit)
 {
 	const wait_create_git = shareStates(EnumShareStates.WAIT_CREATE_GIT);
@@ -308,6 +283,24 @@ export function createGit(options: IOptionsCreateGit)
 		pushUrl: options.urlPush || getPushUrl(options.url, options.LOGIN_TOKEN),
 	};
 
+	let urlClone = data.urlClone;
+
+	if (!urlClone)
+	{
+		console.red(`urlClone 不存在 嘗試自動生成`);
+
+		if (data.LOGIN_TOKEN)
+		{
+			console.debug(`使用 LOGIN_TOKEN 自動生成 urlClone`);
+			urlClone = getPushUrl(data.url, data.LOGIN_TOKEN);
+		}
+		else
+		{
+			console.debug(`使用 url 自動生成 urlClone`);
+			urlClone = getPushUrl(data.url);
+		}
+	}
+
 	let temp: {
 		cp: SpawnSyncReturns,
 
@@ -325,7 +318,8 @@ export function createGit(options: IOptionsCreateGit)
 	console.info(label);
 	console.time(label);
 
-	gitSetRemote(data.targetPath, data.pushUrl);
+	gitSetRemote(data.targetPath, urlClone, 'origin');
+	gitSetRemote(data.targetPath, data.pushUrl, 'origin-push');
 
 	console.timeEnd(label);
 
@@ -346,7 +340,7 @@ export function createGit(options: IOptionsCreateGit)
 
 	temp.cp = null;
 
-	temp.cp = gitCheckRemote(data.targetPath, data.urlClone);
+	temp.cp = gitCheckRemote(data.targetPath, urlClone);
 
 	_cp_error = getCrossSpawnError(temp.cp);
 
@@ -361,7 +355,7 @@ export function createGit(options: IOptionsCreateGit)
 	{
 		console.warn(`${targetName} already exists`);
 
-		temp.cp = fetchGit(data.targetPath);
+		temp.cp = fetchGit(data.targetPath, urlClone);
 	}
 	else if (data.exists)
 	{
@@ -372,7 +366,7 @@ export function createGit(options: IOptionsCreateGit)
 
 		_deleted = gitRemoveBranchOutdate(data.targetPath);
 
-		temp.cp = fetchGit(data.targetPath);
+		temp.cp = fetchGit(data.targetPath, urlClone);
 	}
 	else
 	{
@@ -381,24 +375,6 @@ export function createGit(options: IOptionsCreateGit)
 		if (isNaN(CLONE_DEPTH) || !CLONE_DEPTH || CLONE_DEPTH <= 0)
 		{
 			CLONE_DEPTH = 50;
-		}
-
-		let urlClone = data.urlClone;
-
-		if (!urlClone)
-		{
-			console.red(`urlClone 不存在 嘗試自動生成`);
-
-			if (data.LOGIN_TOKEN)
-			{
-				console.debug(`使用 LOGIN_TOKEN 自動生成 urlClone`);
-				urlClone = getPushUrl(data.url, data.LOGIN_TOKEN);
-			}
-			else
-			{
-				console.debug(`使用 url 自動生成 urlClone`);
-				urlClone = getPushUrl(data.url);
-			}
 		}
 
 		temp.cp = crossSpawnSync('git', [
@@ -714,14 +690,6 @@ export function gitBranchMergedList(REPO_PATH: string, noMerged?: boolean, BR_NA
 
 	return name
 		.split(LF)
-		;
-}
-
-export function filterArgv(argv: string[])
-{
-	return argv
-		.filter(v => typeof v !== 'undefined')
-		.map(v => v.trim())
 		;
 }
 

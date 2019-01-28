@@ -2,8 +2,8 @@
  * Created by user on 2018/9/5/005.
  */
 import console from './log';
-import pretty = require('prettyuse');
 import emailNormalize = require('email-normalize');
+import pretty = require('prettyuse');
 import UString = require('uni-string');
 
 export function memoryUsage(): string
@@ -89,4 +89,12 @@ export function git_fake_author(name?: string, email?: string)
 	}
 
 	return `${name || 'testbot'} <${email || 'testbot@test.test'}>`;
+}
+
+export function filterArgv(argv: string[])
+{
+	return argv
+		.filter(v => v != null)
+		.map(v => v.trim())
+		;
 }
