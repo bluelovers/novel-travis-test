@@ -11,43 +11,14 @@ import { filterArgv } from '../lib/util';
 import { crossSpawnSyncGit } from './git/cross-spawn';
 import { gitSetRemote } from './git/lib';
 import { GIT_TOKEN } from './git/token';
+import { branchNameToDate, getPushUrl, getPushUrlGitee } from './git/util';
 
 import { NO_PUSH, NOT_DONE, PROJECT_ROOT } from './init';
 
 export * from './git/lib';
+export * from './git/util';
 
 export const DATE_FORMAT = 'YYYY-MM-DD-HH-mm-ss';
-
-/**
- * Created by user on 2018/5/17/017.
- */
-
-export function pushGit(REPO_PATH: string, repo: string, force?: boolean, upstream: boolean = true)
-{
-	let argv = [
-		'push',
-		upstream && '-u',
-		'--progress',
-		force ? '--force' : undefined,
-		repo,
-	];
-
-	argv = filterArgv(argv);
-
-	if (NO_PUSH)
-	{
-		return null;
-	}
-
-	console.debug(`嘗試推送 ${repo}`);
-
-	let cp = crossSpawnSync('git', argv, {
-		stdio: 'inherit',
-		cwd: REPO_PATH,
-	});
-
-	return cp;
-}
 
 export function pullGit(REPO_PATH: string)
 {
@@ -222,20 +193,7 @@ export type IOptionsCreateGit = {
 	},
 };
 
-export function getPushUrl(url: string, login_token?: string)
-{
-	if (login_token && !/@$/.test(login_token))
-	{
-		login_token += '@';
-	}
 
-	return `https://${login_token ? login_token : ''}${url}`;
-}
-
-export function getPushUrlGitee(url: string, login_token: string = GIT_TOKEN)
-{
-	return getPushUrl(url, login_token);
-}
 
 export function gitCheckRemote(REPO_PATH: string, remote?: string)
 {
@@ -476,11 +434,6 @@ export function gitGcAggressive(REPO_PATH: string, argv?: string[])
 		cwd: REPO_PATH,
 		stdio: 'inherit',
 	});
-}
-
-export function branchNameToDate(br_name: string)
-{
-	return moment(br_name.replace(/^.*auto\//, ''), DATE_FORMAT)
 }
 
 export function gitRemoveBranchOutdate(REPO_PATH: string)
