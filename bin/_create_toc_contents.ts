@@ -29,6 +29,7 @@ import novelEpub from 'novel-epub';
 import console from '../lib/log';
 import moment = require('moment');
 import { getMdconfMeta, getMdconfMetaByPath } from '../lib/util/meta';
+import url = require('url');
 
 let _update: boolean;
 
@@ -217,12 +218,12 @@ checkShareStatesNotExists([
 
 							{
 								let qt = qrcode_link(DISCORD_LINK);
-								let qu = qrcode_link([
+								let qu = qrcode_link(url.format(url.parse([
 									ProjectConfig.sourceUrl,
 									pathMain,
 									novelID,
 									'導航目錄.md',
-								].join('/'));
+								].join('/'))));
 
 								let c = `\n\n`;
 
