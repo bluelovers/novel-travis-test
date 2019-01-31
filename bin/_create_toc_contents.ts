@@ -171,7 +171,7 @@ checkShareStatesNotExists([
 								let _add = [];
 
 								{
-									link_base = 'https://github.com/bluelovers/node-novel/blob/master/lib/locales/';
+									let link_base = 'https://github.com/bluelovers/node-novel/blob/master/lib/locales/';
 
 									if (meta.options && meta.options.novel && meta.options.pattern)
 									{
@@ -190,6 +190,8 @@ checkShareStatesNotExists([
 
 									ret.push('- ' + md + ` - 如果連結錯誤 請點[這裡](${link_base})`);
 								}
+
+								link_base = `${ProjectConfig.outputUrl}/${_pathMain}/`;
 
 								t = 'EPUB';
 								link = epub_file;
