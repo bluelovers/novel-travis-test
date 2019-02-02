@@ -470,6 +470,44 @@ checkShareStatesNotExists([
 	})
 	.tap(async function ()
 	{
+		return processToc(ProjectConfig.novel_root)
+			.then(async function (ls)
+			{
+				await Promise.each(Object.keys(ls), function (pathMain)
+				{
+					let file = path.join(ProjectConfig.novel_root, pathMain, 'README.md');
+
+					return crossSpawnAsync('git', [
+						'add',
+						'--verbose',
+						file,
+					], {
+						stdio: 'inherit',
+						cwd: ProjectConfig.novel_root,
+					});
+				});
+
+				if (!_update || typeof _update != 'string')
+				{
+					_update = `[TOC] auto update toc`;
+				}
+
+				/*
+				return crossSpawnAsync('git', [
+					'commit',
+					'-a',
+					'-m',
+					`[TOC] auto update toc`,
+				], {
+					stdio: 'inherit',
+					cwd: ProjectConfig.novel_root,
+				});
+				*/
+			})
+			.catch(e => console.error(e))
+	})
+	.tap(async function ()
+	{
 		if (_update)
 		{
 			await crossSpawnAsync('git', [
