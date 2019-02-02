@@ -31,7 +31,7 @@ import moment = require('moment');
 import { getMdconfMeta, getMdconfMetaByPath } from '../lib/util/meta';
 import url = require('url');
 
-let _update: boolean;
+let _update: boolean | string;
 
 const novelStatCache = getNovelStatCache();
 
@@ -203,7 +203,7 @@ checkShareStatesNotExists([
 
 								_add.push(`[${md_link_escape(t)}](${link_base + md_href(link)})`);
 
-								ret.push('- ' + _add.join(` ／ `) + ` - 如果連結錯誤 請點[這裡](${link_base}${_pathMain})`);
+								ret.push('- ' + _add.join(` ／ `) + ` - 如果連結錯誤 請點[這裡](${link_base})`);
 
 							}
 
@@ -302,6 +302,7 @@ checkShareStatesNotExists([
 			{
 				if (_update)
 				{
+					/*
 					await crossSpawnSync('git', [
 						'commit',
 						'-a',
@@ -311,6 +312,9 @@ checkShareStatesNotExists([
 						stdio: 'inherit',
 						cwd: ProjectConfig.novel_root,
 					});
+					*/
+
+					_update = `[toc:contents] 導航目錄.md`;
 
 					console.info(`[toc:contents] 完成`);
 
@@ -434,6 +438,7 @@ checkShareStatesNotExists([
 						cwd: ProjectConfig.novel_root,
 					});
 
+					/*
 					await crossSpawnAsync('git', [
 						'commit',
 						'-a',
@@ -443,10 +448,16 @@ checkShareStatesNotExists([
 						stdio: 'inherit',
 						cwd: ProjectConfig.novel_root,
 					});
+					*/
+
+					if (!_update || typeof _update != 'string')
+					{
+						_update = `[TOC] toc root`;
+					}
 
 					console.success(`[toc:root] 完成 已更新`);
 
-					_update = true;
+					//_update = true;
 				}
 				else
 				{
@@ -456,6 +467,23 @@ checkShareStatesNotExists([
 		;
 
 		novelStatCache.save();
+	})
+	.tap(async function ()
+	{
+		if (_update)
+		{
+			await crossSpawnAsync('git', [
+				'commit',
+				'-a',
+				'-m',
+				typeof _update == 'string' ? _update : `[TOC] updated`,
+			], {
+				stdio: 'inherit',
+				cwd: ProjectConfig.novel_root,
+			});
+
+			_update = true;
+		}
 	})
 	.tap(async function ()
 	{
