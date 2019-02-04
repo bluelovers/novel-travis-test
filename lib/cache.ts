@@ -32,6 +32,12 @@ export async function cacheDiffNovelList(data: ReturnType<typeof novelDiffFromLo
 
 			Object.keys(data.list[pathMain]).forEach(function (novelID)
 			{
+				if (!fs.pathExistsSync(path.join(ProjectConfig.novel_root, pathMain, novelID, 'README.md')))
+				{
+					console.red('[CACHE (cacheDiffNovelList)]', 'WARN: ', pathMain, novelID, `README.md 不存在`);
+
+					return;
+				}
 
 				let arr = data.list[pathMain][novelID].filter(function (v)
 				{
@@ -64,14 +70,22 @@ export async function cacheDiffNovelList(data: ReturnType<typeof novelDiffFromLo
 
 export async function cacheFileList(data: IListNovelRow)
 {
-	if (data.pathMain.match(/_out$|^\./) || ['docs'].includes(data.pathMain))
+	let dir = path.join(ProjectConfig.cache_root, 'files', data.pathMain);
+	let file = path.join(dir, data.novelID + '.json');
+
+	if (!fs.pathExistsSync(path.join(ProjectConfig.novel_root, data.pathMain, data.novelID, 'README.md')))
+	{
+		console.red('[CACHE (cacheFileList)]', 'WARN: ', data.pathMain, data.novelID, `README.md 不存在`);
+
+		await fs.removeSync(file);
+
+		return;
+	}
+	else if (data.pathMain.match(/_out$|^\./) || ['docs'].includes(data.pathMain))
 	{
 		console.grey('[CACHE (cacheFileList)]', 'SKIP: ', data.pathMain, data.novelID);
 		return;
 	}
-
-	let dir = path.join(ProjectConfig.cache_root, 'files', data.pathMain);
-	let file = path.join(dir, data.novelID + '.json');
 
 	await fs.ensureDir(dir);
 
