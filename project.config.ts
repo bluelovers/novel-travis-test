@@ -2,7 +2,9 @@
  * Created by user on 2017/8/13/013.
  */
 
-import * as path from 'path';
+import 'source-map-support/register';
+
+import path = require('path');
 
 export const project_root = path.join(__dirname);
 
