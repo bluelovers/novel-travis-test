@@ -338,6 +338,8 @@ checkShareStatesNotExists([
 })())
 	.tap(async function ()
 	{
+		return null;
+
 		const file = path.join(ProjectConfig.novel_root, 'README.md');
 
 		const old = await fs.readFile(file)
@@ -465,11 +467,11 @@ checkShareStatesNotExists([
 				}
 			})
 		;
-
-		novelStatCache.save();
 	})
 	.tap(async function ()
 	{
+		return null;
+
 		return processToc(ProjectConfig.novel_root)
 			.then(async function (ls)
 			{
@@ -491,18 +493,6 @@ checkShareStatesNotExists([
 				{
 					_update = `[TOC] auto update toc`;
 				}
-
-				/*
-				return crossSpawnAsync('git', [
-					'commit',
-					'-a',
-					'-m',
-					`[TOC] auto update toc`,
-				], {
-					stdio: 'inherit',
-					cwd: ProjectConfig.novel_root,
-				});
-				*/
 			})
 			.catch(e => console.error(e))
 	})
@@ -535,6 +525,8 @@ checkShareStatesNotExists([
 
 			updateCacheConfigHashHEAD();
 		}
+
+		novelStatCache.save();
 	})
 ;
 
