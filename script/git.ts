@@ -606,7 +606,7 @@ export function gitRemoveBranchOutdate(REPO_PATH: string)
 
 		if (is_remote)
 		{
-			deleteBranchRemote(REPO_PATH, remote_name, value);
+			//deleteBranchRemote(REPO_PATH, remote_name, value);
 		}
 		else
 		{
