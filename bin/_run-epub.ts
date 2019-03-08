@@ -196,10 +196,10 @@ checkShareStatesNotExists([
 
 								file = path.join(outputPath_src, 'out', txt.filename);
 
-								novel.txt_basename = txt.filename;
-
 								await _remove_file_git(file);
 							}
+
+							novel.txt_basename = txt.filename;
 
 							return ret;
 						})
