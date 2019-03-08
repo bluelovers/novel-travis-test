@@ -50,6 +50,8 @@ checkShareStatesNotExists([
 		ls = fs.readJSONSync(jsonfile);
 	}
 
+	let allowUpdateTimestamp: boolean = true;
+
 	if (!fs.existsSync(epub_json))
 	{
 		let CWD = process.cwd();
@@ -86,6 +88,8 @@ checkShareStatesNotExists([
 					return { pathMain, novelID }
 				})
 			;
+
+			allowUpdateTimestamp = false;
 		}
 	}
 	else
@@ -242,7 +246,7 @@ checkShareStatesNotExists([
 
 							let novel = novelStatCache.novel(pathMain, novelID);
 
-							novel.epub_date = Date.now();
+							allowUpdateTimestamp && (novel.epub_date = Date.now());
 
 							if (ret.stat)
 							{
