@@ -242,11 +242,11 @@ checkShareStatesNotExists([
 
 							let commit_msg = `[epub] ${pathMain} ${novelID}`;
 
-							historyToday.epub.push([pathMain, novelID]);
+							allowUpdateTimestamp && historyToday.epub.push([pathMain, novelID]);
 
 							let novel = novelStatCache.novel(pathMain, novelID);
 
-							allowUpdateTimestamp && (novel.epub_date = Date.now());
+							novel.epub_date = Date.now();
 
 							if (ret.stat)
 							{
