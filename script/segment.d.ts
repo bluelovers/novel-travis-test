@@ -2,7 +2,6 @@
  * Created by user on 2018/5/16/016.
  */
 import Segment from 'novel-segment/lib/Segment';
-import TableDict from 'novel-segment/lib/table/dict';
 import * as Promise from 'bluebird';
 export declare let DIST_NOVEL: string;
 export declare let CACHE_TIMEOUT: number;
@@ -42,5 +41,5 @@ export declare function _path(pathMain: any, novelID: any, novel_root?: string):
 export declare function getSegment(segment?: Segment): Segment;
 export declare function resetSegmentCache(): void;
 export declare function createSegment(useCache?: boolean): Segment;
-export declare function getDictMain(segment: Segment): TableDict;
+export declare function getDictMain(segment: Segment): import("novel-segment/lib/table/core").AbstractTableDictCore<any>;
 export declare function runSegment(): Promise<number[]>;

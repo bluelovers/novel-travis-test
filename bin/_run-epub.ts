@@ -4,7 +4,7 @@
 
 import { loadMainConfig } from '@node-novel/task/lib/config';
 import { processToc } from '@node-novel/toc';
-import * as fs from 'fs-extra';
+import fs = require('fs-extra');
 import { crossSpawnAsync, crossSpawnOutput, crossSpawnSync, isGitRoot } from '../index';
 import {
 	GIT_SETTING_DIST_NOVEL,
@@ -12,18 +12,19 @@ import {
 } from '../data/git';
 import { getNovelStatCache } from '../lib/cache/novel-stat';
 import { checkShareStatesNotExists, EnumShareStates } from '../lib/share';
-import { git_fake_author } from '../lib/util';
+import { git_fake_author, path_equal } from '../lib/util';
 import ProjectConfig from '../project.config';
 import path = require('upath2');
-import * as Promise from 'bluebird';
+import Promise = require('bluebird');
 import novelEpub from 'novel-epub';
 import { getPushUrl, pushGit } from '../script/git';
 import { _path, DIST_NOVEL } from '../script/segment';
-import * as FastGlob from 'fast-glob';
+import FastGlob = require('fast-glob');
 import txtMerge from 'novel-txt-merge';
 import { array_unique as arrayUniq } from 'array-hyper-unique';
 import console from '../lib/log';
 import { mdconf_parse, IMdconfMeta, chkInfo } from 'node-novel-info';
+import { parsePathMainBase } from '@node-novel/cache-loader/lib/util';
 
 if (!isGitRoot(GIT_SETTING_EPUB.targetPath))
 {
@@ -127,13 +128,15 @@ checkShareStatesNotExists([
 			{
 				const { pathMain, novelID } = data;
 
+				let { is_out, pathMain_base, pathMain_out } = parsePathMainBase(pathMain);
+
 				let _do = false;
 
-				if (pathMain.match(/_out$/))
+				if (is_out)
 				{
 					_do = true;
 				}
-				else if (!fs.existsSync(path.join(_path(pathMain + '_out', novelID), 'README.md')))
+				else if (!fs.existsSync(path.join(_path(pathMain_out, novelID), 'README.md')))
 				{
 					_do = true;
 				}
@@ -142,7 +145,7 @@ checkShareStatesNotExists([
 
 				if (_do)
 				{
-					const outputPath = path.join(GIT_SETTING_EPUB.targetPath, pathMain);
+					const outputPath = path.join(GIT_SETTING_EPUB.targetPath, pathMain_base);
 					const inputPath = _path(pathMain, novelID);
 
 					await Promise.resolve(novelEpub({
@@ -159,48 +162,69 @@ checkShareStatesNotExists([
 
 							let novel = novelStatCache.novel(pathMain, novelID);
 
+							let epub_fullpath = ret.file;
+							let txt_fullpath = txt.fullpath;
+
 							if (novel.txt_basename && novel.txt_basename != txt.filename)
 							{
 								let file = path.join(outputPath, 'out', novel.txt_basename);
 
-								await _remove_file_git(file);
+								if (!path_equal(file, txt_fullpath))
+								{
+									await _remove_file_git(file);
+								}
 							}
 
 							if (novel.epub_basename && novel.epub_basename != ret.filename)
 							{
 								let file = path.join(outputPath, novel.epub_basename);
 
-								await _remove_file_git(file);
+								if (!path_equal(file, epub_fullpath))
+								{
+									await _remove_file_git(file);
+								}
 							}
 
-							if (pathMain.match(/_out$/))
+							if (is_out)
 							{
-								let pathMain_src = pathMain.replace(/_out$/, '');
+								let pathMain_src = pathMain_base;
 
 								let outputPath_src = path.join(GIT_SETTING_EPUB.targetPath, pathMain_src);
 								let outputPath = outputPath_src;
 
 								let file = path.join(outputPath_src, ret.filename);
 
-								await _remove_file_git(file);
+								if (!path_equal(file, epub_fullpath))
+								{
+									await _remove_file_git(file);
+								}
 
 								if (novel.txt_basename)
 								{
 									file = path.join(outputPath_src, 'out', novel.txt_basename);
 
-									await _remove_file_git(file);
+									if (!path_equal(file, txt_fullpath))
+									{
+										await _remove_file_git(file);
+									}
 								}
 
 								if (novel.epub_basename)
 								{
 									file = path.join(outputPath_src, novel.epub_basename);
 
-									await _remove_file_git(file);
+									if (!path_equal(file, epub_fullpath))
+									{
+										await _remove_file_git(file);
+									}
 								}
 
 								file = path.join(outputPath_src, 'out', txt.filename);
 
-								await _remove_file_git(file);
+								if (!path_equal(file, txt_fullpath))
+								{
+									await _remove_file_git(file);
+								}
 							}
 
 							novel.txt_basename = txt.filename;
@@ -246,7 +270,7 @@ checkShareStatesNotExists([
 
 							let novel = novelStatCache.novel(pathMain, novelID);
 
-							novel.epub_date = Date.now();
+							allowUpdateTimestamp && (novel.epub_date = Date.now());
 
 							if (ret.stat)
 							{

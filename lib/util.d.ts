@@ -4,3 +4,4 @@ export declare function freeGC(showmem?: boolean): void;
 export declare function qrcode_link(url: string, size?: number): string;
 export declare function git_fake_author(name?: string, email?: string): string;
 export declare function filterArgv(argv: string[]): string[];
+export declare function path_equal(s1: string, p2: string): boolean;

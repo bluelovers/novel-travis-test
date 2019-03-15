@@ -5,6 +5,7 @@ import console from './log';
 import emailNormalize = require('email-normalize');
 import pretty = require('prettyuse');
 import UString = require('uni-string');
+import path = require('path');
 
 export function memoryUsage(): string
 {
@@ -97,4 +98,9 @@ export function filterArgv(argv: string[])
 		.filter(v => v != null)
 		.map(v => v.trim())
 		;
+}
+
+export function path_equal(s1: string, p2: string)
+{
+	return path.normalize(s1) === path.normalize(p2)
 }

@@ -20,8 +20,8 @@ import { getPushUrl, getPushUrlGitee, pushGit } from '../script/git';
 import { createPullRequests } from '../script/git-api-pr';
 import { crossSpawnSync, crossSpawnAsync } from '../index';
 import path = require('path');
-import * as fs from 'fs-extra';
-import * as FastGlob from 'fast-glob';
+import fs = require('fs-extra');
+import FastGlob = require('fast-glob');
 import { mdconf_parse, IMdconfMeta, chkInfo } from 'node-novel-info';
 import EpubMaker, { hashSum, slugify } from 'epub-maker2';
 import txtMerge, { makeFilename as makeFilenameTxt } from 'novel-txt-merge';
@@ -30,312 +30,333 @@ import console from '../lib/log';
 import moment = require('moment');
 import { getMdconfMeta, getMdconfMetaByPath } from '../lib/util/meta';
 import url = require('url');
+import { parsePathMainBase } from '@node-novel/cache-loader/lib/util';
+import { parse as md_parse } from '@node-novel/md-loader';
 
 let _update: boolean | string;
 
 const novelStatCache = getNovelStatCache();
 
 checkShareStatesNotExists([
-	EnumShareStates.WAIT_CREATE_GIT
+	EnumShareStates.WAIT_CREATE_GIT,
 ]) && Promise.resolve((async () =>
-{
-	let _cache_init = path.join(ProjectConfig.cache_root, '.toc_contents.cache');
-	let jsonfile = path.join(ProjectConfig.cache_root, 'diff-novel.json');
-
-	let ls: { pathMain: string, novelID: string }[];
-
-	let bool = fs.existsSync(_cache_init);
-
-	console.debug(`[toc:contents] 是否已曾經初始化導航目錄`, bool, _cache_init);
-
-	if (!bool)
 	{
-		console.warn(`[toc:contents] 初始化所有 小說 的 導航目錄`);
-		ls = await get_ids(ProjectConfig.novel_root)
-			.reduce(async function (memo, pathMain: string)
-			{
-				await Promise
-					.mapSeries(FastGlob<string>([
-						'*/README.md',
-					], {
-						cwd: path.join(ProjectConfig.novel_root, pathMain),
-					}), function (p)
-					{
-						let novelID = path.basename(path.dirname(p));
+		let _cache_init = path.join(ProjectConfig.cache_root, '.toc_contents.cache');
+		let jsonfile = path.join(ProjectConfig.cache_root, 'diff-novel.json');
 
-						memo.push({ pathMain, novelID });
-					})
-				;
+		let ls: { pathMain: string, novelID: string }[];
 
-				return memo;
-			}, [])
-		;
-	}
-	else if (!fs.existsSync(jsonfile))
-	{
-		console.grey(`[toc:contents] 本次沒有任何待更新列表 (1)`);
-		return;
-	}
-	else
-	{
-		ls = await fs.readJSON(jsonfile);
-	}
+		let bool = fs.existsSync(_cache_init);
 
-	if (ls && ls.length)
-	{
-		await Promise
-			.mapSeries(ls, async function (data)
-			{
-				const { pathMain, novelID } = data;
+		console.debug(`[toc:contents] 是否已曾經初始化導航目錄`, bool, _cache_init);
 
-				let basePath = path.join(ProjectConfig.novel_root, pathMain, novelID);
-
-				let msg: string;
-				let _did = false;
-				let _file_changed: boolean;
-
-				if (fs.existsSync(path.join(basePath, 'README.md')))
+		if (!bool)
+		{
+			console.warn(`[toc:contents] 初始化所有 小說 的 導航目錄`);
+			ls = await get_ids(ProjectConfig.novel_root)
+				.reduce(async function (memo, pathMain: string)
 				{
-					let txts = await getTxtList(basePath);
-
-					let meta = getMdconfMeta(pathMain, novelID);
-
-					if (!txts.length)
-					{
-						console.warn(`[toc:contents]`, pathMain, novelID, '此目錄為書籤');
-
-						/*
-						if (meta)
+					await Promise
+						.mapSeries(FastGlob<string>([
+							'*/README.md',
+						], {
+							cwd: path.join(ProjectConfig.novel_root, pathMain),
+						}), function (p)
 						{
-							novelStatCache.mdconf_set(pathMain, novelID, meta);
-						}
-						*/
+							let novelID = path.basename(path.dirname(p));
 
-						return;
-					}
-
-					let file = path.join(basePath, '導航目錄.md');
-
-					let old = await fs.readFile(file)
-						.catch(function ()
-						{
-							return '';
-						})
-						.then(function (ls)
-						{
-							return ls.toString();
+							memo.push({ pathMain, novelID });
 						})
 					;
 
-					//console.log(`[toc:contents]`, pathMain, novelID);
+					return memo;
+				}, [])
+			;
+		}
+		else if (!fs.existsSync(jsonfile))
+		{
+			console.grey(`[toc:contents] 本次沒有任何待更新列表 (1)`);
+			return;
+		}
+		else
+		{
+			ls = await fs.readJSON(jsonfile);
+		}
 
-					let ret = await processTocContents(basePath, file, async function (basePath: string, ...argv)
+		if (ls && ls.length)
+		{
+			await Promise
+				.mapSeries(ls, async function (data)
+				{
+					const { pathMain, novelID } = data;
+
+					let { is_out, pathMain_base, pathMain_out } = parsePathMainBase(pathMain);
+
+					let basePath = path.join(ProjectConfig.novel_root, pathMain, novelID);
+
+					let msg: string;
+					let _did = false;
+					let _file_changed: boolean;
+
+					if (fs.existsSync(path.join(basePath, 'README.md')))
+					{
+						let txts = await getTxtList(basePath);
+
+						let meta = getMdconfMeta(pathMain, novelID);
+
+						if (!txts.length)
 						{
-							let ret = await makeHeader(basePath, ...argv);
+							console.warn(`[toc:contents]`, pathMain, novelID, '此目錄為書籤');
 
+							/*
 							if (meta)
 							{
-								let epub = new EpubMaker()
-									.withTitle(meta.novel.title, meta.novel.title_short || meta.novel.title_zh)
-								;
+								novelStatCache.mdconf_set(pathMain, novelID, meta);
+							}
+							*/
 
-								let epub_data = await makeFilename({
-									inputPath: basePath,
-									outputPath: '',
-									padEndDate: false,
-									useTitle: true,
-									filenameLocal: novelID,
-									noLog: true,
-								}, epub, meta);
+							return;
+						}
 
-								let epub_file = epub_data.basename + epub_data.ext;
+						let file = path.join(basePath, '導航目錄.md');
 
-								let txt_file = await makeFilenameTxt(meta, epub_data.basename);
+						let old = await fs.readFile(file)
+							.catch(function ()
+							{
+								return '';
+							})
+							.then(function (ls)
+							{
+								return ls.toString();
+							})
+						;
 
-								let _pathMain = pathMain;
+						//console.log(`[toc:contents]`, pathMain, novelID);
 
-								if (fs.existsSync(path.join(
-									ProjectConfig.novel_root,
-									pathMain + '_out',
-									novelID,
-									'README.md',
-								)))
+						let ret = await processTocContents(basePath, file, async function (basePath: string, ...argv)
+							{
+								let ret = await makeHeader(basePath, ...argv);
+
+								if (meta)
 								{
-									_pathMain = pathMain + '_out';
+									let epub = new EpubMaker()
+										.withTitle(meta.novel.title, meta.novel.title_short || meta.novel.title_zh)
+									;
+
+									let epub_data = await makeFilename({
+										inputPath: basePath,
+										outputPath: '',
+										padEndDate: false,
+										useTitle: true,
+										filenameLocal: novelID,
+										noLog: true,
+									}, epub, meta);
+
+									let epub_file = epub_data.basename + epub_data.ext;
+
+									let txt_file = await makeFilenameTxt(meta, epub_data.basename);
+
+									let _pathMain = pathMain_base;
+
+									if (fs.existsSync(path.join(
+										ProjectConfig.novel_root,
+										pathMain_out,
+										novelID,
+										'README.md',
+									)))
+									{
+										_pathMain = pathMain_out;
+									}
+
+									let t: string;
+									let link: string;
+									let _add = [];
+
+									{
+										let LocalesID = novelID;
+
+										let link_base = 'https://github.com/bluelovers/node-novel/blob/master/lib/locales/';
+
+										if (meta.options && meta.options.novel && meta.options.pattern)
+										{
+											t = meta.options.pattern;
+											link = meta.options.pattern + '.ts';
+
+											_add.push(`[${md_link_escape(t)}](${link_base + md_href(link)})`);
+										}
+										else
+										{
+											let file = path.join(_pathMain, novelID, '整合樣式.md');
+
+											if (!fs.existsSync(file))
+											{
+												file = path.join(pathMain_base, novelID, '整合樣式.md');
+											}
+
+											if (fs.existsSync(file))
+											{
+												let ret = md_parse(file);
+
+												if (ret.data && ret.data.LocalesID)
+												{
+													LocalesID = ret.data.LocalesID;
+												}
+											}
+
+											t = '格式與譯名整合樣式';
+											link = LocalesID + '.ts';
+										}
+
+										let md = `[${md_link_escape(t)}](${link_base + md_href(link)})`;
+
+										ret.push('- ' + md + ` - 如果連結錯誤 請點[這裡](${link_base})`);
+									}
+
+									let link_base = `${ProjectConfig.outputUrl}/${pathMain_base}/`;
+
+									t = 'EPUB';
+									link = epub_file;
+
+									_add.push(` :heart: [${md_link_escape(t)}](${link_base + md_href(link)}) :heart: `);
+
+									t = 'TXT';
+									link = 'out/' + txt_file;
+
+									_add.push(`[${md_link_escape(t)}](${link_base + md_href(link)})`);
+
+									ret.push('- ' + _add.join(` ／ `) + ` - 如果連結錯誤 請點[這裡](${link_base})`);
+
 								}
 
-								let link_base = `${ProjectConfig.outputUrl}/${_pathMain}/`;
-
-								let t: string;
-								let link: string;
-								let _add = [];
+								const DISCORD_LINK = 'https://discord.gg/MnXkpmX';
 
 								{
-									let link_base = 'https://github.com/bluelovers/node-novel/blob/master/lib/locales/';
+									let t = DISCORD_LINK;
+									let link = DISCORD_LINK;
 
-									if (meta.options && meta.options.novel && meta.options.pattern)
+									let md = `[${md_link_escape(t)}](${link})`;
+
+									ret.push(`- :mega: ${md} - 報錯交流群，如果已經加入請點[這裡](https://discordapp.com/channels/467794087769014273/467794088285175809) 或 [Discord](https://discordapp.com/channels/@me)`);
+								}
+
+								{
+									let qt = qrcode_link(DISCORD_LINK);
+									let qu = qrcode_link(url.format(url.parse([
+										ProjectConfig.sourceUrl,
+										pathMain,
+										novelID,
+										'導航目錄.md',
+									].join('/'))));
+
+									let c = `\n\n`;
+
+									ret.push(c + [
+										`![導航目錄](${md_link_escape(qu)} "導航目錄")`,
+										//`![Discord](${md_link_escape(qt)})`,
+									].join('  ') + c);
+								}
+
+								return ret;
+							})
+							.tap(async function (ls)
+							{
+								if (ls)
+								{
+									_file_changed = old != ls;
+
+									if (!bool || _file_changed)
 									{
-										t = meta.options.pattern;
-										link = meta.options.pattern + '.ts';
+										await crossSpawnSync('git', [
+											'add',
+											file,
+										], {
+											stdio: 'inherit',
+											cwd: basePath,
+										});
 
-										_add.push(`[${md_link_escape(t)}](${link_base + md_href(link)})`);
+										/*
+										await crossSpawnSync('git', [
+											'commit',
+											'-a',
+											'-m',
+											`[toc:contents] ${pathMain} ${novelID}`,
+										], {
+											stdio: 'inherit',
+											cwd: basePath,
+										});
+										*/
+
+										_did = true;
+										_update = true;
 									}
 									else
 									{
-										t = '格式與譯名整合樣式';
-										link = novelID + '.ts';
+										msg = `目錄檔案已存在並且沒有變化`;
 									}
-
-									let md = `[${md_link_escape(t)}](${link_base + md_href(link)})`;
-
-									ret.push('- ' + md + ` - 如果連結錯誤 請點[這裡](${link_base})`);
-								}
-
-								link_base = `${ProjectConfig.outputUrl}/${_pathMain}/`;
-
-								t = 'EPUB';
-								link = epub_file;
-
-								_add.push(` :heart: [${md_link_escape(t)}](${link_base + md_href(link)}) :heart: `);
-
-								t = 'TXT';
-								link = 'out/' + txt_file;
-
-								_add.push(`[${md_link_escape(t)}](${link_base + md_href(link)})`);
-
-								ret.push('- ' + _add.join(` ／ `) + ` - 如果連結錯誤 請點[這裡](${link_base})`);
-
-							}
-
-							const DISCORD_LINK = 'https://discord.gg/MnXkpmX';
-
-							{
-								let t = DISCORD_LINK;
-								let link = DISCORD_LINK;
-
-								let md = `[${md_link_escape(t)}](${link})`;
-
-								ret.push(`- :mega: ${md} - 報錯交流群，如果已經加入請點[這裡](https://discordapp.com/channels/467794087769014273/467794088285175809) 或 [Discord](https://discordapp.com/channels/@me)`);
-							}
-
-							{
-								let qt = qrcode_link(DISCORD_LINK);
-								let qu = qrcode_link(url.format(url.parse([
-									ProjectConfig.sourceUrl,
-									pathMain,
-									novelID,
-									'導航目錄.md',
-								].join('/'))));
-
-								let c = `\n\n`;
-
-								ret.push(c + [
-									`![導航目錄](${md_link_escape(qu)} "導航目錄")`,
-									//`![Discord](${md_link_escape(qt)})`,
-								].join('  ') + c);
-							}
-
-							return ret;
-						})
-						.tap(async function (ls)
-						{
-							if (ls)
-							{
-								_file_changed = old != ls;
-
-								if (!bool || _file_changed)
-								{
-									await crossSpawnSync('git', [
-										'add',
-										file,
-									], {
-										stdio: 'inherit',
-										cwd: basePath,
-									});
-
-									/*
-									await crossSpawnSync('git', [
-										'commit',
-										'-a',
-										'-m',
-										`[toc:contents] ${pathMain} ${novelID}`,
-									], {
-										stdio: 'inherit',
-										cwd: basePath,
-									});
-									*/
-
-									_did = true;
-									_update = true;
 								}
 								else
 								{
-									msg = `目錄檔案已存在並且沒有變化`;
+									msg = `無法生成目錄，可能不存在任何章節檔案`;
 								}
-							}
-							else
-							{
-								msg = `無法生成目錄，可能不存在任何章節檔案`;
-							}
-						})
+							})
 						;
 
-					if (_did)
+						if (_did)
+						{
+							console.success(`[toc:contents]`, pathMain, novelID);
+						}
+						else
+						{
+							console.dir({
+								title: `[SKIP]`,
+								pathMain, novelID,
+								msg,
+								bool,
+								_file_changed,
+							});
+						}
+
+						return ret;
+					}
+				})
+				.tap(async function ()
+				{
+					if (_update)
 					{
-						console.success(`[toc:contents]`, pathMain, novelID);
+						/*
+						await crossSpawnSync('git', [
+							'commit',
+							'-a',
+							'-m',
+							`[toc:contents] 導航目錄.md`,
+						], {
+							stdio: 'inherit',
+							cwd: ProjectConfig.novel_root,
+						});
+						*/
+
+						_update = `[toc:contents] 導航目錄.md`;
+
+						console.info(`[toc:contents] 完成`);
+
+						await fs.ensureFile(_cache_init);
 					}
 					else
 					{
-						console.dir({
-							title: `[SKIP]`,
-							pathMain, novelID,
-							msg,
-							bool,
-							_file_changed,
-						});
+						console.warn(`[toc:contents] 完成 本次無更新任何檔案`);
 					}
-
-					return ret;
-				}
-			})
-			.tap(async function ()
-			{
-				if (_update)
+				})
+				.tap(function ()
 				{
-					/*
-					await crossSpawnSync('git', [
-						'commit',
-						'-a',
-						'-m',
-						`[toc:contents] 導航目錄.md`,
-					], {
-						stdio: 'inherit',
-						cwd: ProjectConfig.novel_root,
-					});
-					*/
-
-					_update = `[toc:contents] 導航目錄.md`;
-
-					console.info(`[toc:contents] 完成`);
-
-					await fs.ensureFile(_cache_init);
-				}
-				else
-				{
-					console.warn(`[toc:contents] 完成 本次無更新任何檔案`);
-				}
-			})
-			.tap(function ()
-			{
-				console.log(`[toc:contents] done.`);
-			})
-		;
-	}
-	else
-	{
-		console.warn(`[toc:contents] 本次沒有任何待更新列表 (2)`);
-	}
-})())
+					console.log(`[toc:contents] done.`);
+				})
+			;
+		}
+		else
+		{
+			console.warn(`[toc:contents] 本次沒有任何待更新列表 (2)`);
+		}
+	})())
 	.tap(async function ()
 	{
 		return null;
@@ -423,7 +444,7 @@ checkShareStatesNotExists([
 				}
 
 				return text;
-			}
+			},
 		})
 			.tap(async function (md)
 			{
