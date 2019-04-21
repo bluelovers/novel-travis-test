@@ -15,6 +15,7 @@ before_install:
 - export FORCE_COLOR=1
 install:
 - yarn install
+- yarn add cjk-conv
 - yarn list
 - yarn list --pattern "segment|cjk|epub"
 before_script:

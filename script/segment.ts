@@ -2,18 +2,21 @@
  * Created by user on 2018/5/16/016.
  */
 
-import * as path from "upath2";
+import path = require("upath2");
 import { crossSpawnSync } from '../index';
 import { freeGC } from '../lib/util';
 import ProjectConfig from '../project.config';
-import * as fs from 'fs-extra';
+import fs = require('fs-extra');
 import { useDefault, getDefaultModList } from 'novel-segment/lib';
 import Segment from 'novel-segment/lib/Segment';
 import TableDict from 'novel-segment/lib/table/dict';
-import * as FastGlob from 'fast-glob';
-import * as Promise from 'bluebird';
+import FastGlob = require('fast-glob');
+import Promise = require('bluebird');
 import { crlf } from 'crlf-normalize';
 import console from '../lib/log';
+import Bluebird = require('bluebird');
+import fsIconv = require('fs-iconv');
+import { tw2cn_min, cn2tw_min, tableCn2TwDebug, tableTw2CnDebug } from 'cjk-conv/lib/zh/convert/min';
 
 export let DIST_NOVEL = ProjectConfig.novel_root;
 
@@ -508,6 +511,100 @@ export function runSegment()
 				await fs.outputJSON(_cache_file_segment, _cache_segment, {
 					spaces: "\t",
 				});
+			}
+
+			{
+				let dir = path.join(ProjectConfig.cache_root, 'files', pathMain);
+				let jsonfile = path.join(dir, novelID + '.json');
+				let jsonfile_done = jsonfile + '.done';
+
+				await fs.readJSON(jsonfile_done)
+					.then(async function (ls)
+					{
+						if (!ls.length || !ls)
+						{
+							return;
+						}
+
+						let CWD_IN = _path(pathMain, novelID);
+						let cjk_changed: boolean = false;
+
+						if (!fs.pathExistsSync(CWD_IN))
+						{
+							return;
+						}
+
+						return Bluebird
+							.mapSeries(ls, async function (file)
+							{
+								if (path.extname(file).indexOf('txt'))
+								{
+									let fullpath = path.join(CWD_IN, file);
+
+									return await fs.readFile(fullpath)
+										.then(function (buf)
+										{
+											if (buf && buf.length)
+											{
+												let txt_old = String(buf);
+												let txt_new = cn2tw_min(txt_old);
+
+												if (txt_old != txt_new && txt_new)
+												{
+													cjk_changed = true;
+
+													return fs.writeFile(fullpath, txt_new)
+														.then(function ()
+														{
+															console.success(`[cjk-conv]`, file);
+
+															return fullpath;
+														})
+												}
+
+												return null;
+											}
+
+											return Promise.reject(buf);
+										})
+										.catch(e => {
+											console.error(e.message);
+											return null;
+										})
+									;
+								}
+							})
+							.mapSeries(function (fullpath)
+							{
+								fullpath && crossSpawnSync('git', [
+									'add',
+									fullpath,
+								], {
+									stdio: 'inherit',
+									cwd: CWD_IN,
+								});
+
+								return fullpath
+							})
+							.tap(function ()
+							{
+								if (cjk_changed)
+								{
+									crossSpawnSync('git', [
+										'commit',
+										'-m',
+										`[cjk-conv] ${pathMain} ${novelID}`,
+									], {
+										stdio: 'inherit',
+										cwd: CWD_IN,
+									});
+								}
+							})
+					})
+					.catch(e => {
+						console.error(e.message);
+					})
+				;
 			}
 
 			_current_data.last_s_ver = _current_data.s_ver;

@@ -2,7 +2,7 @@
  * Created by user on 2018/5/16/016.
  */
 import Segment from 'novel-segment/lib/Segment';
-import * as Promise from 'bluebird';
+import Promise = require('bluebird');
 export declare let DIST_NOVEL: string;
 export declare let CACHE_TIMEOUT: number;
 export declare let _segmentObject: Segment;

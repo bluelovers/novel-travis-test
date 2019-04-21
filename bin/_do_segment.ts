@@ -12,7 +12,21 @@ import console from '../lib/log';
 import { showMemoryUsage, freeGC } from '../lib/util';
 import { getNovelStatCache } from '../lib/cache/novel-stat';
 
-let { pathMain, novelID, novel_root, runAll } = yargs.argv;
+let { pathMain, novelID, novel_root, runAll } = yargs
+	.option('pathMain', {
+		type: 'string',
+	})
+	.option('novelID', {
+		type: 'string',
+	})
+	.option('novel_root', {
+		type: 'string',
+	})
+	.option('runAll', {
+
+	})
+	.argv
+;
 
 if (pathMain && novelID)
 {
@@ -20,6 +34,10 @@ if (pathMain && novelID)
 	{
 		let dir = path.join(ProjectConfig.cache_root, 'files', pathMain);
 		let jsonfile = path.join(dir, novelID + '.json');
+
+		let jsonfile_done = jsonfile + '.done';
+
+		await fs.remove(jsonfile_done).catch(e => null);
 
 		if (!fs.existsSync(jsonfile))
 		{
@@ -53,6 +71,8 @@ if (pathMain && novelID)
 			console.grey(`list:`, ls);
 		}
 
+		let done_list_cache: string[] = [];
+
 		return doSegmentGlob({
 			pathMain,
 			novelID,
@@ -68,7 +88,14 @@ if (pathMain && novelID)
 
 					ls = ls.filter(function (v)
 					{
-						return done_list.indexOf(v) == -1
+						let bool = done_list.indexOf(v) == -1;
+
+						if (bool)
+						{
+							done_list_cache.push(v)
+						}
+
+						return bool
 					});
 
 //					console.log(ls.length);
@@ -94,7 +121,14 @@ if (pathMain && novelID)
 			{
 				ls = ls.filter(function (v)
 				{
-					return ret.done_list.indexOf(v) == -1
+					let bool = ret.done_list.indexOf(v) == -1;
+
+					if (bool)
+					{
+						done_list_cache.push(v)
+					}
+
+					return bool
 				});
 
 				console.error(`ls: ${ls.length}`);
@@ -122,6 +156,13 @@ if (pathMain && novelID)
 				novelStatCache.save();
 
 				return ret.count.changed;
+			})
+			.tap(function ()
+			{
+				return fs
+					.writeJSON(jsonfile_done, done_list_cache)
+					.catch(e => console.error(e.message))
+					;
 			})
 			.catch(async function (e)
 			{
