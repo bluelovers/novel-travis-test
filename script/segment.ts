@@ -537,7 +537,7 @@ export function runSegment()
 						return Bluebird
 							.mapSeries(ls, async function (file)
 							{
-								if (path.extname(file).indexOf('txt'))
+								if (path.extname(file) == '.txt')
 								{
 									let fullpath = path.join(CWD_IN, file);
 
