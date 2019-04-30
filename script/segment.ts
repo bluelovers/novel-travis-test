@@ -547,7 +547,10 @@ export function runSegment()
 											if (buf && buf.length)
 											{
 												let txt_old = String(buf);
-												let txt_new = cn2tw_min(txt_old);
+												let txt_new = cn2tw_min(txt_old)
+													.replace(/^\s*\n/, '')
+													.replace(/(?<=\n)\s*\n\s*$/, '')
+												;
 
 												if (txt_old != txt_new && txt_new)
 												{
