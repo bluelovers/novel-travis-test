@@ -17,6 +17,7 @@ import console from '../lib/log';
 import Bluebird = require('bluebird');
 import fsIconv = require('fs-iconv');
 import { tw2cn_min, cn2tw_min, tableCn2TwDebug, tableTw2CnDebug } from 'cjk-conv/lib/zh/convert/min';
+import { do_cn2tw_min } from '../lib/conv';
 
 export let DIST_NOVEL = ProjectConfig.novel_root;
 
@@ -547,7 +548,7 @@ export function runSegment()
 											if (buf && buf.length)
 											{
 												let txt_old = String(buf);
-												let txt_new = cn2tw_min(txt_old)
+												let txt_new = do_cn2tw_min(txt_old)
 													.replace(/^\s*\n/, '')
 													.replace(/(?<=\n)\s*\n\s*$/, '')
 												;
