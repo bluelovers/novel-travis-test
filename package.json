@@ -23,6 +23,7 @@
   },
   "scripts": {
     "reset-epub-init-cahche": "node ./script/reset/reset-epub-init-cahche.js",
+    "reset-init-cahche": "node ./script/reset/reset-init-cahche.js",
     "do-toc-contents": "node ./bin/_create_toc_contents.js",
     "do-toc": "node ./bin/_create_toc.js",
     "do-bugfix": "node ./bin/_bugfix.js",
@@ -46,7 +47,7 @@
     "array-hyper-unique": "^1.0.7",
     "bluebird": "^3.5.4",
     "chai": "^4.2.0",
-    "cjk-conv": "^1.1.44",
+    "cjk-conv": "^1.1.46",
     "client-oauth2-request": "^1.0.0",
     "crlf-normalize": "^1.0.3",
     "cross-spawn-extra": "^1.0.5",
@@ -66,7 +67,7 @@
     "node-novel-info": "^2.3.33",
     "novel-epub": "^1.1.26",
     "novel-segment": "^2.2.30",
-    "novel-txt-merge": "^1.0.22",
+    "novel-txt-merge": "^1.0.24",
     "prettyuse": "^0",
     "sort-object-keys2": "^1.1.0",
     "source-map-support": "^0.5.12",
@@ -76,6 +77,7 @@
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
+    "@types/yargs": "^13.0.0",
     "travis-ci-encrypt": "^1.0.7"
   }
 }
