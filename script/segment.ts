@@ -18,6 +18,7 @@ import Bluebird = require('bluebird');
 import fsIconv = require('fs-iconv');
 import { tw2cn_min, cn2tw_min, tableCn2TwDebug, tableTw2CnDebug } from 'cjk-conv/lib/zh/convert/min';
 import { do_cn2tw_min } from '../lib/conv';
+import { array_unique_overwrite } from 'array-hyper-unique';
 
 export let DIST_NOVEL = ProjectConfig.novel_root;
 
@@ -470,6 +471,8 @@ export function runSegment()
 
 			let _current_data = _cache_segment.list[novelID][novelID] = _cache_segment.list[novelID][novelID] || {};
 
+			let _handle_list: string[] = [];
+
 			if (_current_data.d_ver != _d_ver || _current_data.s_ver != _s_ver)
 			{
 				console.debug({
@@ -480,6 +483,19 @@ export function runSegment()
 				});
 
 				_run_all = true;
+			}
+			else
+			{
+				let dir = path.join(ProjectConfig.cache_root, 'files', pathMain);
+				let jsonfile = path.join(dir, novelID + '.json');
+
+				await fs.readJSON(jsonfile)
+					.then(function (ls)
+					{
+						_handle_list.push(...ls);
+					})
+					.catch(e => null)
+				;
 			}
 
 			let cp = crossSpawnSync('node', [
@@ -520,17 +536,23 @@ export function runSegment()
 				let jsonfile_done = jsonfile + '.done';
 
 				await fs.readJSON(jsonfile_done)
-					.then(async function (ls)
+					.then(async function (ls: string[])
 					{
-						if (!ls.length || !ls)
-						{
-							return;
-						}
-
 						let CWD_IN = _path(pathMain, novelID);
 						let cjk_changed: boolean = false;
 
 						if (!fs.pathExistsSync(CWD_IN))
+						{
+							return;
+						}
+
+						ls = (ls || [])
+							.concat(_handle_list)
+						;
+
+						ls = array_unique_overwrite(ls);
+
+						if (!ls.length || !ls)
 						{
 							return;
 						}
