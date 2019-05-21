@@ -473,18 +473,6 @@ export function runSegment()
 
 			let _handle_list: string[] = [];
 
-			if (_current_data.d_ver != _d_ver || _current_data.s_ver != _s_ver)
-			{
-				console.debug({
-					pathMain,
-					novelID,
-					s_ver: _current_data.s_ver,
-					d_ver: _current_data.d_ver,
-				});
-
-				_run_all = true;
-			}
-			else
 			{
 				let dir = path.join(ProjectConfig.cache_root, 'files', pathMain);
 				let jsonfile = path.join(dir, novelID + '.json');
@@ -496,6 +484,18 @@ export function runSegment()
 					})
 					.catch(e => null)
 				;
+			}
+
+			if (_current_data.d_ver != _d_ver || _current_data.s_ver != _s_ver)
+			{
+				console.debug({
+					pathMain,
+					novelID,
+					s_ver: _current_data.s_ver,
+					d_ver: _current_data.d_ver,
+				});
+
+				_run_all = true;
 			}
 
 			let cp = crossSpawnSync('node', [
