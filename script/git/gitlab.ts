@@ -10,7 +10,7 @@ import path = require('upath2');
 import console from '../../lib/log';
 import Bluebird = require('bluebird');
 
-import { Gitlab, ProjectsBundle } from 'gitlab/dist';
+import { Gitlab, ProjectsBundle } from 'gitlab';
 import * as APIServices from 'gitlab/dist/services';
 import { expect } from 'chai';
 
