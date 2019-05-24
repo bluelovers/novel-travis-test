@@ -61,7 +61,7 @@
     "git-diff-from": "^1.1.5",
     "git-root2": "^1.0.5",
     "gitee-api-token": "^1.0.1",
-    "gitlab": "^5.0.0-rc.8",
+    "gitlab": "~4",
     "gitlog2": "^5.0.2",
     "moment": "^2.24.0",
     "node-novel-info": "^2.3.33",
