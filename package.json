@@ -44,6 +44,7 @@
     "@node-novel/sort": "^1.0.6",
     "@node-novel/task": "^1.0.23",
     "@node-novel/toc": "^1.0.42",
+    "@types/dotenv": "^6.1.1",
     "array-hyper-unique": "^1.0.7",
     "bluebird": "^3.5.5",
     "chai": "^4.2.0",

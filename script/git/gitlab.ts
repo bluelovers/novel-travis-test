@@ -2,7 +2,7 @@
  * Created by user on 2019/1/26/026.
  */
 
-import { ProjectId } from 'gitlab/types/types';
+//import { ProjectId } from 'gitlab/types/types';
 import { currentBranchName } from '../git';
 import ProjectConfig, { novel_root } from '../../project.config';
 import { config as dotenvConfig } from 'dotenv';
@@ -10,9 +10,11 @@ import path = require('upath2');
 import console from '../../lib/log';
 import Bluebird = require('bluebird');
 
-import { Gitlab, ProjectsBundle } from 'gitlab';
-import * as APIServices from 'gitlab/dist/services';
+import Gitlab, { ProjectsBundle } from 'gitlab';
+//import * as APIServices from 'gitlab/dist/services';
 import { expect } from 'chai';
+
+type ProjectId = string | number;
 
 export function createPullRequestsGitlab(): Bluebird<IGitlabMergeRequestsCreateReturn>
 {
@@ -68,7 +70,7 @@ export function createPullRequestsGitlab(): Bluebird<IGitlabMergeRequestsCreateR
 			return Bluebird.resolve()
 				.then(function ()
 				{
-					return (api.MergeRequests as APIServices.MergeRequests).create(
+					return api.MergeRequests.create(
 						projectId,
 						sourceBranch,
 						targetBranch,
