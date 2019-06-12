@@ -444,7 +444,8 @@ export function runSegment()
 		}
 	}
 
-	let startTime = Date.now();
+	const startTime = Date.now();
+	const MAX_SCRIPT_TIMEOUT = 20 * 60 * 1000;
 
 	let cancellablePromise = Bluebird
 		.mapSeries(FastGlob([
