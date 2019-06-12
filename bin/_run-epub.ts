@@ -120,6 +120,8 @@ checkShareStatesNotExists([
 
 	const startTime = Date.now();
 
+	const MAX_SCRIPT_TIMEOUT_EPUB = 2 * 60 * 1000;
+
 	if (ls && ls.length)
 	{
 		const novelStatCache = getNovelStatCache();
@@ -132,7 +134,7 @@ checkShareStatesNotExists([
 			{
 				const { pathMain, novelID } = data;
 
-				if ((Date.now() - startTime) > MAX_SCRIPT_TIMEOUT)
+				if ((Date.now() - startTime) > MAX_SCRIPT_TIMEOUT_EPUB)
 				{
 					return null
 				}
