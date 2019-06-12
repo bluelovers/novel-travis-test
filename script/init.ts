@@ -71,6 +71,10 @@ else
 		console.warn(`上次的任務未完成 本次繼續執行 (2)`);
 
 		console.log(ls);
+
+		fs.outputJSONSync(path.join(ProjectConfig.cache_root, 'diff-novel.json'), [], {
+			spaces: '\t',
+		});
 	}
 }
 
