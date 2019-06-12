@@ -5,7 +5,7 @@
 import path = require("upath2");
 import { crossSpawnSync } from '../index';
 import { freeGC } from '../lib/util';
-import ProjectConfig from '../project.config';
+import ProjectConfig, { MAX_SCRIPT_TIMEOUT } from '../project.config';
 import fs = require('fs-extra');
 import { useDefault, getDefaultModList } from 'novel-segment/lib';
 import Segment from 'novel-segment/lib/Segment';
@@ -15,6 +15,9 @@ import Promise = require('bluebird');
 import { crlf } from 'crlf-normalize';
 import console from '../lib/log';
 import Bluebird = require('bluebird');
+// @ts-ignore
+import BluebirdCancellation from 'bluebird-cancellation';
+import { CancellationError, TimeoutError } from 'bluebird';
 import fsIconv = require('fs-iconv');
 import { tw2cn_min, cn2tw_min, tableCn2TwDebug, tableTw2CnDebug } from 'cjk-conv/lib/zh/convert/min';
 import { do_cn2tw_min } from '../lib/conv';
@@ -441,7 +444,9 @@ export function runSegment()
 		}
 	}
 
-	return Promise
+	let startTime = Date.now();
+
+	let cancellablePromise = Bluebird
 		.mapSeries(FastGlob([
 			'*/*.json',
 		], {
@@ -449,8 +454,12 @@ export function runSegment()
 		}), async function (id: string)
 		{
 			let [pathMain, novelID] = id.split(/[\\\/]/);
-
 			novelID = path.basename(novelID, '.json');
+
+			if ((Date.now() - startTime) > MAX_SCRIPT_TIMEOUT)
+			{
+				return Bluebird.reject(new CancellationError(`任務已取消 本次將不會執行 ${pathMain}, ${novelID}`))
+			}
 
 			let np = _path(pathMain, novelID);
 
@@ -597,7 +606,7 @@ export function runSegment()
 											console.error(e.message);
 											return null;
 										})
-									;
+										;
 								}
 							})
 							.mapSeries(function (fullpath)
@@ -641,6 +650,13 @@ export function runSegment()
 
 			return cp.status;
 		})
+		.then(() => true)
+		.catch(CancellationError, (e: CancellationError) => {
+
+			console.error(e.message);
+
+			return false;
+		})
 		.tap(async function ()
 		{
 			_cache_segment.last_s_ver = _cache_segment.s_ver;
@@ -653,5 +669,12 @@ export function runSegment()
 				spaces: "\t",
 			});
 		})
-		;
+	;
+
+	return cancellablePromise
+		.catch(CancellationError, (e) => {
+
+			return console.error(e.message);
+
+		});
 }

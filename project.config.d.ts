@@ -8,5 +8,6 @@ export declare const novel_root: string;
 export declare const epub_root: string;
 export declare const sourceUrl = "https://gitlab.com/novel-group/txt-source/blob/master";
 export declare const outputUrl = "https://gitlab.com/demonovel/epub-txt/blob/master";
+export declare const MAX_SCRIPT_TIMEOUT: number;
 export declare const ProjectConfig: typeof import("./project.config");
 export default ProjectConfig;

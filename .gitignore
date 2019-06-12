@@ -34,3 +34,5 @@ dist_epub
 /dist_epub/
 /dist_epub*
 
+/node_modules/
+/yarn-error.log

@@ -42,4 +42,4 @@ export declare function getSegment(segment?: Segment): Segment;
 export declare function resetSegmentCache(): void;
 export declare function createSegment(useCache?: boolean): Segment;
 export declare function getDictMain(segment: Segment): import("novel-segment/lib/table/core").AbstractTableDictCore<any>;
-export declare function runSegment(): Promise<number[]>;
+export declare function runSegment(): Promise<boolean | void>;

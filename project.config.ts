@@ -16,5 +16,7 @@ export const epub_root = path.join(project_root, 'dist_epub');
 export const sourceUrl = 'https://gitlab.com/novel-group/txt-source/blob/master';
 export const outputUrl = 'https://gitlab.com/demonovel/epub-txt/blob/master';
 
+export const MAX_SCRIPT_TIMEOUT = 10 * 60 * 1000;
+
 export const ProjectConfig = exports as typeof import('./project.config');
 export default ProjectConfig;
