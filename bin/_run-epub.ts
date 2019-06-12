@@ -13,7 +13,7 @@ import {
 import { getNovelStatCache } from '../lib/cache/novel-stat';
 import { checkShareStatesNotExists, EnumShareStates } from '../lib/share';
 import { git_fake_author, path_equal } from '../lib/util';
-import ProjectConfig from '../project.config';
+import ProjectConfig, { MAX_SCRIPT_TIMEOUT } from '../project.config';
 import path = require('upath2');
 import Promise = require('bluebird');
 import novelEpub from 'novel-epub';
@@ -25,6 +25,8 @@ import { array_unique as arrayUniq } from 'array-hyper-unique';
 import console from '../lib/log';
 import { mdconf_parse, IMdconfMeta, chkInfo } from 'node-novel-info';
 import { parsePathMainBase } from '@node-novel/cache-loader/lib/util';
+import { CancellationError, TimeoutError } from 'bluebird';
+import Bluebird = require('bluebird');
 
 if (!isGitRoot(GIT_SETTING_EPUB.targetPath))
 {
@@ -116,6 +118,8 @@ checkShareStatesNotExists([
 		spaces: '\t',
 	});
 
+	const startTime = Date.now();
+
 	if (ls && ls.length)
 	{
 		const novelStatCache = getNovelStatCache();
@@ -127,6 +131,11 @@ checkShareStatesNotExists([
 			.mapSeries(ls, async function (data)
 			{
 				const { pathMain, novelID } = data;
+
+				if ((Date.now() - startTime) > MAX_SCRIPT_TIMEOUT)
+				{
+					return null
+				}
 
 				let { is_out, pathMain_base, pathMain_out } = parsePathMainBase(pathMain);
 
@@ -363,12 +372,36 @@ checkShareStatesNotExists([
 
 					console.grey(ls.length, pathMain, novelID);
 				}
+
+				return false
 			})
 			.tap(function (ls)
 			{
-				let count = ls.filter(v => v).length;
+				let _count = {
+					done: 0,
+					cancel: 0,
+					ignore: 0,
+				};
 
-				console.info(`本次共更新 ${count} 小說`);
+				let count = ls.filter(v => {
+
+					if (v)
+					{
+						_count.done++;
+					}
+					else if (v == null)
+					{
+						_count.cancel++;
+					}
+					else
+					{
+						_count.ignore++;
+					}
+
+					return v;
+				}).length;
+
+				console.info(`本次共更新 ${_count.done} 小說`, `取消 x ${_count.cancel}`, `忽略 x ${_count.ignore}`);
 
 				novelStatCache.save();
 			})
