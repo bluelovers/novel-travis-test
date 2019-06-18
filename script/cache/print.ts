@@ -2,13 +2,13 @@
  * Created by user on 2019/6/18.
  */
 
-import * as fg from 'fast-glob';
+import FastGlob = require('fast-glob');
 import ProjectConfig from '../../project.config';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { console } from '../../lib/log';
 
-fg.async<string>([
+FastGlob.async<string>([
 	'**/*',
 ], {
 		cwd: ProjectConfig.cache_root,
