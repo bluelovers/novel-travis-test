@@ -257,7 +257,7 @@ checkShareStatesNotExists([
 
 	let { history, novels } = novelStatCache.data;
 
-	console.dir({ history, novels }, {
+	0 && console.dir({ history, novels }, {
 		depth: null,
 		colors: true,
 	});
