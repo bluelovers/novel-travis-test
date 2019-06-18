@@ -8,7 +8,7 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import { console } from '../../lib/log';
 
-FastGlob.async<string>([
+FastGlob<string>([
 	'**/*',
 ], {
 		cwd: ProjectConfig.cache_root,

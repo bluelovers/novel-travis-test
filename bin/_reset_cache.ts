@@ -26,7 +26,7 @@ enum MODE
 	{
 		console.info(`檢查並刪除 .cache/files 底下的 */*.json`);
 
-		let ls = await FastGlob.async<string>([
+		let ls = await FastGlob<string>([
 			'*/*.json',
 		], {
 			cwd: path.join(ProjectConfig.cache_root, 'files'),
