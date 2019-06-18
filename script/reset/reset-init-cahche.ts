@@ -10,7 +10,9 @@ import * as yargs from 'yargs';
 
 enum EnumCacheName
 {
-	'toc_contents' = '.toc_contents.cache'
+	'toc_contents' = '.toc_contents.cache',
+	'cache_json' = '.cache.json',
+	'epub_json' = 'epub.json',
 }
 
 let { target } = yargs

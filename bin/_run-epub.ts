@@ -100,6 +100,14 @@ checkShareStatesNotExists([
 		ls2 = fs.readJSONSync(epub_json);
 	}
 
+	ls2 = ls2.filter(function (v)
+	{
+		return v
+	});
+
+	ls = arrayUniq(ls);
+	ls2 = arrayUniq(ls2);
+
 	console.debug(`本次新增 ${ls.length} , 上次未完成 ${ls2.length}`);
 
 	console.dir(ls);
@@ -412,6 +420,9 @@ checkShareStatesNotExists([
 				let waitpush = path.join(ProjectConfig.cache_root, 'epub.waitpush');
 
 				await fs.ensureFile(waitpush);
+
+				ls = arrayUniq(ls);
+				ls2 = arrayUniq(ls2);
 
 				console.log(`ls: ${ls.length}`);
 
