@@ -35,6 +35,7 @@
     "do-task": "node ./bin/_run-task.js",
     "output-stat": "node ./bin/_output_stat.js",
     "set-cache": "node ./bin/_set_cache.js",
+    "list:all:cache": "node ./script/cache/print",
     "test": "node -v"
   },
   "dependencies": {
