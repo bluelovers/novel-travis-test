@@ -8,8 +8,7 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import { console } from '../../lib/log';
 
-fg
-	.async<string>([
+fg.async<string>([
 	'**/*',
 ], {
 		cwd: ProjectConfig.cache_root,
