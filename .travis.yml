@@ -9,8 +9,8 @@ cache:
 before_install:
 - git config --global user.email "testbot@test.test"
 - git config --global user.name "testbot"
-- git config --global gc.reflogExpire "7 days"
-- git config --global gc.reflogExpireUnreachable "7 days"
+- git config --global gc.reflogExpire "3 days"
+- git config --global gc.reflogExpireUnreachable "3 days"
 - npm i -g yarn
 - export FORCE_COLOR=1
 install:
