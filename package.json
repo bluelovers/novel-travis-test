@@ -43,7 +43,7 @@
     "@node-novel/cache-loader": "^1.0.11",
     "@node-novel/md-loader": "^1.0.2",
     "@node-novel/sort": "^1.0.6",
-    "@node-novel/task": "^1.0.23",
+    "@node-novel/task": "^1.0.26",
     "@node-novel/toc": "^1.0.42",
     "@types/dotenv": "^6.1.1",
     "array-hyper-unique": "^1.0.7",

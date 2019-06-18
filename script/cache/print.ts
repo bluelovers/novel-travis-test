@@ -7,8 +7,10 @@ import ProjectConfig from '../../project.config';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { console } from '../../lib/log';
+import cosmiconfig = require('fast-glob');
+import { loadCacheConfig } from '@node-novel/task/lib/config';
 
-FastGlob<string>([
+FastGlob([
 	'**/*',
 ], {
 		cwd: ProjectConfig.cache_root,
@@ -16,6 +18,9 @@ FastGlob<string>([
 	.then(async (ls) => {
 
 		console.dir(ls);
+
+		console.info(`loadCacheConfig`);
+		console.dir(loadCacheConfig(ProjectConfig.project_root));
 
 		console.info(`.cache.json`);
 		await fs.readJSON(path.join(ProjectConfig.cache_root, '.cache.json')).then(data => console.dir(data)).catch(e => null);
