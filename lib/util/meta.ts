@@ -11,9 +11,9 @@ import { cacheSortCallback } from '@node-novel/cache-loader/lib/util'
 
 const metaMap = new Map<string, IMdconfMeta>();
 
-export function get_idsSync(rootPath: string)
+export function get_idsSync(rootPath: string): string[]
 {
-	return FastGlob.sync<string>([
+	return FastGlob.sync([
 		'*',
 		'!docs',
 		'!.*',
@@ -55,7 +55,7 @@ export function filterIDs(rootPath: string)
 
 			memo[pathMain_base] = memo[pathMain_base] || {};
 
-			FastGlob.sync<string>([
+			FastGlob.sync([
 					'*/README.md',
 				], {
 					cwd: path.join(rootPath, pathMain),
