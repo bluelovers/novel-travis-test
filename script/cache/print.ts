@@ -19,6 +19,8 @@ FastGlob([
 
 		console.dir(ls);
 
+		console.dir(ProjectConfig.project_root);
+
 		console.info(`loadCacheConfig`);
 		console.dir(loadCacheConfig(ProjectConfig.project_root));
 
