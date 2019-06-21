@@ -6,7 +6,7 @@ import path = require("upath2");
 import { crossSpawnSync } from '../index';
 import { freeGC } from '../lib/util';
 import ProjectConfig, { MAX_SCRIPT_TIMEOUT } from '../project.config';
-import fs = require('fs-extra');
+import fs = require('fs-iconv');
 import { useDefault, getDefaultModList } from 'novel-segment/lib';
 import Segment from 'novel-segment/lib/Segment';
 import TableDict from 'novel-segment/lib/table/dict';
@@ -18,7 +18,6 @@ import Bluebird = require('bluebird');
 // @ts-ignore
 import BluebirdCancellation from 'bluebird-cancellation';
 import { CancellationError, TimeoutError } from 'bluebird';
-import fsIconv = require('fs-iconv');
 import { tw2cn_min, cn2tw_min, tableCn2TwDebug, tableTw2CnDebug } from 'cjk-conv/lib/zh/convert/min';
 import { do_cn2tw_min } from '../lib/conv';
 import { array_unique_overwrite } from 'array-hyper-unique';
@@ -152,7 +151,9 @@ export function _doSegmentGlob(ls: string[], options: IOptions)
 					};
 				}
 
-				let text = await fs.readFile(fillpath)
+				let text = await fs.loadFile(fillpath, {
+					autoDecode: true,
+					})
 					.then(v => crlf(v.toString()))
 				;
 
@@ -574,7 +575,9 @@ export function runSegment()
 								{
 									let fullpath = path.join(CWD_IN, file);
 
-									return await fs.readFile(fullpath)
+									return fs.loadFile(fullpath, {
+										autoDecode: true,
+										})
 										.then(function (buf)
 										{
 											if (buf && buf.length)

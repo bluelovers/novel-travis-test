@@ -17,7 +17,8 @@ before_install:
 - export FORCE_COLOR=1
 install:
 - yarn install
-- yarn add cjk-conv
+- yarn add cjk-conv regexp-cjk
+- yarn add gitlab@4
 #- yarn list
 - yarn list --pattern "segment|cjk|epub|gitlab"
 before_script:
