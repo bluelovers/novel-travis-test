@@ -174,6 +174,7 @@ checkShareStatesNotExists([
 							useTitle: true,
 							filenameLocal: novelID,
 							noLog: true,
+							epubContextDate: ProjectConfig.EPUB_CONTEXT_DATE,
 						}))
 						.then(async function (ret)
 						{
