@@ -6,6 +6,8 @@ import ProjectConfig from '../project.config';
 import path = require('upath2');
 import * as fs from 'fs-extra';
 import console from '../lib/log';
+import { pathExistsSync, ensureFileSync, removeSync } from 'fs-extra';
+import { resolve } from 'upath2';
 
 export enum EnumShareStates
 {
@@ -14,7 +16,7 @@ export enum EnumShareStates
 
 export function shareStates(name: EnumShareStates)
 {
-	const file = path.resolve(ProjectConfig.cache_root, name);
+	const file = resolve(ProjectConfig.cache_root, name);
 
 	const data = {
 		name,
@@ -22,15 +24,15 @@ export function shareStates(name: EnumShareStates)
 
 		exists()
 		{
-			return fs.pathExistsSync(file)
+			return pathExistsSync(file)
 		},
 		ensure()
 		{
-			return fs.ensureFileSync(file)
+			return ensureFileSync(file)
 		},
 		remove()
 		{
-			return fs.removeSync(file);
+			return removeSync(file);
 		},
 	};
 

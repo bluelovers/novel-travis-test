@@ -47,7 +47,7 @@ export declare function createGit(options: IOptionsCreateGit): {
     };
     temp: {
         [k: string]: any;
-        cp: SpawnSyncReturns<Buffer>;
+        cp: SpawnSyncReturns;
     };
 };
 export declare function gitGc(REPO_PATH: string, argv?: string[]): SpawnSyncReturns<Buffer>;
