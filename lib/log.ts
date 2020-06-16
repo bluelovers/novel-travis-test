@@ -7,17 +7,20 @@ if (process && process.env)
 	process.env.FORCE_COLOR = process.env.FORCE_COLOR || '1';
 }
 
-import { Console } from 'debug-color2';
-export const console = new Console(null, {
+import console from 'debug-color2';
+
+console.enabled = true
+console.chalkOptions = {
+	...console.chalkOptions,
 	enabled: true,
-	inspectOptions: {
-		colors: true,
-	},
-	chalkOptions: {
-		enabled: true,
-	},
-});
+}
+console.inspectOptions = {
+	...console.inspectOptions,
+	colors: true,
+}
 
 console.enabledColor = true;
+
+export { console }
 
 export default console
