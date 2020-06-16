@@ -89,6 +89,7 @@ if (ls.length)
 							// @ts-ignore
 							let ms = moment.unix(data[k]).valueOf();
 
+							// @ts-ignore
 							data[k] = ms;
 
 							_ok = true;
