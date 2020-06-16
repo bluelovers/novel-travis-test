@@ -2,7 +2,7 @@ import { get_ids } from '@node-novel/toc';
 import { getNovelStatCache } from '../lib/cache/novel-stat';
 import { checkShareStatesNotExists, EnumShareStates } from '../lib/share';
 import ProjectConfig from '../project.config';
-import * as FastGlob from 'fast-glob';
+import * as FastGlob from '@bluelovers/fast-glob';
 import path = require('path');
 import { getMdconfMeta, getMdconfMetaByPath, filterIDs } from '../lib/util/meta';
 import Promise = require('bluebird');

@@ -9,7 +9,7 @@ import { IConfig } from '@node-novel/task';
 import { getNovelStatCache } from '../lib/cache/novel-stat';
 import ProjectConfig from '../project.config';
 import moment = require('moment');
-import * as FastGlob from 'fast-glob';
+import * as FastGlob from '@bluelovers/fast-glob';
 
 /**
  * Created by user on 2018/7/22/022.

@@ -8,7 +8,7 @@ import { loadCacheConfig, loadMainConfig, loadConfig } from '@node-novel/task/li
 import { IConfig } from '@node-novel/task';
 import ProjectConfig from '../project.config';
 import moment = require('moment');
-import * as FastGlob from 'fast-glob';
+import * as FastGlob from '@bluelovers/fast-glob';
 import console from '../lib/log';
 
 /**

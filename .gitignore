@@ -120,3 +120,4 @@ dist_epub
 
 /node_modules/
 /yarn-error.log
+.env

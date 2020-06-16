@@ -2,7 +2,7 @@
  * Created by user on 2018/9/3/003.
  */
 
-import * as FastGlob from 'fast-glob';
+import * as FastGlob from '@bluelovers/fast-glob';
 import * as fs from 'fs-extra';
 import * as yargs from 'yargs';
 import path = require('upath2');

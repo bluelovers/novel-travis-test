@@ -13,7 +13,7 @@ import { loadCacheConfig, loadMainConfig } from '@node-novel/task/lib/config';
 import { checkShareStatesNotExists, EnumShareStates } from '../lib/share';
 import ProjectConfig, { novel_root } from '../project.config';
 import moment = require('moment');
-import * as FastGlob from 'fast-glob';
+import * as FastGlob from '@bluelovers/fast-glob';
 import gitlog from 'gitlog2';
 import console from '../lib/log';
 import Promise = require('bluebird');

@@ -2,12 +2,11 @@
  * Created by user on 2019/6/18.
  */
 
-import FastGlob = require('fast-glob');
+import FastGlob = require('@bluelovers/fast-glob');
 import ProjectConfig from '../../project.config';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { console } from '../../lib/log';
-import cosmiconfig = require('fast-glob');
 import { loadCacheConfig } from '@node-novel/task/lib/config';
 
 FastGlob([

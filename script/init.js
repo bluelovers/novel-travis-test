@@ -7,7 +7,7 @@ const fs = require("fs-extra");
 const config_1 = require("@node-novel/task/lib/config");
 const project_config_1 = require("../project.config");
 const moment = require("moment");
-const FastGlob = require("fast-glob");
+const FastGlob = require("@bluelovers/fast-glob");
 const log_1 = require("../lib/log");
 /**
  * Created by user on 2018/5/17/017.

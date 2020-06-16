@@ -19,7 +19,7 @@ import Promise = require('bluebird');
 import novelEpub from 'novel-epub';
 import { getPushUrl, pushGit } from '../script/git';
 import { _path, DIST_NOVEL } from '../script/segment';
-import FastGlob = require('fast-glob');
+import FastGlob = require('@bluelovers/fast-glob');
 import txtMerge from 'novel-txt-merge';
 import { array_unique as arrayUniq } from 'array-hyper-unique';
 import console from '../lib/log';

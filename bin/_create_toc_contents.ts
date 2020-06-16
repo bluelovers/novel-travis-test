@@ -21,7 +21,7 @@ import { createPullRequests } from '../script/git-api-pr';
 import { crossSpawnSync, crossSpawnAsync } from '../index';
 import path = require('path');
 import fs = require('fs-extra');
-import FastGlob = require('fast-glob');
+import FastGlob = require('@bluelovers/fast-glob');
 import { mdconf_parse, IMdconfMeta, chkInfo } from 'node-novel-info';
 import EpubMaker, { hashSum, slugify } from 'epub-maker2';
 import txtMerge, { makeFilename as makeFilenameTxt } from 'novel-txt-merge';

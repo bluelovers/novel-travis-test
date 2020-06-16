@@ -7,7 +7,7 @@ import { crossSpawnOutput, isGitRoot } from '../index';
 import { loadCacheConfig, loadMainConfig } from '@node-novel/task/lib/config';
 import ProjectConfig from '../project.config';
 import moment = require('moment');
-import * as FastGlob from 'fast-glob';
+import * as FastGlob from '@bluelovers/fast-glob';
 
 import { NOT_DONE, DIST_NOVEL, PROJECT_ROOT, BR_NAME, CLONE_DEPTH, GITEE_TOKEN } from '../script/init';
 import {

@@ -3,7 +3,7 @@ import * as fs from 'fs-extra';
 import { chkInfo, IMdconfMeta, mdconf_parse } from 'node-novel-info';
 import console from '../log';
 import path = require('path');
-import FastGlob = require('fast-glob');
+import FastGlob = require('@bluelovers/fast-glob');
 import ProjectConfig from '../../project.config';
 import { get_ids } from '@node-novel/toc';
 import { tocSortCallback } from '@node-novel/toc/lib/util';

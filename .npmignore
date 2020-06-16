@@ -32,3 +32,4 @@ bin/*.d.ts
 ### jsonly template
 *.ts
 !*.d.ts
+.env

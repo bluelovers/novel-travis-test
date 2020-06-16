@@ -10,7 +10,7 @@ import fs = require('fs-iconv');
 import { useDefault, getDefaultModList } from 'novel-segment/lib';
 import Segment from 'novel-segment/lib/Segment';
 import TableDict from 'novel-segment/lib/table/dict';
-import FastGlob = require('fast-glob');
+import FastGlob = require('@bluelovers/fast-glob');
 import Promise = require('bluebird');
 import { crlf } from 'crlf-normalize';
 import console from '../lib/log';

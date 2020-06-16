@@ -11,7 +11,7 @@ import path = require('upath2');
 import ProjectConfig from './project.config';
 import { filterNotDelete } from '@node-novel/task/lib/index';
 import * as fs from 'fs-extra';
-import * as FastGlob from 'fast-glob';
+import * as FastGlob from '@bluelovers/fast-glob';
 import * as Promise from 'bluebird';
 
 let DIST_NOVEL = ProjectConfig.novel_root;

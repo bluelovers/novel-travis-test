@@ -51,6 +51,7 @@
     "update-meta-cache": "node ./bin/_update_meta.js"
   },
   "dependencies": {
+    "@bluelovers/fast-glob": "^3.0.4",
     "@node-novel/cache-loader": "^1.0.26",
     "@node-novel/md-loader": "^1.0.9",
     "@node-novel/sort": "^1.0.14",
@@ -67,7 +68,6 @@
     "dotenv": "^8.2.0",
     "email-normalize": "^1.0.0",
     "env-bool": "^1.0.3",
-    "fast-glob": "^3.2.4",
     "fs-extra": "^9.0.1",
     "fs-iconv": "^3.0.8",
     "git-diff-from": "^1.1.17",

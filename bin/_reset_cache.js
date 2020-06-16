@@ -3,7 +3,7 @@
  * Created by user on 2018/9/3/003.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const FastGlob = require("fast-glob");
+const FastGlob = require("@bluelovers/fast-glob");
 const fs = require("fs-extra");
 const yargs = require("yargs");
 const path = require("upath2");
