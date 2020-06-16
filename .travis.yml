@@ -2,24 +2,26 @@ language: node_js
 node_js:
 - node
 cache:
+  yarn: true
   directories:
-  - ".cache"
-  - dist_novel
-  - dist_epub
-after_cacje:
+    - node_modules
+    - ".cache"
+    - dist_novel
+    - dist_epub
+after_cache:
   - yarn run list:all:cache
 before_install:
 - git config --global user.email "testbot@test.test"
 - git config --global user.name "testbot"
 - git config --global gc.reflogExpire "3 days"
 - git config --global gc.reflogExpireUnreachable "3 days"
-- npm i -g yarn
+#- npm i -g yarn
 - export FORCE_COLOR=1
 install:
-- yarn install
+#- yarn install
 - yarn add cjk-conv regexp-cjk novel-segment segment-dict
 #- yarn list
-- yarn list --pattern "segment|cjk|epub|gitlab"
+- yarn list --pattern "segment|cjk|epub|gitlab|bluelovers|lazy"
 before_script:
 script:
 - git --version
