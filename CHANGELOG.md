@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/bluelovers/novel-travis-test/compare/novel-travis-test@1.0.0...novel-travis-test@1.0.0) (2020-07-04)
+
+
+### ♻️　Chores
+
+* update deps ([1a4c210](https://github.com/bluelovers/novel-travis-test/commit/1a4c21015ed074de790244b933ab58fcc95195b0))
+
+
+
+
+
 # 1.0.0 (2020-06-16)
 
 
